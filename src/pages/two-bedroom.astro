@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BedroomPageLayout from '../components/BedroomPageLayout.astro';
+import { bedroomCategories } from '../data/designs';
+
+const category = bedroomCategories['two-bedroom'];
+---
+
+<Layout title={`${category.pageTitle} Tiny Home`} description={category.metaDescription}>
+  <BedroomPageLayout category={category} />
+</Layout>

@@ -1,0 +1,250 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ImageCrossfade from '../components/ImageCrossfade.astro';
+import ServiceGrid from '../components/ServiceGrid.astro';
+import CTA from '../components/CTA.astro';
+import { upgradeImages } from '../data/upgradeImages';
+import { serviceAreaLong } from '../data/site';
+
+const serviceGrid = [
+  {
+    label: 'Kitchen Upgrades',
+    href: '/contact?service=kitchen-upgrade',
+    image: upgradeImages.kitchen,
+    alt: 'Modern kitchen upgrade with quality finishes and island bench',
+  },
+  {
+    label: 'Bathroom Upgrades',
+    href: '/contact?service=bathroom-upgrade',
+    image: upgradeImages.bathroom,
+    alt: 'Contemporary bathroom upgrade with modern fixtures',
+  },
+  {
+    label: 'Whole-Home Improvements',
+    href: '/contact?service=home-upgrade',
+    image: upgradeImages.kitchenRestore,
+    alt: 'Before and after kitchen renovation showing whole-home transformation',
+  },
+];
+
+const featuredGrid = [
+  {
+    label: 'Kitchen Renovation',
+    href: '/contact?service=kitchen-upgrade',
+    image: upgradeImages.kitchenRestore,
+    alt: 'Before and after kitchen renovation',
+  },
+  {
+    label: 'Bathroom Refresh',
+    href: '/contact?service=bathroom-upgrade',
+    image: upgradeImages.bathroomAlt,
+    alt: 'Bright bathroom upgrade with modern vanity and tiling',
+  },
+  {
+    label: 'Luxury Bathroom',
+    href: '/contact?service=bathroom-upgrade',
+    image: upgradeImages.bathroomAlt2,
+    alt: 'Premium bathroom upgrade with freestanding bath',
+  },
+];
+
+const scopeSlideshow = [
+  { src: upgradeImages.kitchen, alt: 'Modern kitchen upgrade with island bench and quality appliances' },
+  { src: upgradeImages.bathroom, alt: 'Contemporary bathroom upgrade with walk-in shower' },
+  { src: upgradeImages.kitchenRestore, alt: 'Kitchen renovation before and after comparison' },
+];
+
+const benefitsSlideshow = [
+  { src: upgradeImages.bathroomAlt, alt: 'Updated bathroom with modern fixtures and tiling' },
+  { src: upgradeImages.bathroomAlt2, alt: 'Spacious bathroom upgrade with premium finishes' },
+  { src: upgradeImages.bathroom, alt: 'Designer bathroom with contemporary styling' },
+];
+
+const finishesSlideshow = [
+  { src: upgradeImages.kitchen, alt: 'Kitchen detailing with stone benchtops and cabinetry' },
+  { src: upgradeImages.bathroomAlt, alt: 'Bathroom finishes with quality tapware and tiles' },
+  { src: upgradeImages.kitchenRestore, alt: 'Completed kitchen restoration with modern finishes' },
+];
+
+const scopeFeatures = [
+  'Kitchen and bathroom renovations tailored to your layout and budget',
+  'Open-plan living conversions and internal layout improvements',
+  'Extensions, decking, and outdoor living upgrades',
+  'Custom cabinetry, benchtops, and premium fixture selections',
+  'Electrical, plumbing, and compliance upgrades handled in-house',
+  'Clear timelines with minimal disruption to your daily routine',
+];
+
+const benefits = [
+  'Increase property value and rental appeal',
+  'Improve functionality and everyday livability',
+  'Modernise outdated kitchens and bathrooms',
+  'Energy-efficient appliances and lighting options',
+  'Quality materials selected for durability and style',
+  'Licensed trades and project management throughout',
+  'Transparent quoting with no hidden surprises',
+  'Workmanship warranty on all completed upgrades',
+];
+
+const qualityPoints = [
+  'Premium benchtops, splashbacks, and cabinetry options',
+  'Designer tapware, tiles, and bathroom fittings',
+  'Coordinated colour palettes and material selections',
+  'Attention to detail in finishing and alignment',
+];
+---
+
+<Layout
+  title="Upgrades"
+  description={`Property upgrades and improvements by Hartup Construction — kitchen, bathroom, and whole-home transformations in ${serviceAreaLong}.`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="page-title-serif">Upgrades</h1>
+      <p class="lead">
+        Transform your existing property with expert upgrades — from kitchen and bathroom renovations to whole-home improvements delivered with minimal disruption.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--bg-default service-row-section">
+    <div class="container">
+      <ServiceGrid items={serviceGrid} />
+    </div>
+  </section>
+
+  <section class="section section--bg-elevated">
+    <div class="container">
+      <div class="split-grid split-grid--text-left">
+        <div class="split-grid__content">
+          <span class="eyebrow">What We Upgrade</span>
+          <h2>Upgrade Services &amp; Scope</h2>
+          <p class="lead">
+            Hartup Construction delivers practical, high-quality upgrades that modernise your home while respecting its existing character and structure.
+          </p>
+          <ul class="split-list">
+            {scopeFeatures.map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="split-grid__media">
+          <ImageCrossfade id="upgrade-scope" images={scopeSlideshow} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--bg-default">
+    <div class="container">
+      <div class="split-grid">
+        <div class="split-grid__media">
+          <ImageCrossfade id="upgrade-benefits" images={benefitsSlideshow} />
+        </div>
+        <div class="split-grid__content">
+          <span class="eyebrow">Benefits</span>
+          <h2>Why Upgrade with Hartup</h2>
+          <p class="lead">
+            Smart renovations combine better living spaces with long-term value — whether you are updating to sell, rent, or enjoy your home for years to come.
+          </p>
+          <ul class="split-list">
+            {benefits.map((benefit) => (
+              <li>{benefit}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--bg-elevated">
+    <div class="container">
+      <div class="split-grid split-grid--text-left">
+        <div class="split-grid__content">
+          <span class="eyebrow">Finishes</span>
+          <h2>Quality Materials &amp; Craftsmanship</h2>
+          <p class="lead">
+            Every upgrade is finished to a high standard with materials and fixtures chosen for performance, appearance, and ease of maintenance.
+          </p>
+          <ul class="split-list">
+            {qualityPoints.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <p>
+            From initial consultation through to final handover, our team coordinates trades, suppliers, and inspections so your upgrade is delivered on time and to specification.
+          </p>
+        </div>
+        <div class="split-grid__media">
+          <ImageCrossfade id="upgrade-finishes" images={finishesSlideshow} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--bg-default service-row-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Transformations</span>
+        <h2>Recent Upgrade Styles</h2>
+        <p>Explore the range of kitchen and bathroom upgrades we deliver — from compact refreshes to full renovations.</p>
+      </div>
+      <ServiceGrid items={featuredGrid} />
+    </div>
+  </section>
+
+  <CTA
+    sectionClass="section--bg-elevated"
+    title="Planning an Upgrade?"
+    description="Speak with our team about your renovation goals, timeline, and budget."
+    buttonLabel="Get a Quote"
+  />
+</Layout>
+
+<style>
+  .service-row-section {
+    padding-top: var(--space-lg);
+    padding-bottom: var(--space-lg);
+  }
+
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .split-grid__content h2 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .split-grid__content p {
+    margin-bottom: var(--space-sm);
+  }
+
+  .split-list {
+    margin: var(--space-md) 0 var(--space-lg);
+  }
+
+  .split-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .split-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    .split-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+interface Image {
+  src: string;
+  alt: string;
+}
+
+interface Props {
+  images: Image[];
+  id: string;
+  interval?: number;
+  fadeDuration?: number;
+  imageFit?: 'cover' | 'contain';
+  zoom?: boolean;
+}
+
+const { images, id, interval = 8, fadeDuration = 1, imageFit = 'cover', zoom = true } = Astro.props;
+const count = images.length;
+const totalDuration = count * interval;
+const fadeInEnd = (fadeDuration / totalDuration) * 100;
+const holdEnd = ((interval - fadeDuration) / totalDuration) * 100;
+const fadeOutEnd = (interval / totalDuration) * 100;
+const animationName = `crossfade-${id}`;
+const keyframes = `
+  @keyframes ${animationName} {
+    0% { opacity: 0; }
+    ${fadeInEnd.toFixed(2)}% { opacity: 1; }
+    ${holdEnd.toFixed(2)}% { opacity: 1; }
+    ${fadeOutEnd.toFixed(2)}% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+`;
+---
+
+<div class:list={['image-crossfade', { 'image-crossfade--contain': imageFit === 'contain', 'image-crossfade--zoom': zoom }]}>
+  {images.map((image, index) => (
+    <img
+      src={image.src}
+      alt={image.alt}
+      loading={index === 0 ? 'eager' : 'lazy'}
+      width="800"
+      height="600"
+      style={`animation: ${animationName} ${totalDuration}s ease-in-out infinite; animation-delay: ${-index * interval}s;`}
+    />
+  ))}
+</div>
+
+<style is:global set:html={keyframes} />
+
+<style>
+  .image-crossfade {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 4 / 3;
+    background: var(--color-bg-card);
+  }
+
+  .image-crossfade img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+  }
+
+  .image-crossfade--zoom img {
+    transform: scale(1.15);
+  }
+
+  .image-crossfade--contain {
+    background: #f8fafc;
+  }
+
+  .image-crossfade--contain img {
+    object-fit: contain;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .image-crossfade img {
+      animation: none !important;
+      opacity: 0;
+    }
+
+    .image-crossfade img:first-child {
+      opacity: 1;
+    }
+  }
+</style>

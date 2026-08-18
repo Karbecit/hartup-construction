@@ -1,0 +1,59 @@
+---
+interface Props {
+  icon: string;
+  title: string;
+  description: string;
+  href?: string;
+}
+
+const { icon, title, description, href } = Astro.props;
+---
+
+{href ? (
+  <a href={href} class="service-card card">
+    <div class="service-icon" aria-hidden="true">{icon}</div>
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <span class="service-link">Learn more →</span>
+  </a>
+) : (
+  <article class="service-card card">
+    <div class="service-icon" aria-hidden="true">{icon}</div>
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </article>
+)}
+
+<style>
+  .service-card {
+    display: block;
+    padding: var(--space-md);
+    color: inherit;
+  }
+
+  .service-icon {
+    font-size: 2rem;
+    margin-bottom: var(--space-sm);
+    line-height: 1;
+  }
+
+  .service-card h3 {
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+
+  .service-card p {
+    font-size: 0.9375rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .service-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  a.service-card:hover .service-link {
+    text-decoration: underline;
+  }
+</style>

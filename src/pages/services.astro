@@ -1,0 +1,233 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { serviceAreaLong } from '../data/site';
+import ServiceCard from '../components/ServiceCard.astro';
+import CTA from '../components/CTA.astro';
+
+const services = [
+  {
+    id: 'residential',
+    icon: '🏠',
+    title: 'Residential Construction',
+    description: 'We specialise in building custom homes that reflect your lifestyle and vision. From single-storey dwellings to multi-level residences, our team manages every detail — site preparation, framing, roofing, interiors, and landscaping coordination.',
+    features: [
+      'Custom home design and build',
+      'Knock-down rebuilds',
+      'Dual occupancy and townhouse developments',
+      'Extensions and second-storey additions',
+      'Granny flats and ancillary dwellings',
+    ],
+  },
+  {
+    id: 'commercial',
+    icon: '🏢',
+    title: 'Commercial Construction',
+    description: 'Our commercial division delivers functional, compliant, and aesthetically polished spaces for businesses throughout the Adelaide metro and surrounding areas. We understand the importance of minimising downtime and working within strict commercial timelines.',
+    features: [
+      'Office fit-outs and refurbishments',
+      'Retail and hospitality spaces',
+      'Warehouses and industrial buildings',
+      'Medical and healthcare facilities',
+      'Educational and community buildings',
+    ],
+  },
+  {
+    id: 'renovations',
+    icon: '🔨',
+    title: 'Renovations & Extensions',
+    description: 'Transform your existing property without the cost and disruption of a full rebuild. Our renovation team excels at breathing new life into homes and commercial spaces while respecting structural integrity and heritage features.',
+    features: [
+      'Kitchen and bathroom renovations',
+      'Whole-home makeovers',
+      'Heritage restorations',
+      'Open-plan living conversions',
+      'Outdoor entertaining areas',
+    ],
+  },
+  {
+    id: 'project-management',
+    icon: '📋',
+    title: 'Project Management',
+    description: 'Not every client needs a full build — sometimes you need an expert to coordinate trades, manage timelines, and keep your project on track. Our project management service provides experienced oversight from planning through to completion.',
+    features: [
+      'Feasibility studies and budgeting',
+      'Council and permit applications',
+      'Trade coordination and scheduling',
+      'Quality assurance inspections',
+      'Defect management and warranty handover',
+    ],
+  },
+];
+---
+
+<Layout
+  title="Services"
+  description={`Hartup Construction services — residential builds, commercial construction, renovations, and project management in ${serviceAreaLong}.`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">What We Offer</span>
+      <h1>Our Services</h1>
+      <p class="lead">
+        Full-spectrum construction services for homeowners, developers, and businesses — delivered with professionalism and pride.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="services-overview grid-4">
+        {services.map(({ icon, title, description, id }) => (
+          <ServiceCard icon={icon} title={title} description={description.slice(0, 100) + '…'} href={`#${id}`} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section services-detail">
+    <div class="container">
+      {services.map(({ id, icon, title, description, features }) => (
+        <article id={id} class="service-detail">
+          <div class="service-detail-header">
+            <span class="service-detail-icon" aria-hidden="true">{icon}</span>
+            <h2>{title}</h2>
+          </div>
+          <p class="service-detail-desc">{description}</p>
+          <ul class="service-features">
+            {features.map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section process-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">How We Work</span>
+        <h2>Our Process</h2>
+        <p>A clear, structured approach that keeps your project on track from day one.</p>
+      </div>
+      <div class="process-grid">
+        <div class="process-step">
+          <span class="step-number">01</span>
+          <h3>Consultation</h3>
+          <p>We meet to understand your vision, budget, and timeline. No obligation, no pressure.</p>
+        </div>
+        <div class="process-step">
+          <span class="step-number">02</span>
+          <h3>Quote & Planning</h3>
+          <p>Detailed fixed-price quote with project scope, milestones, and expected completion date.</p>
+        </div>
+        <div class="process-step">
+          <span class="step-number">03</span>
+          <h3>Construction</h3>
+          <p>Regular updates, quality checks, and open communication throughout the build.</p>
+        </div>
+        <div class="process-step">
+          <span class="step-number">04</span>
+          <h3>Handover</h3>
+          <p>Final inspection, documentation, and warranty — ready for you to move in or open for business.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Layout>
+
+<style>
+  .services-overview {
+    margin-bottom: var(--space-xl);
+  }
+
+  .services-detail {
+    background: var(--color-bg-elevated);
+  }
+
+  .service-detail {
+    padding: var(--space-xl) 0;
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: calc(var(--header-height) + var(--space-md));
+  }
+
+  .service-detail:last-child {
+    border-bottom: none;
+  }
+
+  .service-detail-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+  }
+
+  .service-detail-icon {
+    font-size: 2rem;
+  }
+
+  .service-detail-desc {
+    font-size: 1.0625rem;
+    max-width: 720px;
+    margin-bottom: var(--space-md);
+  }
+
+  .service-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .service-features li {
+    position: relative;
+    padding-left: 1.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+  }
+
+  .service-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .process-section {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .process-step {
+    padding: var(--space-md);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .step-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-accent);
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+  }
+
+  .process-step h3 {
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+
+  .process-step p {
+    font-size: 0.9375rem;
+  }
+</style>

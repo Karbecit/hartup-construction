@@ -1,0 +1,293 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { serviceArea, serviceAreaLong } from '../data/site';
+---
+
+<Layout
+  title="Contact"
+  description={`Contact Hartup Construction for a free quote on residential or commercial building projects in ${serviceAreaLong}.`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Get In Touch</span>
+      <h1>Contact Us</h1>
+      <p class="lead">
+        Ready to start your project? Reach out for a free, no-obligation consultation and quote.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2>We'd Love to Hear From You</h2>
+          <p>
+            Whether you're at the early planning stage or ready to break ground, our team is here to help. Fill in the form and we'll get back to you within one business day.
+          </p>
+
+          <div class="contact-details">
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">📞</span>
+              <div>
+                <strong>Phone</strong>
+                <a href="tel:+61000000000">+61 (0) 0000 0000</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">✉️</span>
+              <div>
+                <strong>Email</strong>
+                <a href="mailto:info@hartupconstruction.com.au">info@hartupconstruction.com.au</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">📍</span>
+              <div>
+                <strong>Service Area</strong>
+                <span>{serviceArea}</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">🕐</span>
+              <div>
+                <strong>Business Hours</strong>
+                <span>Mon – Fri: 7:00 AM – 5:00 PM ACST</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-note card">
+            <h3>What to Include in Your Enquiry</h3>
+            <ul>
+              <li>Project type (residential, commercial, renovation)</li>
+              <li>Approximate location / suburb</li>
+              <li>Desired timeline</li>
+              <li>Brief description of scope</li>
+            </ul>
+          </div>
+        </div>
+
+        <form class="contact-form card" id="contact-form" novalidate>
+          <h2>Send a Message</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first-name">First Name *</label>
+              <input type="text" id="first-name" name="firstName" required autocomplete="given-name" />
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name *</label>
+              <input type="text" id="last-name" name="lastName" required autocomplete="family-name" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+61" />
+          </div>
+
+          <div class="form-group">
+            <label for="project-type">Project Type *</label>
+            <select id="project-type" name="projectType" required>
+              <option value="">Select a project type</option>
+              <option value="1-bedroom-tiny-home">1 Bedroom Tiny Home</option>
+              <option value="2-bedroom-tiny-home">2 Bedroom Tiny Home</option>
+              <option value="3-bedroom-tiny-home">3 Bedroom Tiny Home</option>
+              <option value="new-build">New Build (Other)</option>
+              <option value="upgrades">Upgrades</option>
+              <option value="restorations">Restorations</option>
+              <option value="residential">Residential Construction</option>
+              <option value="commercial">Commercial Construction</option>
+              <option value="renovation">Renovation / Extension</option>
+              <option value="project-management">Project Management</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="location">Project Location (Suburb / City)</label>
+            <input type="text" id="location" name="location" placeholder="e.g. Norwood, SA" />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Project Details *</label>
+            <textarea id="message" name="message" required placeholder="Tell us about your project, timeline, and any specific requirements…"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Send Enquiry</button>
+
+          <p class="form-disclaimer">
+            By submitting this form, you agree to be contacted by Hartup Construction regarding your enquiry. We respect your privacy and will never share your details.
+          </p>
+
+          <div class="form-success" id="form-success" hidden role="status">
+            <strong>Thank you for your enquiry!</strong>
+            <p>We've received your message and will be in touch within one business day.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .contact-info h2 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .contact-info > p {
+    margin-bottom: var(--space-lg);
+  }
+
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .contact-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+    margin-top: 0.125rem;
+  }
+
+  .contact-item strong {
+    display: block;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.125rem;
+  }
+
+  .contact-item a,
+  .contact-item span {
+    font-size: 0.9375rem;
+    color: var(--color-text);
+  }
+
+  .contact-item a:hover {
+    color: var(--color-accent);
+  }
+
+  .contact-note {
+    padding: var(--space-md);
+  }
+
+  .contact-note h3 {
+    font-size: 0.9375rem;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+  }
+
+  .contact-note li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .contact-note li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+  }
+
+  .contact-form {
+    padding: var(--space-lg);
+  }
+
+  .contact-form h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .form-disclaimer {
+    font-size: 0.75rem;
+    margin-top: var(--space-sm);
+    color: var(--color-text-muted);
+  }
+
+  .form-success {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+
+  .form-success strong {
+    display: block;
+    color: var(--color-success);
+    margin-bottom: 0.25rem;
+  }
+
+  .form-success p {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const success = document.getElementById('form-success');
+  const projectType = document.getElementById('project-type') as HTMLSelectElement;
+
+  const params = new URLSearchParams(window.location.search);
+  const service = params.get('service');
+  if (service && projectType) {
+    const option = projectType.querySelector(`option[value="${service}"]`);
+    if (option) projectType.value = service;
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    form.querySelector('button[type="submit"]')?.setAttribute('disabled', 'true');
+    success?.removeAttribute('hidden');
+    form.reset();
+  });
+</script>

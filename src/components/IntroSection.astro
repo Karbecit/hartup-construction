@@ -1,0 +1,130 @@
+---
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  text: string;
+  button?: { label: string; href: string };
+  image: string;
+  imageAlt: string;
+  imagePosition: 'left' | 'right';
+  imageFit?: 'cover' | 'contain';
+  background?: 'default' | 'elevated';
+  eager?: boolean;
+}
+
+const {
+  eyebrow,
+  heading,
+  text,
+  button,
+  image,
+  imageAlt,
+  imagePosition,
+  imageFit = 'cover',
+  background = 'default',
+  eager = false,
+} = Astro.props;
+
+const textFirst = imagePosition === 'right';
+---
+
+<section
+  class:list={[
+    'section',
+    'intro-section',
+    background === 'elevated' ? 'section--bg-elevated' : 'section--bg-default',
+  ]}
+>
+  <div class="container">
+    <div class:list={['split-grid', { 'split-grid--text-left': textFirst }]}>
+      <div class="split-grid__media intro-section__media">
+        <div class:list={['intro-section__image', 'zoom-image', { 'intro-section__image--contain': imageFit === 'contain' }]}>
+          <img
+            src={image}
+            alt={imageAlt}
+            loading={eager ? 'eager' : 'lazy'}
+            width="900"
+            height="600"
+          />
+        </div>
+      </div>
+      <div class="split-grid__content intro-section__content">
+        {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+        <h2>{heading}</h2>
+        <p>{text}</p>
+        {button && (
+          <p class="intro-section__cta">
+            <a href={button.href} class="btn btn-primary">{button.label}</a>
+          </p>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro-section__image {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+
+  .intro-section__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.2);
+    transition: transform 0.5s ease;
+  }
+
+  .intro-section__image--contain {
+    background: #f8fafc;
+  }
+
+  .intro-section__image--contain img {
+    object-fit: contain;
+    transform: none;
+  }
+
+  .intro-section__image--contain:hover img {
+    transform: none;
+  }
+
+  .intro-section__image:hover img {
+    transform: scale(1);
+  }
+
+  .intro-section__content h2 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .intro-section__content p {
+    margin-bottom: var(--space-sm);
+  }
+
+  .intro-section__cta {
+    margin-top: var(--space-md);
+    margin-bottom: 0;
+  }
+
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .split-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .split-grid__media {
+      order: -1;
+    }
+
+    .split-grid--text-left .split-grid__media {
+      order: -1;
+    }
+  }
+</style>

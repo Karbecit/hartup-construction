@@ -1,0 +1,71 @@
+---
+import { bedroomOptions } from '../data/bedroomOptions';
+
+interface Props {
+  class?: string;
+  variant?: 'default' | 'alt';
+}
+
+const { class: className, variant = 'default' } = Astro.props;
+---
+
+<div class:list={['bedroom-grid', className]}>
+  {bedroomOptions.map(({ label, href, image, imageAlt, alt }) => (
+    <a href={href} class="bedroom-card">
+      <div class="bedroom-image zoom-image">
+        <img src={variant === 'alt' ? imageAlt : image} alt={alt} loading="lazy" width="400" height="300" />
+      </div>
+      <span class="bedroom-label">{label}</span>
+    </a>
+  ))}
+</div>
+
+<style>
+  .bedroom-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .bedroom-card {
+    display: block;
+    text-align: center;
+    transition: opacity 0.2s;
+  }
+
+  .bedroom-card:hover {
+    opacity: 0.95;
+  }
+
+  .bedroom-image {
+    aspect-ratio: 4 / 3;
+    margin-bottom: var(--space-sm);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .bedroom-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
+    letter-spacing: 0.02em;
+  }
+
+  .zoom-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.2);
+    transition: transform 0.5s ease;
+  }
+
+  .zoom-image:hover img {
+    transform: scale(1);
+  }
+
+  @media (max-width: 640px) {
+    .bedroom-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+import type { BedroomCategory } from '../data/designs';
+import { bedroomOptions } from '../data/bedroomOptions';
+import IntroSection from './IntroSection.astro';
+import OurDesignsBanner from './OurDesignsBanner.astro';
+import DesignShowcase from './DesignShowcase.astro';
+import BedroomGrid from './BedroomGrid.astro';
+import CTA from './CTA.astro';
+import Lightbox from './Lightbox.astro';
+import VideoModal from './VideoModal.astro';
+
+interface Props {
+  category: BedroomCategory;
+}
+
+const { category } = Astro.props;
+
+const otherCategories = bedroomOptions.filter((opt) => !opt.href.includes(category.slug));
+
+const introBackgrounds: ('default' | 'elevated')[] = ['default', 'elevated', 'default'];
+---
+
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">New Builds</span>
+    <h1 class="page-title-serif">{category.pageTitle}</h1>
+    <p class="lead">{category.heroLead}</p>
+  </div>
+</section>
+
+{category.introSections.map((section, i) => (
+  <IntroSection
+    eyebrow={section.eyebrow}
+    heading={section.heading}
+    text={section.text}
+    button={section.button}
+    image={section.image}
+    imageAlt={section.imageAlt}
+    imagePosition={section.imagePosition}
+    imageFit={section.imageFit}
+    background={introBackgrounds[i]}
+    eager={i === 0}
+  />
+))}
+
+<OurDesignsBanner
+  image={category.ourDesignsFeatureImage.src}
+  imageAlt={category.ourDesignsFeatureImage.alt}
+/>
+
+{category.designs.map((design, index) => (
+  <DesignShowcase design={design} index={index} />
+))}
+
+<section class="section section--bg-elevated">
+  <div class="container">
+    <div class="section-header">
+      <span class="eyebrow">Explore More</span>
+      <h2>Other Configurations</h2>
+      <p>
+        {otherCategories.length === 2
+          ? `Compare our ${otherCategories.map((c) => c.shortLabel.toLowerCase()).join(' and ')} tiny home layouts to find your ideal fit.`
+          : 'Explore our full range of tiny home configurations.'}
+      </p>
+    </div>
+    <BedroomGrid />
+  </div>
+</section>
+
+<CTA
+  title={`Interested in a ${category.pageTitle} Tiny Home?`}
+  description="Speak with our team about floor plans, site requirements, and customisation options."
+  buttonLabel="Get a Quote"
+  sectionClass="section--bg-default"
+/>
+
+<Lightbox />
+<VideoModal />

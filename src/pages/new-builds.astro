@@ -1,0 +1,234 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ImageCrossfade from '../components/ImageCrossfade.astro';
+import BedroomGrid from '../components/BedroomGrid.astro';
+import CTA from '../components/CTA.astro';
+import { bedroomImages } from '../data/bedroomImages';
+
+const designSlideshow = [
+  {
+    src: bedroomImages['one-bedroom'].exterior,
+    alt: 'One bedroom tiny home exterior with timber cladding and deck',
+  },
+  {
+    src: bedroomImages['two-bedroom'].exterior,
+    alt: 'Two bedroom tiny home exterior with timber cladding and deck',
+  },
+  {
+    src: bedroomImages['three-bedroom'].exterior,
+    alt: 'Three bedroom tiny home exterior with timber cladding and deck',
+  },
+];
+
+const benefitsSlideshow = [
+  {
+    src: bedroomImages['one-bedroom'].exteriorAlt,
+    alt: 'One bedroom tiny home exterior alternate view',
+  },
+  {
+    src: bedroomImages['two-bedroom'].exteriorAlt,
+    alt: 'Two bedroom tiny home exterior alternate view',
+  },
+  {
+    src: bedroomImages['three-bedroom'].exteriorAlt,
+    alt: 'Three bedroom tiny home exterior alternate view',
+  },
+];
+
+const qualitySlideshow = [
+  {
+    src: bedroomImages['one-bedroom'].floorplan,
+    alt: 'One bedroom tiny home floorplan layout',
+  },
+  {
+    src: bedroomImages['two-bedroom'].floorplan,
+    alt: 'Two bedroom tiny home floorplan layout',
+  },
+  {
+    src: bedroomImages['three-bedroom'].floorplan,
+    alt: 'Three bedroom tiny home floorplan layout',
+  },
+];
+
+const designFeatures = [
+  'Open-plan living areas designed to maximise usable space',
+  'Efficient floor plans that create a comfortable, practical living environment',
+  'Built-in storage solutions to reduce clutter and increase functionality',
+  'Contemporary external finishes including brick, cladding, and modern façade options',
+  'Large windows and glazed doors to enhance natural light',
+  'Stylish, low-maintenance materials selected for durability and appearance',
+];
+
+const kitchenBathroom = [
+  'Modern cabinetry and space-saving kitchen layouts',
+  'Quality benchtops, splashbacks, and integrated appliances',
+  'Compact yet practical bathroom designs with modern fixtures',
+  'Efficient layouts that maximise comfort and usability',
+];
+
+const benefits = [
+  'Affordable housing solution',
+  'Fast and efficient construction',
+  'Low maintenance requirements',
+  'Modern and attractive appearance',
+  'Comfortable living spaces',
+  'Energy-efficient operation',
+  'Suitable for Adelaide metro, surrounding areas, and investment use',
+  'Strong long-term value and durability',
+];
+---
+
+<Layout
+  title="New Builds"
+  description="Hartup Construction tiny homes — smart space design, modern finishes, and quality craftsmanship. Explore 1, 2, and 3 bedroom configurations."
+>
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="page-title-serif">New Builds</h1>
+      <p class="lead">
+        Hartup Construction tiny homes are designed to maximise comfort, functionality, and style within a compact footprint — delivering exceptional value without compromising quality.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--bg-default bedroom-row-section">
+    <div class="container">
+      <BedroomGrid />
+    </div>
+  </section>
+
+  <section class="section section--bg-elevated">
+    <div class="container">
+      <div class="split-grid split-grid--text-left">
+        <div class="split-grid__content">
+          <span class="eyebrow">Design Features</span>
+          <h2>Tiny Home Design Features</h2>
+          <p class="lead">
+            Drawing on expertise in residential construction and property refurbishment, Hartup Construction creates modern living spaces tailored to today's lifestyle needs.
+          </p>
+          <ul class="split-list">
+            {designFeatures.map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="split-grid__media">
+          <ImageCrossfade id="design" images={designSlideshow} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--bg-default">
+    <div class="container">
+      <div class="split-grid">
+        <div class="split-grid__media">
+          <ImageCrossfade id="benefits" images={benefitsSlideshow} />
+        </div>
+        <div class="split-grid__content">
+          <span class="eyebrow">Benefits</span>
+          <h2>Benefits of a Hartup Tiny Home</h2>
+          <p class="lead">
+            Innovative design, efficient use of space, and quality craftsmanship combine to provide a practical and attractive housing solution.
+          </p>
+          <ul class="split-list">
+            {benefits.map((benefit) => (
+              <li>{benefit}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--bg-elevated">
+    <div class="container">
+      <div class="split-grid split-grid--text-left">
+        <div class="split-grid__content">
+          <span class="eyebrow">Interiors</span>
+          <h2>Kitchens, Bathrooms &amp; Energy Efficiency</h2>
+          <p class="lead">
+            Every Hartup tiny home includes fully functional interiors and energy-conscious design principles to reduce running costs.
+          </p>
+          <ul class="split-list">
+            {kitchenBathroom.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <p>
+            Flexible floor plans can be tailored to client requirements — from granny flats and rural accommodation to guest lodging and investment properties, with customisable finishes, colours, fixtures, and layouts.
+          </p>
+        </div>
+        <div class="split-grid__media">
+          <ImageCrossfade id="quality" images={qualitySlideshow} imageFit="contain" zoom={false} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--bg-default bedroom-row-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Configurations</span>
+        <h2>Choose Your Bedroom Layout</h2>
+        <p>Explore our one, two, and three bedroom tiny home configurations to find the right fit for your lifestyle.</p>
+      </div>
+      <BedroomGrid variant="alt" />
+    </div>
+  </section>
+
+  <CTA
+    sectionClass="section--bg-elevated"
+    title="Ready to Build Your Tiny Home?"
+    description="Contact our team to discuss floor plans, finishes, and timelines for your new build."
+    buttonLabel="Get a Quote"
+  />
+</Layout>
+
+<style>
+  .bedroom-row-section {
+    padding-top: var(--space-lg);
+    padding-bottom: var(--space-lg);
+  }
+
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .split-grid__content h2 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .split-grid__content p {
+    margin-bottom: var(--space-sm);
+  }
+
+  .split-list {
+    margin: var(--space-md) 0 var(--space-lg);
+  }
+
+  .split-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .split-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    .split-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,223 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { serviceArea, serviceAreaLong } from '../data/site';
+import CTA from '../components/CTA.astro';
+---
+
+<Layout
+  title="About Us"
+  description={`Learn about Hartup Construction — our story, values, and commitment to quality building in ${serviceAreaLong}.`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Our Story</span>
+      <h1>About Hartup Construction</h1>
+      <p class="lead">
+        A trusted Adelaide building company dedicated to quality craftsmanship, honest communication, and projects that stand the test of time.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="content-grid">
+        <div class="content-main">
+          <h2>Who We Are</h2>
+          <p>
+            Hartup Construction was founded on a simple belief: every client deserves a builder who treats their project as if it were their own. From the first consultation to the final handover, we prioritise transparency, quality, and respect for your investment.
+          </p>
+          <p>
+            Our team brings together decades of combined experience across residential, commercial, and renovation projects. We understand the South Australian building landscape — local regulations, climate considerations, and the standards that define a job well done.
+          </p>
+
+          <h2>Our Values</h2>
+          <div class="values-grid">
+            <article class="value-card card">
+              <h3>Quality First</h3>
+              <p>We never cut corners. Every material, every joint, and every finish meets our rigorous standards and Australian building codes.</p>
+            </article>
+            <article class="value-card card">
+              <h3>Honest Communication</h3>
+              <p>Clear timelines, transparent pricing, and regular progress updates keep you informed at every stage of your project.</p>
+            </article>
+            <article class="value-card card">
+              <h3>Reliability</h3>
+              <p>We show up on time, deliver on schedule, and stand behind our work with comprehensive warranty coverage.</p>
+            </article>
+            <article class="value-card card">
+              <h3>Safety</h3>
+              <p>Workplace safety is non-negotiable. Our sites meet all WHS requirements to protect our team, clients, and the public.</p>
+            </article>
+          </div>
+
+          <h2>Why Choose Hartup?</h2>
+          <ul class="feature-list">
+            <li><strong>Licensed & fully insured</strong> — peace of mind on every project</li>
+            <li><strong>Experienced project managers</strong> — dedicated point of contact from start to finish</li>
+            <li><strong>Quality subcontractors</strong> — trusted trade partners we've worked with for years</li>
+            <li><strong>Fixed-price quoting</strong> — no surprises, no hidden costs</li>
+            <li><strong>Post-completion support</strong> — we're here long after the keys are handed over</li>
+          </ul>
+        </div>
+
+        <aside class="content-sidebar">
+          <div class="sidebar-card card">
+            <h3>Quick Facts</h3>
+            <dl class="facts-list">
+              <div>
+                <dt>Founded</dt>
+                <dd>2010</dd>
+              </div>
+              <div>
+                <dt>Projects Completed</dt>
+                <dd>200+</dd>
+              </div>
+              <div>
+                <dt>Team Size</dt>
+                <dd>25+ professionals</dd>
+              </div>
+              <div>
+                <dt>Service Area</dt>
+                <dd>{serviceArea}</dd>
+              </div>
+              <div>
+                <dt>Specialisations</dt>
+                <dd>Residential, Commercial, Renovations</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="sidebar-card card">
+            <h3>Accreditations</h3>
+            <ul class="accreditation-list">
+              <li>Licensed Building Practitioner</li>
+              <li>Master Builders Association Member</li>
+              <li>Public Liability Insured</li>
+              <li>WorkCover Compliant</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <CTA
+    title="Let's Build Something Together"
+    description="Whether you're planning a new build, renovation, or commercial fit-out, we'd love to hear about your project."
+  />
+</Layout>
+
+<style>
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .content-main h2 {
+    margin: var(--space-lg) 0 var(--space-sm);
+  }
+
+  .content-main h2:first-child {
+    margin-top: 0;
+  }
+
+  .content-main p {
+    margin-bottom: var(--space-sm);
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-md) 0 var(--space-lg);
+  }
+
+  .value-card {
+    padding: var(--space-md);
+  }
+
+  .value-card h3 {
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+    font-size: 1.0625rem;
+  }
+
+  .value-card p {
+    font-size: 0.9375rem;
+  }
+
+  .feature-list {
+    margin-top: var(--space-sm);
+  }
+
+  .feature-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.625rem;
+    color: var(--color-text-muted);
+  }
+
+  .feature-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+  }
+
+  .feature-list strong {
+    color: var(--color-text);
+  }
+
+  .sidebar-card {
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+
+  .sidebar-card h3 {
+    font-size: 1rem;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+  }
+
+  .facts-list div {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.875rem;
+  }
+
+  .facts-list dt {
+    color: var(--color-text-muted);
+  }
+
+  .facts-list dd {
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: right;
+  }
+
+  .accreditation-list li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .accreditation-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-success);
+    font-weight: 700;
+  }
+
+  @media (max-width: 900px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
