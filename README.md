@@ -46,14 +46,30 @@ npm run preview
 
 ## Deployment
 
-The site builds to static HTML in the `dist/` folder. Deploy to any static host:
+See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for the full cPanel upload guide, password-protected preview setup, and go-live checklist.
+
+The site builds to static HTML in the `dist/` folder.
+
+### Build commands
+
+```bash
+# Customer preview — blocks search indexing (noindex + Disallow robots.txt)
+npm run build:staging
+
+# Production — allow indexing when customer has approved
+npm run build
+```
+
+Upload the **contents** of `dist/` to cPanel `public_html/` (or a staging subdomain folder). Password-protect the folder in cPanel during customer review.
+
+### Other hosts
 
 | Platform | Notes |
 |----------|-------|
-| **Netlify** | Connect repo, build command: `npm run build`, publish: `dist` |
+| **Netlify** | Connect repo, build: `npm run build`, publish: `dist` |
 | **Vercel** | Auto-detects Astro; set output to `dist` |
 | **Cloudflare Pages** | Build: `npm run build`, output: `dist` |
-| **Any web host** | Upload `dist/` contents via FTP/SFTP |
+| **cPanel** | See [DEPLOYMENT.md](./DEPLOYMENT.md) |
 
 ### Domain Setup
 

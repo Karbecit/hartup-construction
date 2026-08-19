@@ -5,8 +5,11 @@
   "description": "Website for Hartup Construction — hartupconstruction.com.au",
   "scripts": {
     "dev": "astro dev",
+    "dev:staging": "astro dev --mode staging",
     "build": "astro build",
-    "preview": "astro preview"
+    "build:staging": "astro build --mode staging",
+    "preview": "astro preview",
+    "preview:staging": "npm run build:staging && astro preview"
   },
   "dependencies": {
     "astro": "^5.7.10"

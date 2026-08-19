@@ -5,6 +5,7 @@ interface Props {
   canonical?: string;
 }
 
+import { STAGING } from 'astro:env/server';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
@@ -24,6 +25,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {STAGING && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalUrl} />
 
     <meta property="og:type" content="website" />
