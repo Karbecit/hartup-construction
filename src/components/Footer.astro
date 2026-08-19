@@ -1,5 +1,5 @@
 ---
-import { serviceArea } from '../data/site';
+import { serviceArea, officeContact, projectManagementContact } from '../data/site';
 
 const year = new Date().getFullYear();
 const assetVersion = '2';
@@ -76,15 +76,23 @@ const socialLinks = [
         <div class="footer-contact-item">
           <span class="contact-icon" aria-hidden="true">📞</span>
           <div>
-            <span class="contact-label">Phone</span>
-            <a href="tel:+61000000000">+61 (0) 0000 0000</a>
+            <span class="contact-label">{projectManagementContact.department}</span>
+            <span class="contact-name">{projectManagementContact.name}</span>
+            <a href={`tel:${projectManagementContact.phoneTel}`}>{projectManagementContact.phone}</a>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <span class="contact-icon" aria-hidden="true">📞</span>
+          <div>
+            <span class="contact-label">{officeContact.department}</span>
+            <a href={`tel:${officeContact.phoneTel}`}>{officeContact.phone}</a>
           </div>
         </div>
         <div class="footer-contact-item">
           <span class="contact-icon" aria-hidden="true">✉</span>
           <div>
             <span class="contact-label">Email</span>
-            <a href="mailto:info@hartupconstruction.com.au">info@hartupconstruction.com.au</a>
+            <a href={`mailto:${officeContact.email}`}>{officeContact.email}</a>
           </div>
         </div>
         <div class="footer-contact-item">
@@ -244,6 +252,13 @@ const socialLinks = [
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
+    margin-bottom: 0.125rem;
+  }
+
+  .contact-name {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text);
     margin-bottom: 0.125rem;
   }
 

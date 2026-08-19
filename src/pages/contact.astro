@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { serviceArea, serviceAreaLong } from '../data/site';
+import { businessHours, officeContact, projectManagementContact, serviceArea, serviceAreaLong } from '../data/site';
 ---
 
 <Layout
@@ -30,15 +30,23 @@ import { serviceArea, serviceAreaLong } from '../data/site';
             <div class="contact-item">
               <span class="contact-icon" aria-hidden="true">📞</span>
               <div>
-                <strong>Phone</strong>
-                <a href="tel:+61000000000">+61 (0) 0000 0000</a>
+                <strong>{projectManagementContact.department}</strong>
+                <span class="contact-subname">{projectManagementContact.name}</span>
+                <a href={`tel:${projectManagementContact.phoneTel}`}>{projectManagementContact.phone}</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">📞</span>
+              <div>
+                <strong>{officeContact.department}</strong>
+                <a href={`tel:${officeContact.phoneTel}`}>{officeContact.phone}</a>
               </div>
             </div>
             <div class="contact-item">
               <span class="contact-icon" aria-hidden="true">✉️</span>
               <div>
                 <strong>Email</strong>
-                <a href="mailto:info@hartupconstruction.com.au">info@hartupconstruction.com.au</a>
+                <a href={`mailto:${officeContact.email}`}>{officeContact.email}</a>
               </div>
             </div>
             <div class="contact-item">
@@ -52,7 +60,7 @@ import { serviceArea, serviceAreaLong } from '../data/site';
               <span class="contact-icon" aria-hidden="true">🕐</span>
               <div>
                 <strong>Business Hours</strong>
-                <span>Mon – Fri: 7:00 AM – 5:00 PM ACST</span>
+                <span>{businessHours}</span>
               </div>
             </div>
           </div>
@@ -177,6 +185,13 @@ import { serviceArea, serviceAreaLong } from '../data/site';
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-text-muted);
+    margin-bottom: 0.125rem;
+  }
+
+  .contact-subname {
+    display: block;
+    font-size: 0.9375rem;
+    color: var(--color-text);
     margin-bottom: 0.125rem;
   }
 

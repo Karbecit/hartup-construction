@@ -81,8 +81,8 @@ Upload the **contents** of `dist/` to cPanel `public_html/` (or a staging subdom
 
 Before going live, update these placeholder values:
 
-- [ ] **Phone number** — Search for `+61 (0) 0000 0000` in `Header.astro`, `Footer.astro`, `contact.astro`
-- [ ] **Email** — Currently `info@hartupconstruction.com.au` (update if different)
+- [x] **Phone numbers** — Project Management (Robert): 0418 839 759; Office: 08 7119 5191
+- [x] **Email** — `office@hartupconstruction.com.au`
 - [ ] **Company stats** — Years experience, project count on homepage
 - [ ] **Project photos** — Replace Unsplash placeholders with real project images in `public/images/`
 - [ ] **About content** — Founding year, team size, accreditations in `about.astro`

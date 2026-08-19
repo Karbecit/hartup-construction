@@ -29,11 +29,11 @@ function isActive(href: string, children?: { href: string }[]) {
   <div class="container header-inner">
     <a href="/" class="logo" aria-label="Hartup Construction — Home">
       <img
-        src="/images/logo.png"
+        src="/images/logo_white.png"
         alt="Hartup Construction"
         class="logo-img"
-        width="180"
-        height="48"
+        width="216"
+        height="76"
       />
     </a>
 
@@ -105,6 +105,7 @@ function isActive(href: string, children?: { href: string }[]) {
     background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: visible;
   }
 
   .header-inner {
@@ -127,7 +128,7 @@ function isActive(href: string, children?: { href: string }[]) {
 
   .logo-img {
     display: block;
-    height: 48px;
+    height: 76px;
     width: auto;
   }
 
@@ -169,7 +170,8 @@ function isActive(href: string, children?: { href: string }[]) {
     color: var(--color-text-muted);
     padding: 0.25rem 0;
     position: relative;
-    transition: color 0.2s;
+    display: inline-block;
+    transition: color 0.2s, transform 0.2s ease;
   }
 
   .nav-link::after {
@@ -183,7 +185,11 @@ function isActive(href: string, children?: { href: string }[]) {
     transition: width 0.2s;
   }
 
-  .nav-link:hover,
+  .nav-link:hover {
+    color: var(--color-text);
+    transform: scale(1.08);
+  }
+
   .nav-link.active {
     color: var(--color-text);
   }
@@ -308,6 +314,7 @@ function isActive(href: string, children?: { href: string }[]) {
     .nav-link {
       font-size: 1.125rem;
       padding: 0.5rem 0;
+      transform: none;
     }
 
     .nav-dropdown {

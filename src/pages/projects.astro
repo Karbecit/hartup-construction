@@ -3,63 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { serviceAreaLong } from '../data/site';
 import ProjectCard from '../components/ProjectCard.astro';
 import CTA from '../components/CTA.astro';
-
-const projects = [
-  {
-    title: 'Modern Family Home — Melbourne',
-    category: 'Residential',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80',
-    imageAlt: 'Modern two-storey family home with large windows and landscaped garden',
-  },
-  {
-    title: 'Coastal Retreat — Gold Coast',
-    category: 'Residential',
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80',
-    imageAlt: 'Luxury coastal home with pool and ocean views',
-  },
-  {
-    title: 'Heritage Terrace Renovation — Sydney',
-    category: 'Renovation',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80',
-    imageAlt: 'Renovated heritage terrace home with restored facade',
-  },
-  {
-    title: 'Corporate Office Fit-Out — Brisbane',
-    category: 'Commercial',
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80',
-    imageAlt: 'Modern open-plan corporate office with glass partitions',
-  },
-  {
-    title: 'Retail Showroom — Adelaide',
-    category: 'Commercial',
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=80',
-    imageAlt: 'Bright retail showroom with display fixtures and polished floors',
-  },
-  {
-    title: 'Kitchen & Living Extension — Perth',
-    category: 'Renovation',
-    image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80',
-    imageAlt: 'Open-plan kitchen and living area with modern finishes',
-  },
-  {
-    title: 'Multi-Unit Development — Canberra',
-    category: 'Residential',
-    image: 'https://images.unsplash.com/photo-1545324418-c1dbe4fc1b8b?w=600&q=80',
-    imageAlt: 'Modern apartment building with balconies and clean architecture',
-  },
-  {
-    title: 'Medical Clinic Build — Hobart',
-    category: 'Commercial',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&q=80',
-    imageAlt: 'Clean, modern medical clinic reception and waiting area',
-  },
-  {
-    title: 'Outdoor Entertaining Area — Darwin',
-    category: 'Renovation',
-    image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80',
-    imageAlt: 'Outdoor deck and entertaining area with pergola and seating',
-  },
-];
+import { portfolioProjects as projects } from '../data/placeholderImages';
 
 const categories = ['All', 'Residential', 'Commercial', 'Renovation'];
 ---
