@@ -91,11 +91,82 @@ Share with the customer:
 
 ---
 
-## Option B — Preview on the live domain
+## Option B — Preview on the live domain (password protected)
 
-Same steps as Option A, but upload to `public_html/` and password-protect `public_html` until the customer approves.
+Use when DNS already points (or will point) to your cPanel server and you want the customer to review at `https://hartupconstruction.com.au` before go-live.
 
-Use this only if DNS already points to your server and you are comfortable password-protecting the main site temporarily.
+### 1. Build the staging site locally
+
+```bash
+npm install
+npm run build:staging
+```
+
+Or use the pre-built zip from the developer: **`hartup-staging-preview.zip`** (contents of `dist/`).
+
+Verify:
+
+- `dist/robots.txt` → `Disallow: /`
+- Any page `<head>` → `<meta name="robots" content="noindex, nofollow">`
+
+### 2. Point DNS to your cPanel server
+
+At your domain registrar (or cPanel **Zone Editor**):
+
+| Type | Name | Value |
+|------|------|-------|
+| A | `@` | Your cPanel server IP |
+| A or CNAME | `www` | Same IP, or `@` |
+
+Wait for propagation (often minutes; allow up to 24–48 hours).
+
+### 3. Upload to `public_html`
+
+1. Log in to **cPanel**
+2. **File Manager** → open **`public_html`**
+3. **Delete or move** any default placeholder files (e.g. `index.html`, `cgi-bin` stays)
+4. **Upload** `hartup-staging-preview.zip` → **Extract** inside `public_html`
+5. Confirm structure looks like:
+   - `public_html/index.html`
+   - `public_html/about/index.html`
+   - `public_html/_astro/`
+   - `public_html/images/`
+   - `public_html/robots.txt`
+
+Do **not** nest an extra `dist/` folder — files must sit directly in `public_html`.
+
+**FTP alternative:** FileZilla / WinSCP → upload all contents of local `dist/` into `public_html/`.
+
+### 4. Password-protect the site
+
+1. cPanel → **Directory Privacy** (or **Password Protect Directories**)
+2. Navigate to **`public_html`**
+3. Check **Password protect this directory**
+4. Enter a label (e.g. `Hartup Preview`)
+5. **Save**
+6. **Create user** — set username + strong password for the customer
+
+Share with the customer:
+
+- URL: `https://hartupconstruction.com.au`
+- Username / password
+
+The browser will prompt for credentials before any page loads.
+
+### 5. Enable HTTPS
+
+1. cPanel → **SSL/TLS Status**
+2. Run **AutoSSL** for `hartupconstruction.com.au` and `www.hartupconstruction.com.au`
+
+### 6. Smoke-test the preview
+
+- [ ] `https://hartupconstruction.com.au` loads after login prompt
+- [ ] Home, New Builds, Contact, and mobile menu work
+- [ ] `/robots.txt` shows `Disallow: /`
+- [ ] View source on homepage — `noindex, nofollow` present
+- [ ] Phone links and contact details correct
+
+Use this only if you are comfortable password-protecting the main domain temporarily until the customer approves.
 
 ---
 
