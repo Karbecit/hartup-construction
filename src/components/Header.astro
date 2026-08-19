@@ -42,8 +42,10 @@ function isActive(href: string, children?: { href: string }[]) {
       <span class="nav-toggle-bar"></span>
       <span class="nav-toggle-bar"></span>
     </button>
+  </div>
+</header>
 
-    <nav id="main-nav" class="main-nav" aria-label="Main navigation">
+<nav id="main-nav" class="main-nav" aria-label="Main navigation">
       <ul class="nav-list">
         {navLinks.map(({ href, label, children }) => (
           <li class:list={['nav-item', { 'nav-item--dropdown': children }]}>
@@ -90,9 +92,7 @@ function isActive(href: string, children?: { href: string }[]) {
         ))}
       </ul>
       <a href="/contact" class="btn btn-primary nav-cta">Get a Quote</a>
-    </nav>
-  </div>
-</header>
+</nav>
 
 <style>
   .site-header {
@@ -103,9 +103,18 @@ function isActive(href: string, children?: { href: string }[]) {
     z-index: 100;
     height: var(--header-height);
     background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     overflow: visible;
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    pointer-events: none;
+    z-index: -1;
   }
 
   .header-inner {
@@ -286,6 +295,7 @@ function isActive(href: string, children?: { href: string }[]) {
       left: 0;
       right: 0;
       bottom: 0;
+      z-index: 99;
       flex-direction: column;
       justify-content: flex-start;
       padding: var(--space-lg) var(--space-md);
@@ -294,6 +304,7 @@ function isActive(href: string, children?: { href: string }[]) {
       transition: transform 0.3s ease;
       gap: var(--space-lg);
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .main-nav.open {
@@ -382,12 +393,14 @@ function isActive(href: string, children?: { href: string }[]) {
   toggle?.addEventListener('click', () => {
     const isOpen = nav?.classList.toggle('open');
     toggle.setAttribute('aria-expanded', String(isOpen));
+    document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
   nav?.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       nav?.classList.remove('open');
       toggle?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
     });
   });
 

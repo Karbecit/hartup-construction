@@ -170,11 +170,20 @@ h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
   right: 0;
   z-index: 1000;
   background: rgba(26, 35, 50, 0.97);
-  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: box-shadow var(--transition);
   height: var(--header-height);
   overflow: visible;
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .site-header.scrolled {
@@ -464,11 +473,13 @@ h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 999;
   background: var(--navy-dark);
   padding: 2rem 1.25rem;
   flex-direction: column;
   gap: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav-mobile.open {
