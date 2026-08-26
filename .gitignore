@@ -8,6 +8,13 @@ hartup-staging-preview.zip
 # CMS (generated locally / on server)
 config/config.php
 content/site.json
+data/rate_limits/
+
+# Server / local-only
+.user.ini
+admin/.user.ini
+check.php
+From customer/
 
 # Astro
 .astro/
