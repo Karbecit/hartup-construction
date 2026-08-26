@@ -34,6 +34,12 @@ Professional website for **Hartup Construction** — [hartupconstruction.com.au]
 # Install dependencies
 npm install
 
+# Create local CMS config + content files (first clone only)
+npm run cms:setup
+
+# CMS admin (http://localhost:8090/admin/) — requires PHP
+npm run cms:dev
+
 # Start development server (http://localhost:4321)
 npm run dev
 

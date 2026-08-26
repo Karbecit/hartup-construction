@@ -41,14 +41,19 @@ On **Services**, drag items in the **Navigation menu order** list to reorder. To
 
 ## Local setup
 
-### 1. PHP config
+### 1. PHP config and content
+
+After cloning the repo:
 
 ```powershell
-copy config\config.example.php config\config.php
+npm install
+npm run cms:setup
 npm run cms:dev
 ```
 
-Visit **http://localhost:8090/admin/setup.php** and complete setup.
+`cms:setup` creates `config/config.php` and `content/site.json` from the committed examples if they are missing.
+
+Visit **http://localhost:8090/admin/setup.php** and complete setup on a new machine.
 
 ### 2. Astro dev
 

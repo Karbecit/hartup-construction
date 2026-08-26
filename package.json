@@ -10,6 +10,7 @@
     "build:staging": "astro build --mode staging",
     "preview": "astro preview",
     "preview:staging": "npm run build:staging && astro preview",
+    "cms:setup": "node scripts/cms-setup.js",
     "cms:dev": "php -d upload_max_filesize=20M -d post_max_size=22M -S localhost:8090 cms-router.php"
   },
   "dependencies": {

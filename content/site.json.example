@@ -5,7 +5,7 @@
     },
     "hero": {
         "tagline": "BUILDING QUALITY - CREATING VALUE",
-        "background_image": "images/tiny-home.png"
+        "background_image": "images/main-photo_3bdce6.png"
     },
     "contact": {
         "eyebrow": "Get In Touch",
@@ -32,7 +32,10 @@
             "title": "Home",
             "path": "/",
             "page_hero": {
-                "use_site_hero": true
+                "use_site_hero": true,
+                "eyebrow": "",
+                "heading": "",
+                "lead": ""
             },
             "sections": [
                 {
@@ -45,7 +48,7 @@
                             "service_slug": "new-builds",
                             "label": "New Builds",
                             "image": {
-                                "file": "tiny-home.png",
+                                "file": "Designer_38__c5a607.png",
                                 "alt": "Modern new home exterior",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -61,7 +64,7 @@
                             "service_slug": "kitchens",
                             "label": "Kitchens",
                             "image": {
-                                "file": "kitchen1.png",
+                                "file": "KItchen_a4e142.png",
                                 "alt": "Modern kitchen interior",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -69,31 +72,31 @@
                                 "crop_x_mobile": 0,
                                 "crop_y_mobile": 0,
                                 "crop_zoom_mobile": 1,
-                                "aspect_ratio": 1.3333,
-                                "cropped_area_pixels": ""
+                                "aspect_ratio": 1,
+                                "cropped_area_pixels": "{\"x\":0,\"y\":121,\"width\":1054,\"height\":1054}"
                             }
                         },
                         {
                             "service_slug": "bathrooms",
                             "label": "Bathrooms",
                             "image": {
-                                "file": "bathroom3.png",
+                                "file": "Bathroom_7f6929.png",
                                 "alt": "Modern bathroom interior",
                                 "crop_x": 0,
-                                "crop_y": 0,
+                                "crop_y": -0.4714,
                                 "crop_zoom": 1,
                                 "crop_x_mobile": 0,
                                 "crop_y_mobile": 0,
                                 "crop_zoom_mobile": 1,
-                                "aspect_ratio": 1.3333,
-                                "cropped_area_pixels": ""
+                                "aspect_ratio": 1,
+                                "cropped_area_pixels": "{\"x\":0,\"y\":160,\"width\":1023,\"height\":1023}"
                             }
                         },
                         {
                             "service_slug": "restorations",
                             "label": "Restorations",
                             "image": {
-                                "file": "kitchen-restore.png",
+                                "file": "Restoration__e76580.png",
                                 "alt": "Restored heritage home",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -112,11 +115,17 @@
                     "type": "image_text",
                     "enabled": true,
                     "background": "elevated",
-                    "eyebrow": "About Hartup",
-                    "heading": "Trusted Builders, Proven Results",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "normal",
+                    "eyebrow": "Trusted South Australian building and property services company",
+                    "heading": "About Hartup",
                     "paragraphs": [
-                        "Hartup Construction is an Adelaide-based building company committed to delivering exceptional quality on every project — big or small.",
-                        "Our experienced team combines traditional craftsmanship with modern building techniques. We work closely with clients, architects, and subcontractors to ensure seamless project delivery from concept to completion."
+                        "Hartup Construction is a trusted South Australian building and property services company dedicated to delivering high-quality construction, renovation, and maintenance solutions for residential and investment properties.",
+                        "With a strong commitment to workmanship, reliability, and customer satisfaction. Hartup Construction provides a complete range of building services, from new home construction and tiny home developments through to comprehensive property refurbishments and ongoing maintenance programs.",
+                        "Our experienced team works closely with homeowners, investors, property managers, commercial and government clients to create functional, modern, and value-driven spaces.",
+                        "Whether constructing a custom family home, delivering an affordable tiny home solution, or undertaking extensive renovations, we focus on quality workmanship, attention to detail, and efficient project delivery."
                     ],
                     "bullets": [
                         "Transparent quoting and project timelines",
@@ -125,8 +134,9 @@
                         "Comprehensive warranty on all workmanship"
                     ],
                     "image_position": "right",
+                    "image_scale": 1,
                     "image": {
-                        "file": "tiny-home.png",
+                        "file": "Aura_68_Front_6bb4f4.png",
                         "alt": "Modern tiny home exterior",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -143,16 +153,28 @@
                     "type": "image_text",
                     "enabled": true,
                     "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "normal",
                     "eyebrow": "What We Do",
-                    "heading": "Hartup Construction Specialises in",
+                    "heading": "Our Services",
                     "paragraphs": [
                         "From ground-up builds to detailed interior upgrades — tailored construction services for homes and commercial spaces throughout the Adelaide metro and surrounding areas."
                     ],
-                    "bullets": [],
-                    "image_position": "left",
+                    "bullets": [
+                        "New Home Builds – Custom-designed homes built to suit individual lifestyles, budgets, and future needs.",
+                        "Secondary Dwellings – Innovative, sustainable, and space-efficient living solutions designed for modern Australian living.",
+                        "Property Maintenance – We deliver fast, dependable property maintenance to safeguard and grow the value of your real estate assets",
+                        "Property Upgrades – Complete internal and external upgrades that transform ageing properties into modern, functional spaces.",
+                        "Kitchen Upgrades – Contemporary kitchen renovations featuring practical layouts, quality finishes, finishes, and improved functionality.",
+                        "Bathroom Upgrades – Stylish bathroom transformations designed to improve comfort, aesthetics, and long-term property value."
+                    ],
+                    "image_position": "right",
+                    "image_scale": 1,
                     "image": {
-                        "file": "exterior.png",
-                        "alt": "Three bedroom tiny home exterior",
+                        "file": "Couple_with_plans_3_5a6f23.png",
+                        "alt": "House plans",
                         "crop_x": 0,
                         "crop_y": 0,
                         "crop_zoom": 1,
@@ -164,15 +186,43 @@
                     }
                 },
                 {
+                    "id": "sec_39ff911e",
+                    "type": "image",
+                    "enabled": true,
+                    "background": "elevated",
+                    "image": {
+                        "file": "3rd_Main_Photo_84a4a6.png",
+                        "alt": "3 Bedroom design external",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.7778,
+                        "cropped_area_pixels": ""
+                    },
+                    "image_scale": 1,
+                    "caption": ""
+                },
+                {
                     "id": "home_values",
                     "type": "image_text",
                     "enabled": true,
                     "background": "elevated",
-                    "eyebrow": "Our Principles",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "normal",
+                    "eyebrow": "",
                     "heading": "Our Values",
                     "paragraphs": [
-                        "Everything we build reflects what we stand for — uncompromising quality, honest communication, and a genuine commitment to our clients.",
-                        "At Hartup Construction, our values guide every decision on site and in the office. They shape how we treat people, how we manage projects, and how we deliver results that stand the test of time."
+                        "At Hartup Construction, we are committed to integrity, professionalism, employee wellbeing,",
+                        "flexibility, and building lasting relationships.",
+                        "We foster a family-oriented culture where our people, clients, subcontractors,",
+                        "and suppliers are valued, and we strive to maintain these principles as we continue to grow.",
+                        "At Hartup Construction, we pride ourselves on building lasting relationships through professionalism, transparency, and exceptional results.",
+                        "Our goal is to provide clients with dependable construction solutions that enhance the quality, usability, and value of every property we work on."
                     ],
                     "bullets": [
                         "Quality craftsmanship in every detail, from foundation to finish",
@@ -181,9 +231,10 @@
                         "Safety and compliance as non-negotiable standards on every project"
                     ],
                     "image_position": "right",
+                    "image_scale": 1,
                     "image": {
-                        "file": "kitchen-restore.png",
-                        "alt": "Restored kitchen interior",
+                        "file": "Gem_47_Front_0fb381.png",
+                        "alt": "Gem 47 front view",
                         "crop_x": 0,
                         "crop_y": 0,
                         "crop_zoom": 1,
@@ -193,6 +244,64 @@
                         "aspect_ratio": 1.3333,
                         "cropped_area_pixels": ""
                     }
+                },
+                {
+                    "id": "sec_5348eb88",
+                    "type": "layout",
+                    "enabled": true,
+                    "background": "elevated",
+                    "min_height": 290,
+                    "blocks": [
+                        {
+                            "id": "blk_6a07c4cc",
+                            "type": "image",
+                            "x": 1.0825708438749957,
+                            "y": 4.482758620689946,
+                            "w": 38.72214946133277,
+                            "h": 90.6896551724135,
+                            "image": {
+                                "file": "Designer_16__a31d71.png",
+                                "alt": "",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        },
+                        {
+                            "id": "blk_deaec30c",
+                            "type": "text",
+                            "x": 41.878111277964535,
+                            "y": 11.668965517241498,
+                            "w": 56.94233437865033,
+                            "h": 77.0068965517241,
+                            "content": "<p class=\"cms-body cms-text--normal\"><span class=\"cms-body cms-text--normal\"><span class=\"cms-heading cms-heading--md cms-weight--semibold\"><span class=\"cms-heading cms-heading--md cms-weight--semibold\"><span class=\"cms-heading cms-heading--sm cms-weight--semibold\">Hartup Construction builds with confidence, delivering high-quality homes and renovations using sustainable, eco-friendly materials that&nbsp;<span>promote healthier, greener living for generations to come.</span></span></span></span></span><span></span></p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "sec_c3c1ad77",
+                    "type": "image",
+                    "enabled": true,
+                    "background": "default",
+                    "image": {
+                        "file": "Swimming_pool_3_slim_57f834.png",
+                        "alt": "",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.7778,
+                        "cropped_area_pixels": ""
+                    },
+                    "image_scale": 1,
+                    "caption": ""
                 }
             ]
         },
@@ -211,6 +320,10 @@
                     "type": "text",
                     "enabled": true,
                     "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
                     "eyebrow": "Our Story",
                     "heading": "Who We Are",
                     "paragraphs": [
@@ -224,6 +337,10 @@
                     "type": "image_text",
                     "enabled": true,
                     "background": "elevated",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
                     "eyebrow": "Our Values",
                     "heading": "Built on Trust",
                     "paragraphs": [
@@ -231,6 +348,7 @@
                     ],
                     "bullets": [],
                     "image_position": "left",
+                    "image_scale": 1,
                     "image": {
                         "file": "exterior.png",
                         "alt": "Two bedroom tiny home exterior",
@@ -261,6 +379,10 @@
                     "type": "text",
                     "enabled": true,
                     "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
                     "eyebrow": "Get In Touch",
                     "heading": "We'd Love to Hear From You",
                     "paragraphs": [
@@ -285,10 +407,14 @@
             "visible": true,
             "sections": [
                 {
-                    "id": "sec_cd9940a4",
+                    "id": "sec_cafbc958",
                     "type": "text",
                     "enabled": true,
-                    "background": null,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
                     "eyebrow": "",
                     "heading": "Quality New Builds",
                     "paragraphs": [
@@ -309,7 +435,52 @@
             "menu_order": 11,
             "parent_slug": "new-builds",
             "visible": true,
-            "sections": []
+            "sections": [
+                {
+                    "id": "sec_b51ee1dd",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "",
+                    "heading": "New section heading",
+                    "paragraphs": [
+                        "A 1-bedroom granny flat is a self-contained secondary dwelling that typically includes",
+                        "a bedroom, bathroom/laundry, kitchen, and living area. It is commonly built on the",
+                        "same property as the main house and can serve a variety of residential or investment purposes.",
+                        "Key Functions of a 1-Bedroom Granny Flat",
+                        "1. Independent Living Space",
+                        "Ideal for elderly parents wanting to stay close to family while maintaining independence.",
+                        "Suitable for adult children, relatives, or guests needing separate accommodation.",
+                        "2. Rental Accommodation",
+                        "Can be leased to singles, couples, retirees, students, workers, bed & breakfast accommodation.",
+                        "Providing a source of ongoing passive income.",
+                        "3. Home Office or Business Space",
+                        "Can be used as a private office, consulting room, studio, or workspace separate from the",
+                        "main residence.",
+                        "4. Guest Accommodation",
+                        "Offers comfortable, private accommodation for extended family or visiting friends."
+                    ],
+                    "bullets": [],
+                    "image_position": "right",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "Designer_22__ff03de.png",
+                        "alt": "",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                }
+            ]
         },
         {
             "slug": "two-bedroom",
@@ -376,10 +547,14 @@
             "visible": true,
             "sections": [
                 {
-                    "id": "sec_52977222",
+                    "id": "sec_35eb1f20",
                     "type": "image_text",
                     "enabled": true,
-                    "background": null,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
                     "eyebrow": "",
                     "heading": "Interior Upgrades",
                     "paragraphs": [
@@ -387,6 +562,7 @@
                     ],
                     "bullets": [],
                     "image_position": "right",
+                    "image_scale": 1,
                     "image": {
                         "file": "kitchen1.png",
                         "alt": "Modern kitchen upgrade",
@@ -415,10 +591,14 @@
             "visible": true,
             "sections": [
                 {
-                    "id": "sec_a8a66645",
+                    "id": "sec_0f88d956",
                     "type": "image_text",
                     "enabled": true,
-                    "background": null,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
                     "eyebrow": "",
                     "heading": "Property Restorations",
                     "paragraphs": [
@@ -426,6 +606,7 @@
                     ],
                     "bullets": [],
                     "image_position": "left",
+                    "image_scale": 1,
                     "image": {
                         "file": "kitchen-restore.png",
                         "alt": "Restored property interior",
