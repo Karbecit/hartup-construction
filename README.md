@@ -54,6 +54,8 @@ npm run preview
 
 See **[CMS.md](./CMS.md)** for the PHP admin panel (content editing, galleries, contact form email).
 
+**Continuing on another computer?** See **[CONTINUE-ON-OTHER-MACHINE.md](./CONTINUE-ON-OTHER-MACHINE.md)** (setup, git sync, Cursor prompt).
+
 See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for the full cPanel upload guide, password-protected preview setup, and go-live checklist.
 
 The site builds to static HTML in the `dist/` folder.
