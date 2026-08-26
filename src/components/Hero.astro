@@ -1,11 +1,21 @@
 ---
+import { cms } from '../lib/cms';
+
+function heroBackgroundUrl(path: string): string {
+  const cleaned = path.replace(/^\//, '');
+  if (!cleaned) return '/images/tiny-home.png';
+  if (cleaned.startsWith('images/')) return `/${cleaned}`;
+  return `/images/${cleaned}`;
+}
+
+const heroImage = heroBackgroundUrl(cms.hero.background_image);
 ---
 
 <section class="hero">
-  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-bg" aria-hidden="true" style={`--hero-image: url('${heroImage}')`}></div>
   <div class="hero-overlay" aria-hidden="true"></div>
   <div class="container hero-content">
-    <h1 class="hero-tagline">BUILDING QUALITY - CREATING VALUE</h1>
+    <h1 class="hero-tagline">{cms.hero.tagline}</h1>
   </div>
 </section>
 
@@ -25,7 +35,7 @@
     inset: 0;
     background:
       linear-gradient(135deg, rgba(15, 20, 25, 0.52) 0%, rgba(26, 35, 50, 0.38) 50%, rgba(15, 20, 25, 0.58) 100%),
-      url('/images/tiny-home.png') center/cover no-repeat;
+      var(--hero-image, url('/images/tiny-home.png')) center/cover no-repeat;
   }
 
   .hero-overlay {
@@ -116,11 +126,17 @@
       hero-tagline-scale 6s linear forwards;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero-tagline {
-      animation: none;
-      opacity: 1;
-      transform: none;
+  @keyframes hero-tagline-scale-mobile {
+    0% {
+      transform: scale(0.35);
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    68% {
+      transform: scale(2.25);
+      animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    100% {
+      transform: scale(1);
     }
   }
 
@@ -128,6 +144,26 @@
     .hero {
       min-height: 85vh;
       padding-bottom: var(--space-2xl);
+    }
+
+    .hero-content {
+      overflow: visible;
+    }
+
+    .hero-tagline {
+      font-size: min(1.1875rem, calc((100cqi - 1.25rem) / 18.25));
+      letter-spacing: 0.03em;
+      animation:
+        hero-tagline-fade 6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards,
+        hero-tagline-scale-mobile 6s linear forwards;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-tagline {
+      animation: none;
+      opacity: 1;
+      transform: none;
     }
   }
 </style>

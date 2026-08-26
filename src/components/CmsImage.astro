@@ -1,0 +1,73 @@
+---
+interface CmsImageData {
+  file: string;
+  alt?: string;
+  crop_x?: number;
+  crop_y?: number;
+  crop_zoom?: number;
+  crop_x_mobile?: number;
+  crop_y_mobile?: number;
+  crop_zoom_mobile?: number;
+  aspect_ratio?: number;
+}
+
+interface Props {
+  image: CmsImageData;
+  class?: string;
+  aspect?: number;
+  fullWidth?: boolean;
+}
+
+const { image, class: className, aspect, fullWidth = false } = Astro.props;
+
+function imageSrc(file: string): string {
+  if (!file) return '';
+  const parts = file.replace(/^\/?images\//, '').split('/').map(encodeURIComponent);
+  return `/images/${parts.join('/')}`;
+}
+
+const src = imageSrc(image.file);
+const ratio = aspect ?? image.aspect_ratio ?? (fullWidth ? 16 / 9 : 4 / 3);
+---
+
+{src && (
+  <div
+    class:list={['cms-image', 'image-crop-view', className, { 'cms-image--full': fullWidth }]}
+    style={`--cms-aspect: ${ratio}`}
+    data-crop-x={image.crop_x ?? 0}
+    data-crop-y={image.crop_y ?? 0}
+    data-crop-zoom={image.crop_zoom ?? 1}
+    data-crop-x-mobile={image.crop_x_mobile ?? image.crop_x ?? 0}
+    data-crop-y-mobile={image.crop_y_mobile ?? image.crop_y ?? 0}
+    data-crop-zoom-mobile={image.crop_zoom_mobile ?? image.crop_zoom ?? 1}
+    data-aspect={ratio}
+  >
+    <img src={src} alt={image.alt ?? ''} loading="lazy" width="1200" height="800" />
+  </div>
+)}
+
+<style>
+  .cms-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    aspect-ratio: var(--cms-aspect, 4 / 3);
+  }
+
+  .cms-image--full {
+    border-radius: 0;
+    width: 100%;
+  }
+
+  .cms-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-width: none;
+    width: auto;
+    height: auto;
+    object-fit: unset;
+  }
+</style>
+
+<script src="/image-crop-view.js" defer></script>

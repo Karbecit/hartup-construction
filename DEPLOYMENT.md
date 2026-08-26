@@ -135,6 +135,14 @@ Wait for propagation (often minutes; allow up to 24–48 hours).
 
 Do **not** nest an extra `dist/` folder — files must sit directly in `public_html`.
 
+**Also upload the CMS** (same `public_html` root):
+
+- `admin/`, `api/`, `includes/`, `content/`, `data/`, `.htaccess`
+- `config/config.php` (create on server from `config/config.example.php` — do not commit)
+- Run `/admin/setup.php` once, then delete it
+
+See **[CMS.md](./CMS.md)** for admin URLs and content workflow.
+
 **FTP alternative:** FileZilla / WinSCP → upload all contents of local `dist/` into `public_html/`.
 
 ### 4. Password-protect the site

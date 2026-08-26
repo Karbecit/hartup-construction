@@ -23,6 +23,7 @@
   --space-lg: 2.5rem;
   --space-xl: 4rem;
   --space-2xl: 6rem;
+  --section-padding-y: 3rem;
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -123,7 +124,7 @@ p {
 }
 
 .section {
-  padding: var(--space-2xl) 0;
+  padding: var(--section-padding-y) 0;
 }
 
 .section--bg-default {
@@ -137,7 +138,7 @@ p {
 .section-header {
   text-align: center;
   max-width: 640px;
-  margin: 0 auto var(--space-xl);
+  margin: 0 auto var(--space-lg);
 }
 
 .section-header h2 {
@@ -312,6 +313,7 @@ p {
   :root {
     --space-xl: 3rem;
     --space-2xl: 4rem;
+    --section-padding-y: 2.25rem;
   }
 
   .btn-group {

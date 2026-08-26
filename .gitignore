@@ -5,6 +5,10 @@ node_modules/
 dist/
 hartup-staging-preview.zip
 
+# CMS (generated locally / on server)
+config/config.php
+content/site.json
+
 # Astro
 .astro/
 

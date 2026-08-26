@@ -114,6 +114,14 @@ const textFirst = imagePosition === 'right';
     align-items: center;
   }
 
+  .split-grid--text-left .split-grid__media {
+    order: 2;
+  }
+
+  .split-grid--text-left .split-grid__content {
+    order: 1;
+  }
+
   @media (max-width: 768px) {
     .split-grid {
       grid-template-columns: 1fr;

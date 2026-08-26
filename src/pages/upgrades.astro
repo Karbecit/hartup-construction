@@ -1,10 +1,12 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import CmsServicePage from '../components/CmsServicePage.astro';
 import ImageCrossfade from '../components/ImageCrossfade.astro';
 import ServiceGrid from '../components/ServiceGrid.astro';
-import CTA from '../components/CTA.astro';
 import { upgradeImages } from '../data/upgradeImages';
-import { serviceAreaLong } from '../data/site';
+import { serviceAreaLong, serviceBySlug } from '../data/site';
+
+const service = serviceBySlug('upgrades');
+const hasCmsSections = (service?.sections ?? []).some((section) => section.enabled !== false);
 
 const serviceGrid = [
   {
@@ -94,119 +96,104 @@ const qualityPoints = [
 ];
 ---
 
-<Layout
-  title="Upgrades"
+<CmsServicePage
+  slug="upgrades"
   description={`Property upgrades and improvements by Hartup Construction — kitchen, bathroom, and whole-home transformations in ${serviceAreaLong}.`}
+  ctaTitle="Planning an Upgrade?"
+  ctaDescription="Speak with our team about your renovation goals, timeline, and budget."
 >
-  <section class="page-hero">
-    <div class="container">
-      <h1 class="page-title-serif">Upgrades</h1>
-      <p class="lead">
-        Transform your existing property with expert upgrades — from kitchen and bathroom renovations to whole-home improvements delivered with minimal disruption.
-      </p>
-    </div>
-  </section>
-
-  <section class="section section--bg-default service-row-section">
-    <div class="container">
-      <ServiceGrid items={serviceGrid} />
-    </div>
-  </section>
-
-  <section class="section section--bg-elevated">
-    <div class="container">
-      <div class="split-grid split-grid--text-left">
-        <div class="split-grid__content">
-          <span class="eyebrow">What We Upgrade</span>
-          <h2>Upgrade Services &amp; Scope</h2>
-          <p class="lead">
-            Hartup Construction delivers practical, high-quality upgrades that modernise your home while respecting its existing character and structure.
-          </p>
-          <ul class="split-list">
-            {scopeFeatures.map((feature) => (
-              <li>{feature}</li>
-            ))}
-          </ul>
+  {!hasCmsSections && (
+    <>
+      <section class="section section--bg-default service-row-section">
+        <div class="container">
+          <ServiceGrid items={serviceGrid} />
         </div>
-        <div class="split-grid__media">
-          <ImageCrossfade id="upgrade-scope" images={scopeSlideshow} />
-        </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <section class="section section--bg-default">
-    <div class="container">
-      <div class="split-grid">
-        <div class="split-grid__media">
-          <ImageCrossfade id="upgrade-benefits" images={benefitsSlideshow} />
+      <section class="section section--bg-elevated">
+        <div class="container">
+          <div class="split-grid split-grid--text-left">
+            <div class="split-grid__content">
+              <span class="eyebrow">What We Upgrade</span>
+              <h2>Upgrade Services &amp; Scope</h2>
+              <p class="lead">
+                Hartup Construction delivers practical, high-quality upgrades that modernise your home while respecting its existing character and structure.
+              </p>
+              <ul class="split-list">
+                {scopeFeatures.map((feature) => (
+                  <li>{feature}</li>
+                ))}
+              </ul>
+            </div>
+            <div class="split-grid__media">
+              <ImageCrossfade id="upgrade-scope" images={scopeSlideshow} />
+            </div>
+          </div>
         </div>
-        <div class="split-grid__content">
-          <span class="eyebrow">Benefits</span>
-          <h2>Why Upgrade with Hartup</h2>
-          <p class="lead">
-            Smart renovations combine better living spaces with long-term value — whether you are updating to sell, rent, or enjoy your home for years to come.
-          </p>
-          <ul class="split-list">
-            {benefits.map((benefit) => (
-              <li>{benefit}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <section class="section section--bg-elevated">
-    <div class="container">
-      <div class="split-grid split-grid--text-left">
-        <div class="split-grid__content">
-          <span class="eyebrow">Finishes</span>
-          <h2>Quality Materials &amp; Craftsmanship</h2>
-          <p class="lead">
-            Every upgrade is finished to a high standard with materials and fixtures chosen for performance, appearance, and ease of maintenance.
-          </p>
-          <ul class="split-list">
-            {qualityPoints.map((item) => (
-              <li>{item}</li>
-            ))}
-          </ul>
-          <p>
-            From initial consultation through to final handover, our team coordinates trades, suppliers, and inspections so your upgrade is delivered on time and to specification.
-          </p>
+      <section class="section section--bg-default">
+        <div class="container">
+          <div class="split-grid">
+            <div class="split-grid__media">
+              <ImageCrossfade id="upgrade-benefits" images={benefitsSlideshow} />
+            </div>
+            <div class="split-grid__content">
+              <span class="eyebrow">Benefits</span>
+              <h2>Why Upgrade with Hartup</h2>
+              <p class="lead">
+                Smart renovations combine better living spaces with long-term value — whether you are updating to sell, rent, or enjoy your home for years to come.
+              </p>
+              <ul class="split-list">
+                {benefits.map((benefit) => (
+                  <li>{benefit}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="split-grid__media">
-          <ImageCrossfade id="upgrade-finishes" images={finishesSlideshow} />
+      </section>
+
+      <section class="section section--bg-elevated">
+        <div class="container">
+          <div class="split-grid split-grid--text-left">
+            <div class="split-grid__content">
+              <span class="eyebrow">Finishes</span>
+              <h2>Quality Materials &amp; Craftsmanship</h2>
+              <p class="lead">
+                Every upgrade is finished to a high standard with materials and fixtures chosen for performance, appearance, and ease of maintenance.
+              </p>
+              <ul class="split-list">
+                {qualityPoints.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+              <p>
+                From initial consultation through to final handover, our team coordinates trades, suppliers, and inspections so your upgrade is delivered on time and to specification.
+              </p>
+            </div>
+            <div class="split-grid__media">
+              <ImageCrossfade id="upgrade-finishes" images={finishesSlideshow} />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <section class="section section--bg-default service-row-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="eyebrow">Transformations</span>
-        <h2>Recent Upgrade Styles</h2>
-        <p>Explore the range of kitchen and bathroom upgrades we deliver — from compact refreshes to full renovations.</p>
-      </div>
-      <ServiceGrid items={featuredGrid} />
-    </div>
-  </section>
-
-  <CTA
-    sectionClass="section--bg-elevated"
-    title="Planning an Upgrade?"
-    description="Speak with our team about your renovation goals, timeline, and budget."
-    buttonLabel="Get a Quote"
-  />
-</Layout>
+      <section class="section section--bg-default service-row-section">
+        <div class="container">
+          <div class="section-header">
+            <span class="eyebrow">Transformations</span>
+            <h2>Recent Upgrade Styles</h2>
+            <p>Explore the range of kitchen and bathroom upgrades we deliver — from compact refreshes to full renovations.</p>
+          </div>
+          <ServiceGrid items={featuredGrid} />
+        </div>
+      </section>
+    </>
+  )}
+</CmsServicePage>
 
 <style>
-  .service-row-section {
-    padding-top: var(--space-lg);
-    padding-bottom: var(--space-lg);
-  }
-
   .split-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

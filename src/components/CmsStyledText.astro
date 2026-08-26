@@ -1,0 +1,74 @@
+---
+interface Props {
+  content?: string;
+  eyebrow?: string;
+  heading?: string;
+  paragraphs?: string[];
+  bullets?: string[];
+  headingSize?: string;
+  headingWeight?: string;
+  textSize?: string;
+  eyebrowSize?: string;
+  class?: string;
+}
+
+const {
+  content,
+  eyebrow,
+  heading,
+  paragraphs = [],
+  bullets = [],
+  headingSize = 'lg',
+  headingWeight = 'semibold',
+  textSize = 'normal',
+  eyebrowSize = 'sm',
+  class: className,
+} = Astro.props;
+
+const richContent = content?.trim();
+---
+
+{richContent ? (
+  <div class:list={['cms-styled-text', 'cms-styled-text--rich', className]} set:html={richContent} />
+) : (
+  <div class:list={['cms-styled-text', className]}>
+    {eyebrow && <span class={`cms-eyebrow cms-text--${eyebrowSize}`}>{eyebrow}</span>}
+    {heading && <h2 class={`cms-heading cms-heading--${headingSize} cms-weight--${headingWeight}`}>{heading}</h2>}
+    {paragraphs.map((paragraph) => (
+      <p class={`cms-body cms-text--${textSize}`}>{paragraph}</p>
+    ))}
+    {bullets.length > 0 && (
+      <ul class="cms-styled-text__list">
+        {bullets.map((item) => (
+          <li class={`cms-body cms-text--${textSize}`}>{item}</li>
+        ))}
+      </ul>
+    )}
+  </div>
+)}
+
+<style is:global>
+  .cms-styled-text .cms-styled-text__list,
+  .cms-styled-text--rich .cms-styled-text__list {
+    margin: var(--space-md) 0 var(--space-lg);
+    list-style: none;
+    padding: 0;
+  }
+
+  .cms-styled-text .cms-styled-text__list li,
+  .cms-styled-text--rich .cms-styled-text__list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-muted);
+  }
+
+  .cms-styled-text .cms-styled-text__list li::before,
+  .cms-styled-text--rich .cms-styled-text__list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+</style>

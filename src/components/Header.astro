@@ -1,21 +1,7 @@
 ---
-const navLinks = [
-  { href: '/', label: 'Home' },
-  {
-    href: '/new-builds',
-    label: 'New Builds',
-    children: [
-      { href: '/new-builds', label: 'New Builds' },
-      { href: '/one-bedroom', label: 'One Bedroom' },
-      { href: '/two-bedroom', label: 'Two Bedroom' },
-      { href: '/three-bedroom', label: 'Three Bedroom' },
-    ],
-  },
-  { href: '/upgrades', label: 'Upgrades' },
-  { href: '/restorations', label: 'Restorations' },
-  { href: '/about', label: 'About Us' },
-  { href: '/contact', label: 'Contact Us' },
-];
+import { navLinksFromCms } from '../lib/cms';
+
+const navLinks = navLinksFromCms();
 
 const currentPath = Astro.url.pathname;
 
@@ -42,10 +28,8 @@ function isActive(href: string, children?: { href: string }[]) {
       <span class="nav-toggle-bar"></span>
       <span class="nav-toggle-bar"></span>
     </button>
-  </div>
-</header>
 
-<nav id="main-nav" class="main-nav" aria-label="Main navigation">
+    <nav id="main-nav" class="main-nav" aria-label="Main navigation">
       <ul class="nav-list">
         {navLinks.map(({ href, label, children }) => (
           <li class:list={['nav-item', { 'nav-item--dropdown': children }]}>
@@ -92,7 +76,9 @@ function isActive(href: string, children?: { href: string }[]) {
         ))}
       </ul>
       <a href="/contact" class="btn btn-primary nav-cta">Get a Quote</a>
-</nav>
+    </nav>
+  </div>
+</header>
 
 <style>
   .site-header {
@@ -276,6 +262,14 @@ function isActive(href: string, children?: { href: string }[]) {
   }
 
   @media (min-width: 961px) {
+    .main-nav {
+      position: static;
+      transform: none;
+      background: transparent;
+      padding: 0;
+      overflow: visible;
+    }
+
     .nav-dropdown:hover .nav-dropdown-menu,
     .nav-dropdown:focus-within .nav-dropdown-menu {
       opacity: 1;

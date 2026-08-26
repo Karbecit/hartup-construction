@@ -1,44 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { serviceAreaLong } from '../data/site';
+import { getPage, serviceAreaLong } from '../data/site';
 import Hero from '../components/Hero.astro';
-import ServiceTile from '../components/ServiceTile.astro';
+import CmsSections from '../components/CmsSections.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import CTA from '../components/CTA.astro';
-import ImageCrossfade from '../components/ImageCrossfade.astro';
-import {
-  aboutSlideshow,
-  expertiseSlideshow,
-  featuredProjects,
-  valuesSlideshow,
-} from '../data/placeholderImages';
+import { featuredProjects } from '../data/placeholderImages';
 
-const serviceTiles = [
-  {
-    title: 'New Builds',
-    image: '/images/tiny-home.png',
-    imageAlt: 'Modern new home exterior with clean architectural lines',
-    href: '/new-builds',
-  },
-  {
-    title: 'Kitchens',
-    image: '/images/kitchen1.png',
-    imageAlt: 'Modern kitchen interior with quality finishes',
-    href: '/upgrades',
-  },
-  {
-    title: 'Bathrooms',
-    image: '/images/bathroom3.png',
-    imageAlt: 'Modern bathroom interior with contemporary fixtures',
-    href: '/upgrades',
-  },
-  {
-    title: 'Restorations',
-    image: '/images/kitchen-restore.png',
-    imageAlt: 'Restored heritage home preserving original character',
-    href: '/restorations',
-  },
-];
+const homePage = getPage('home');
+const sections = homePage?.sections ?? [];
 ---
 
 <Layout
@@ -46,85 +16,7 @@ const serviceTiles = [
   description={`Hartup Construction — quality residential and commercial building services in ${serviceAreaLong}. Licensed builders delivering projects on time, on budget, and to the highest standards.`}
 >
   <Hero />
-
-  <section class="section section--bg-default service-tiles-section">
-    <div class="container">
-      <div class="grid-4">
-        {serviceTiles.map((tile) => (
-          <ServiceTile {...tile} />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--bg-elevated about-preview">
-    <div class="container">
-      <div class="split-grid split-grid--text-left">
-        <div class="split-grid__content">
-          <span class="eyebrow">About Hartup</span>
-          <h2>Trusted Builders, Proven Results</h2>
-          <p class="lead">
-            Hartup Construction is an Adelaide-based building company committed to delivering exceptional quality on every project — big or small.
-          </p>
-          <p>
-            Our experienced team combines traditional craftsmanship with modern building techniques. We work closely with clients, architects, and subcontractors to ensure seamless project delivery from concept to completion.
-          </p>
-          <ul class="split-list">
-            <li>Transparent quoting and project timelines</li>
-            <li>Full compliance with Australian building codes</li>
-            <li>Dedicated project manager on every build</li>
-            <li>Comprehensive warranty on all workmanship</li>
-          </ul>
-        </div>
-        <div class="split-grid__media">
-          <ImageCrossfade id="about" images={aboutSlideshow} />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--bg-default specialises-showcase">
-    <div class="container">
-      <div class="split-grid split-grid--align-top">
-        <div class="split-grid__media">
-          <ImageCrossfade id="specialises" images={expertiseSlideshow} />
-        </div>
-        <div class="split-grid__content">
-          <span class="eyebrow">What We Do</span>
-          <h2>Hartup Construction Specialises in</h2>
-          <p class="lead">
-            From ground-up builds to detailed interior upgrades — tailored construction services for homes and commercial spaces throughout the Adelaide metro and surrounding areas.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--bg-elevated values-showcase">
-    <div class="container">
-      <div class="split-grid split-grid--text-left">
-        <div class="split-grid__content">
-          <span class="eyebrow">Our Principles</span>
-          <h2>Our Values</h2>
-          <p class="lead">
-            Everything we build reflects what we stand for — uncompromising quality, honest communication, and a genuine commitment to our clients.
-          </p>
-          <p>
-            At Hartup Construction, our values guide every decision on site and in the office. They shape how we treat people, how we manage projects, and how we deliver results that stand the test of time.
-          </p>
-          <ul class="split-list">
-            <li>Quality craftsmanship in every detail, from foundation to finish</li>
-            <li>Integrity and transparency in all quoting, communication, and delivery</li>
-            <li>Client focus — your vision, timeline, and budget always come first</li>
-            <li>Safety and compliance as non-negotiable standards on every project</li>
-          </ul>
-        </div>
-        <div class="split-grid__media">
-          <ImageCrossfade id="values" images={valuesSlideshow} />
-        </div>
-      </div>
-    </div>
-  </section>
+  <CmsSections sections={sections} />
 
   <section class="section section--bg-default portfolio-section">
     <div class="container">
@@ -148,78 +40,7 @@ const serviceTiles = [
 </Layout>
 
 <style>
-  .service-tiles-section {
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-md);
-  }
-
-  .about-preview {
-    padding-top: var(--space-lg);
-    padding-bottom: 0;
-  }
-
-  .specialises-showcase {
-    padding-top: var(--space-xl);
-    padding-bottom: 0;
-  }
-
-  .values-showcase {
-    padding-top: var(--space-xl);
-    padding-bottom: 0;
-  }
-
-  .portfolio-section {
-    padding-top: var(--space-xl);
-    padding-bottom: 0;
-  }
-
   .portfolio-section-cta {
     margin-top: var(--space-lg);
-    margin-bottom: 2.5rem;
-  }
-
-  .split-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-xl);
-    align-items: center;
-  }
-
-  .split-grid--align-top {
-    align-items: start;
-  }
-
-  .split-grid__content h2 {
-    margin-bottom: var(--space-sm);
-  }
-
-  .split-grid__content p {
-    margin-bottom: var(--space-sm);
-  }
-
-  .split-list {
-    margin: var(--space-md) 0 var(--space-lg);
-  }
-
-  .split-list li {
-    position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--color-text-muted);
-    font-size: 0.9375rem;
-  }
-
-  .split-list li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--color-accent);
-    font-weight: 700;
-  }
-
-  @media (max-width: 768px) {
-    .split-grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

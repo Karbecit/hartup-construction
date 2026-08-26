@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CmsSections from './CmsSections.astro';
+import CTA from './CTA.astro';
+import { serviceBySlug } from '../lib/cms';
+
+interface Props {
+  slug: string;
+  title?: string;
+  description?: string;
+  showCta?: boolean;
+  ctaTitle?: string;
+  ctaDescription?: string;
+}
+
+const {
+  slug,
+  title,
+  description,
+  showCta = true,
+  ctaTitle,
+  ctaDescription,
+} = Astro.props;
+
+const service = serviceBySlug(slug);
+const pageTitle = title ?? service?.title ?? 'Service';
+const pageDescription = description ?? service?.description ?? '';
+const sections = service?.sections ?? [];
+const hasSections = sections.some((section) => section.enabled !== false);
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <section class="page-hero">
+    <div class="container">
+      {service?.tag && <span class="eyebrow">{service.tag}</span>}
+      <h1 class:list={[{ 'page-title-serif': slug === 'new-builds' }]}>{pageTitle}</h1>
+      {pageDescription && <p class="lead">{pageDescription}</p>}
+    </div>
+  </section>
+
+  {hasSections && <CmsSections sections={sections} />}
+
+  <slot />
+
+  {showCta && (
+    <CTA
+      sectionClass="section--bg-elevated"
+      title={ctaTitle}
+      description={ctaDescription}
+    />
+  )}
+</Layout>

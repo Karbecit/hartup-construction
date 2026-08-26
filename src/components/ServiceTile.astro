@@ -1,17 +1,42 @@
 ---
+import CmsImage from './CmsImage.astro';
+
 interface Props {
   title: string;
-  image: string;
-  imageAlt: string;
   href: string;
+  image?: string;
+  imageAlt?: string;
+  cmsImage?: {
+    file: string;
+    alt?: string;
+    crop_x?: number;
+    crop_y?: number;
+    crop_zoom?: number;
+    crop_x_mobile?: number;
+    crop_y_mobile?: number;
+    crop_zoom_mobile?: number;
+    aspect_ratio?: number;
+  };
 }
 
-const { title, image, imageAlt, href } = Astro.props;
+const { title, href, image, imageAlt, cmsImage } = Astro.props;
+
+const hasCmsImage = Boolean(cmsImage?.file);
+const tileAspect = cmsImage?.aspect_ratio ?? 4 / 3;
+const resolvedImage = hasCmsImage ? null : (image ?? '/images/tiny-home.png');
+const resolvedAlt = cmsImage?.alt ?? imageAlt ?? title;
 ---
 
 <a href={href} class="service-tile">
-  <div class="service-tile-image">
-    <img src={image} alt={imageAlt} loading="lazy" width="600" height="400" />
+  <div
+    class:list={['service-tile-image', { 'service-tile-image--cms': hasCmsImage }]}
+    style={`--tile-aspect: ${hasCmsImage ? tileAspect : 4 / 3}`}
+  >
+    {hasCmsImage && cmsImage ? (
+      <CmsImage image={cmsImage} aspect={cmsImage.aspect_ratio ?? 4 / 3} />
+    ) : (
+      <img src={resolvedImage} alt={resolvedAlt} loading="lazy" width="600" height="400" />
+    )}
   </div>
   <span class="service-tile-label">{title}</span>
 </a>
@@ -19,6 +44,7 @@ const { title, image, imageAlt, href } = Astro.props;
 <style>
   .service-tile {
     display: block;
+    container-type: inline-size;
     color: inherit;
     text-align: center;
   }
@@ -26,9 +52,21 @@ const { title, image, imageAlt, href } = Astro.props;
   .service-tile-image {
     border-radius: var(--radius-lg);
     overflow: hidden;
-    aspect-ratio: 4 / 3;
+    /* Match full-column 4:3 landscape height; width follows each tile's aspect */
+    --tile-h: calc(100cqw * 0.75);
+    height: var(--tile-h);
+    width: min(100cqw, calc(var(--tile-h) * var(--tile-aspect, 1.333333)));
+    margin-inline: auto;
     margin-bottom: var(--space-sm);
     border: 1px solid var(--color-border);
+  }
+
+  .service-tile-image--cms :global(.cms-image) {
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: unset;
+    transition: transform 0.4s ease;
   }
 
   .service-tile-image img {
@@ -38,7 +76,11 @@ const { title, image, imageAlt, href } = Astro.props;
     transition: transform 0.4s ease;
   }
 
-  .service-tile:hover .service-tile-image img {
+  .service-tile:hover .service-tile-image:not(.service-tile-image--cms) img {
+    transform: scale(1.06);
+  }
+
+  .service-tile:hover .service-tile-image--cms :global(.cms-image) {
     transform: scale(1.06);
   }
 

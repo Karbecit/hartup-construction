@@ -1,0 +1,342 @@
+---
+import CmsImage from './CmsImage.astro';
+import CmsStyledText from './CmsStyledText.astro';
+import ServiceTile from './ServiceTile.astro';
+import { serviceBySlug } from '../lib/cms';
+
+export interface CmsLayoutBlock {
+  id: string;
+  type: 'image' | 'text';
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  eyebrow?: string;
+  heading?: string;
+  paragraphs?: string[];
+  heading_size?: string;
+  heading_weight?: string;
+  text_size?: string;
+  eyebrow_size?: string;
+  image?: {
+    file: string;
+    alt?: string;
+    crop_x?: number;
+    crop_y?: number;
+    crop_zoom?: number;
+    aspect_ratio?: number;
+  };
+}
+
+export interface CmsSection {
+  id: string;
+  type: string;
+  enabled?: boolean;
+  background?: 'default' | 'elevated';
+  eyebrow?: string;
+  heading?: string;
+  paragraphs?: string[];
+  bullets?: string[];
+  heading_size?: string;
+  heading_weight?: string;
+  text_size?: string;
+  eyebrow_size?: string;
+  image_position?: 'left' | 'right';
+  image_scale?: number;
+  image?: {
+    file: string;
+    alt?: string;
+    crop_x?: number;
+    crop_y?: number;
+    crop_zoom?: number;
+    aspect_ratio?: number;
+  };
+  caption?: string;
+  min_height?: number;
+  blocks?: CmsLayoutBlock[];
+  tiles?: Array<{
+    service_slug: string;
+    label?: string;
+    image?: { file: string; alt?: string; crop_x?: number; crop_y?: number; crop_zoom?: number; aspect_ratio?: number };
+  }>;
+}
+
+interface Props {
+  sections: CmsSection[];
+}
+
+const { sections } = Astro.props;
+const visibleSections = sections.filter((section) => section.enabled !== false);
+---
+
+{visibleSections.map((section) => {
+  if (section.type === 'service_tiles') {
+    return (
+      <section class="section section--bg-default service-tiles-section">
+        <div class="container">
+          <div class="service-tiles-grid">
+            {(section.tiles ?? []).map((tile) => {
+              const service = tile.service_slug ? serviceBySlug(tile.service_slug) : null;
+              const href = service?.href ?? '#';
+              const title = tile.label || service?.nav_label || service?.title || 'Service';
+              const imageFile = tile.image?.file || '';
+              const imageAlt = tile.image?.alt || title;
+              return (
+                <ServiceTile
+                  title={title}
+                  href={href}
+                  cmsImage={tile.image?.file ? tile.image : undefined}
+                  image={imageFile ? `/images/${imageFile.replace(/^\/?images\//, '')}` : '/images/tiny-home.png'}
+                  imageAlt={imageAlt}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (section.type === 'layout') {
+    const minHeight = section.min_height ?? 480;
+    return (
+      <section class:list={['section', 'cms-layout-section', section.background === 'elevated' ? 'section--bg-elevated' : 'section--bg-default']}>
+        <div class="container">
+          <div class="cms-layout-canvas" style={`min-height: ${minHeight}px`}>
+            {(section.blocks ?? []).map((block) => (
+              <div
+                class:list={['cms-layout-block', `cms-layout-block--${block.type}`]}
+                style={`left: ${block.x}%; top: ${block.y}%; width: ${block.w}%; height: ${block.h}%;`}
+              >
+                {block.type === 'image' && block.image?.file ? (
+                  <CmsImage image={block.image} aspect={block.image.aspect_ratio ?? 4 / 3} class="cms-layout-block__image" />
+                ) : block.type === 'text' ? (
+                  <CmsStyledText
+                    content={block.content}
+                    eyebrow={block.eyebrow}
+                    heading={block.heading}
+                    paragraphs={block.paragraphs}
+                    headingSize={block.heading_size}
+                    headingWeight={block.heading_weight}
+                    textSize={block.text_size}
+                    eyebrowSize={block.eyebrow_size}
+                    class="cms-layout-block__text"
+                  />
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (section.type === 'image') {
+    const imageScale = section.image_scale ?? 1;
+    return (
+      <section class:list={['section', 'cms-image-section', section.background === 'elevated' ? 'section--bg-elevated' : 'section--bg-default']}>
+        <div class="container cms-image-section__inner" style={`--image-scale: ${imageScale}`}>
+          {section.image && <CmsImage image={section.image} fullWidth aspect={section.image.aspect_ratio ?? 16 / 9} />}
+          {section.caption && <p class="cms-image-section__caption cms-text--sm">{section.caption}</p>}
+        </div>
+      </section>
+    );
+  }
+
+  if (section.type === 'image_text') {
+    const textFirst = section.image_position === 'right';
+    const imageScale = section.image_scale ?? 1;
+    return (
+      <section class:list={['section', 'cms-split-section', section.background === 'elevated' ? 'section--bg-elevated' : 'section--bg-default']}>
+        <div class="container">
+          <div class:list={['split-grid', { 'split-grid--text-left': textFirst }]}>
+            <div class="split-grid__media" style={`--image-scale: ${imageScale}`}>
+              {section.image && <CmsImage image={section.image} />}
+            </div>
+            <div class="split-grid__content">
+              <CmsStyledText
+                eyebrow={section.eyebrow}
+                heading={section.heading}
+                paragraphs={section.paragraphs}
+                bullets={section.bullets}
+                headingSize={section.heading_size}
+                headingWeight={section.heading_weight}
+                textSize={section.text_size}
+                eyebrowSize={section.eyebrow_size}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section class:list={['section', 'cms-text-section', section.background === 'elevated' ? 'section--bg-elevated' : 'section--bg-default']}>
+      <div class="container cms-text-section__inner">
+        <CmsStyledText
+          eyebrow={section.eyebrow}
+          heading={section.heading}
+          paragraphs={section.paragraphs}
+          bullets={section.bullets}
+          headingSize={section.heading_size}
+          headingWeight={section.heading_weight}
+          textSize={section.text_size}
+          eyebrowSize={section.eyebrow_size}
+        />
+      </div>
+    </section>
+  );
+})}
+
+<style is:global>
+  .cms-heading {
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+    color: var(--color-text);
+  }
+
+  .cms-heading--xl { font-size: clamp(2rem, 4vw, 2.75rem); }
+  .cms-heading--lg { font-size: clamp(1.75rem, 3vw, 2.25rem); }
+  .cms-heading--md { font-size: clamp(1.35rem, 2.5vw, 1.75rem); }
+  .cms-heading--sm { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+
+  .cms-weight--normal { font-weight: 400; }
+  .cms-weight--semibold { font-weight: 600; }
+  .cms-weight--bold { font-weight: 700; }
+
+  .cms-body { margin-bottom: var(--space-sm); color: var(--color-text); }
+  .cms-text--sm, .cms-eyebrow.cms-text--sm { font-size: 0.8125rem; }
+  .cms-text--normal { font-size: 1rem; }
+  .cms-text--lg { font-size: 1.125rem; }
+  .cms-text--lead { font-size: 1.25rem; line-height: 1.65; color: var(--color-text-muted); }
+
+  .cms-eyebrow {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+  }
+</style>
+
+<style>
+  .service-tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+    align-items: start;
+  }
+
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .split-grid--text-left .split-grid__media {
+    order: 2;
+  }
+
+  .split-grid--text-left .split-grid__content {
+    order: 1;
+  }
+
+  .split-grid__media {
+    width: calc(var(--image-scale, 1) * 100%);
+    max-width: 100%;
+    justify-self: center;
+  }
+
+  .split-grid--text-left .split-grid__media {
+    justify-self: center;
+  }
+
+  .split-grid:not(.split-grid--text-left) .split-grid__media {
+    justify-self: center;
+  }
+
+  .cms-image-section__inner {
+    width: calc(var(--image-scale, 1) * 100%);
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .cms-layout-canvas {
+    position: relative;
+    width: 100%;
+  }
+
+  .cms-layout-block {
+    position: absolute;
+    overflow: hidden;
+  }
+
+  .cms-layout-block--image {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+
+  .cms-layout-block--image :global(.cms-layout-block__image) {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    aspect-ratio: unset;
+  }
+
+  .cms-layout-block--text {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .cms-layout-block--text :global(.cms-layout-block__text) {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .cms-image-section__caption {
+    margin-top: var(--space-sm);
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+
+  .cms-text-section__inner {
+    max-width: 820px;
+  }
+
+  @media (max-width: 768px) {
+    .split-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .split-grid__media {
+      order: -1;
+      width: 100%;
+    }
+
+    .split-grid--text-left .split-grid__media,
+    .split-grid--text-left .split-grid__content {
+      order: unset;
+    }
+
+    .split-grid--text-left .split-grid__media {
+      order: -1;
+    }
+
+    .cms-layout-canvas {
+      min-height: auto !important;
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .cms-layout-block {
+      position: relative;
+      left: auto !important;
+      top: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      min-height: 200px;
+    }
+  }
+</style>

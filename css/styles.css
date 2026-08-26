@@ -619,6 +619,20 @@ h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
   }
 }
 
+@keyframes hero-tagline-scale-mobile {
+  0% {
+    transform: scale(0.35);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  68% {
+    transform: scale(2.25);
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .hero-tagline {
   font-family: var(--font);
   font-size: clamp(0.5625rem, 3.05cqi, 2.5rem);
@@ -636,6 +650,20 @@ h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
   animation:
     hero-tagline-fade 6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards,
     hero-tagline-scale 6s linear forwards;
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    overflow: visible;
+  }
+
+  .hero-tagline {
+    font-size: min(1.1875rem, calc((100cqi - 1.25rem) / 18.25));
+    letter-spacing: 0.03em;
+    animation:
+      hero-tagline-fade 6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards,
+      hero-tagline-scale-mobile 6s linear forwards;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
