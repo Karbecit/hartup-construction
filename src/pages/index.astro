@@ -3,9 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { getPage, serviceAreaLong } from '../data/site';
 import Hero from '../components/Hero.astro';
 import CmsSections from '../components/CmsSections.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import CTA from '../components/CTA.astro';
-import { featuredProjects } from '../data/placeholderImages';
 
 const homePage = getPage('home');
 const sections = homePage?.sections ?? [];
@@ -17,30 +15,5 @@ const sections = homePage?.sections ?? [];
 >
   <Hero />
   <CmsSections sections={sections} />
-
-  <section class="section section--bg-default portfolio-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="eyebrow">Portfolio</span>
-        <h2>Featured Projects</h2>
-        <p>A selection of recent work showcasing our range and quality across residential and commercial sectors.</p>
-      </div>
-      <div class="grid-3">
-        {featuredProjects.map((project) => (
-          <ProjectCard {...project} />
-        ))}
-      </div>
-      <p class="text-center portfolio-section-cta">
-        <a href="/projects" class="btn btn-outline">View Full Gallery</a>
-      </p>
-    </div>
-  </section>
-
   <CTA sectionClass="section--bg-elevated" />
 </Layout>
-
-<style>
-  .portfolio-section-cta {
-    margin-top: var(--space-lg);
-  }
-</style>

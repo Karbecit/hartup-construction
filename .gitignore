@@ -4,6 +4,7 @@ node_modules/
 # Build output
 dist/
 hartup-staging-preview.zip
+hartup-production-update.zip
 
 # CMS (generated locally / on server)
 config/config.php

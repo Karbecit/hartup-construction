@@ -248,6 +248,25 @@ function migrate_legacy_crop(array $item): array
     return $item;
 }
 
+function normalize_stored_image_file(string $file): string
+{
+    $file = trim(str_replace('\\', '/', $file));
+    $file = ltrim($file, '/');
+    if (str_starts_with($file, 'images/')) {
+        $file = substr($file, strlen('images/'));
+    }
+
+    $parts = [];
+    foreach (explode('/', $file) as $part) {
+        if ($part === '' || $part === '.' || $part === '..') {
+            continue;
+        }
+        $parts[] = $part;
+    }
+
+    return implode('/', $parts);
+}
+
 function normalize_gallery_item(array $item): array
 {
     $item = migrate_legacy_crop($item);
@@ -268,7 +287,7 @@ function normalize_gallery_item(array $item): array
     $cropZoom = normalize_crop_zoom($item['crop_zoom'] ?? 1);
 
     return [
-        'file' => basename((string) ($item['file'] ?? '')),
+        'file' => normalize_stored_image_file((string) ($item['file'] ?? '')),
         'alt' => (string) ($item['alt'] ?? ''),
         'caption' => (string) ($item['caption'] ?? ''),
         'wide' => !empty($item['wide']),

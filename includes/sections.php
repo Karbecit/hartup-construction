@@ -10,12 +10,14 @@ const SECTION_TYPES = [
     'image' => 'Image only (full width)',
     'service_tiles' => 'Services / category tiles',
     'layout' => 'Custom layout (drag & resize)',
+    'designs' => 'Design showcase',
 ];
 
 const IMAGE_SCALE_OPTIONS = [0.6, 0.75, 0.85, 1.0, 1.15, 1.3];
 const HEADING_SIZE_OPTIONS = ['sm', 'md', 'lg', 'xl'];
 const HEADING_WEIGHT_OPTIONS = ['normal', 'semibold', 'bold'];
 const TEXT_SIZE_OPTIONS = ['sm', 'normal', 'lg', 'lead'];
+const IMAGE_TRANSITION_TYPES = ['fade', 'slide', 'slide-up', 'zoom', 'wipe'];
 
 function new_section_id(): string
 {
@@ -31,7 +33,36 @@ function default_image_field(string $file = '', string $alt = ''): array
     ]);
 }
 
-function normalize_image_field(array $item): array
+function normalize_image_transition(string $value): string
+{
+    $value = strtolower(trim($value));
+
+    return in_array($value, IMAGE_TRANSITION_TYPES, true) ? $value : 'fade';
+}
+
+function normalize_transition_ms($value): int
+{
+    $raw = is_numeric($value) ? (float) $value : 0;
+    if ($raw <= 0) {
+        return 800;
+    }
+
+    $ms = $raw <= 10 ? (int) round($raw * 1000) : (int) round($raw);
+
+    return max(150, min(10000, $ms));
+}
+
+function normalize_hold_seconds($value): float
+{
+    $seconds = (float) $value;
+    if ($seconds <= 0) {
+        return 5.0;
+    }
+
+    return max(0.5, min(60.0, round($seconds, 1)));
+}
+
+function normalize_image_slide(array $item): array
 {
     $normalized = normalize_gallery_item(array_merge([
         'file' => '',
@@ -52,6 +83,41 @@ function normalize_image_field(array $item): array
         'aspect_ratio' => (float) ($normalized['aspect_ratio'] ?? 4 / 3),
         'cropped_area_pixels' => (string) ($normalized['cropped_area_pixels'] ?? ''),
     ];
+}
+
+function normalize_slideshow_settings(array $item): array
+{
+    return [
+        'transition' => normalize_image_transition((string) ($item['transition'] ?? 'fade')),
+        'transition_ms' => normalize_transition_ms($item['transition_ms'] ?? 800),
+        'hold_seconds' => normalize_hold_seconds($item['hold_seconds'] ?? 5),
+    ];
+}
+
+function normalize_image_field(array $item): array
+{
+    $field = normalize_image_slide($item);
+    $slides = [];
+    if (!empty($item['slides']) && is_array($item['slides'])) {
+        foreach ($item['slides'] as $slide) {
+            if (!is_array($slide)) {
+                continue;
+            }
+            $normalizedSlide = normalize_image_slide($slide);
+            if ($normalizedSlide['file'] === '') {
+                continue;
+            }
+            $slides[] = $normalizedSlide;
+        }
+    }
+
+    if ($field['file'] === '' && $slides !== []) {
+        $field = array_shift($slides);
+    }
+
+    return array_merge($field, normalize_slideshow_settings($item), [
+        'slides' => $slides,
+    ]);
 }
 
 function normalize_image_scale($value): float
@@ -144,6 +210,30 @@ function layout_text_block_to_content(array $block): string
     return implode('', $parts);
 }
 
+function normalize_optional_px($value): int
+{
+    return max(0, min(4000, (int) round((float) $value)));
+}
+
+function normalize_rotate($value): float
+{
+    if (is_string($value)) {
+        $value = trim(str_ireplace('deg', '', $value));
+    }
+    $deg = (float) $value;
+    if (!is_finite($deg)) {
+        return 0.0;
+    }
+    while ($deg > 360) {
+        $deg -= 360;
+    }
+    while ($deg < -360) {
+        $deg += 360;
+    }
+
+    return round($deg, 2);
+}
+
 function normalize_layout_block(array $block): array
 {
     $type = (string) ($block['type'] ?? 'text');
@@ -158,6 +248,9 @@ function normalize_layout_block(array $block): array
         'y' => max(0, min(100, (float) ($block['y'] ?? 0))),
         'w' => max(8, min(100, (float) ($block['w'] ?? 40))),
         'h' => max(8, min(100, (float) ($block['h'] ?? 30))),
+        'width_px' => normalize_optional_px($block['width_px'] ?? 0),
+        'height_px' => normalize_optional_px($block['height_px'] ?? 0),
+        'rotate' => normalize_rotate($block['rotate'] ?? 0),
     ];
 
     if ($type === 'image') {
@@ -228,8 +321,15 @@ function normalize_section(array $section): array
             'image' => normalize_image_field(is_array($section['image'] ?? null) ? $section['image'] : []),
             'image_scale' => normalize_image_scale($section['image_scale'] ?? 1),
             'caption' => trim((string) ($section['caption'] ?? '')),
+            'overlay' => normalize_image_overlay(is_array($section['overlay'] ?? null) ? $section['overlay'] : []),
         ]),
-        'service_tiles' => array_merge($base, [
+        'designs' => array_merge($base, [
+            'items' => normalize_design_items(is_array($section['items'] ?? null) ? $section['items'] : []),
+        ]),
+        'service_tiles' => array_merge($base, normalize_text_styles($section), [
+            'eyebrow' => trim((string) ($section['eyebrow'] ?? '')),
+            'heading' => trim((string) ($section['heading'] ?? '')),
+            'paragraphs' => normalize_string_list(is_array($section['paragraphs'] ?? null) ? $section['paragraphs'] : []),
             'tiles' => normalize_service_tiles(is_array($section['tiles'] ?? null) ? $section['tiles'] : []),
         ]),
         'layout' => array_merge($base, [
@@ -255,6 +355,83 @@ function normalize_service_tiles(array $tiles): array
             'label' => trim((string) ($tile['label'] ?? '')),
             'image' => normalize_image_field(is_array($tile['image'] ?? null) ? $tile['image'] : []),
         ];
+    }
+
+    return $normalized;
+}
+
+function normalize_public_href(string $value): string
+{
+    $value = trim($value);
+    if ($value === '' || $value === '#') {
+        return '';
+    }
+    if (preg_match('#^(https?:)?//#i', $value) || str_starts_with($value, '/')) {
+        return $value;
+    }
+
+    return '/' . ltrim($value, '/');
+}
+
+function normalize_image_overlay(array $overlay): array
+{
+    $size = (string) ($overlay['size'] ?? 'lg');
+    if (!in_array($size, ['sm', 'md', 'lg', 'xl'], true)) {
+        $size = 'lg';
+    }
+
+    return [
+        'text' => trim((string) ($overlay['text'] ?? '')),
+        'size' => $size,
+        'color' => ($overlay['color'] ?? 'light') === 'dark' ? 'dark' : 'light',
+        'x' => max(0, min(92, (float) ($overlay['x'] ?? 10))),
+        'y' => max(0, min(92, (float) ($overlay['y'] ?? 35))),
+        'w' => max(8, min(100, (float) ($overlay['w'] ?? 80))),
+        'h' => max(8, min(100, (float) ($overlay['h'] ?? 30))),
+    ];
+}
+
+function normalize_design_item(array $item): array
+{
+    $pdf = normalize_public_href((string) ($item['floorplan_pdf'] ?? ''));
+    $video = trim((string) ($item['video_url'] ?? ''));
+    if ($video === '#' || preg_match('#^javascript:#i', $video)) {
+        $video = '';
+    } elseif ($video !== '' && !preg_match('#^(https?:)?//#i', $video) && !str_starts_with($video, '/')) {
+        $video = '';
+    }
+
+    return [
+        'id' => (string) ($item['id'] ?? ('des_' . bin2hex(random_bytes(4)))),
+        'name' => trim((string) ($item['name'] ?? '')),
+        'description' => normalize_string_list(is_array($item['description'] ?? null) ? $item['description'] : []),
+        'bullets' => normalize_string_list(is_array($item['bullets'] ?? null) ? $item['bullets'] : []),
+        'price_from' => trim((string) ($item['price_from'] ?? '')),
+        'width' => trim((string) ($item['width'] ?? '')),
+        'length' => trim((string) ($item['length'] ?? '')),
+        'area' => trim((string) ($item['area'] ?? '')),
+        'bedrooms' => trim((string) ($item['bedrooms'] ?? '')),
+        'bathrooms' => trim((string) ($item['bathrooms'] ?? '')),
+        'floorplan_pdf' => $pdf,
+        'video_url' => $video,
+        'image_position' => ($item['image_position'] ?? 'right') === 'left' ? 'left' : 'right',
+        'hero_image' => normalize_image_field(is_array($item['hero_image'] ?? null) ? $item['hero_image'] : []),
+        'hero_caption' => trim((string) ($item['hero_caption'] ?? '')),
+        'image_2' => normalize_image_field(is_array($item['image_2'] ?? null) ? $item['image_2'] : []),
+        'image_2_caption' => trim((string) ($item['image_2_caption'] ?? '')),
+        'image_3' => normalize_image_field(is_array($item['image_3'] ?? null) ? $item['image_3'] : []),
+        'image_3_caption' => trim((string) ($item['image_3_caption'] ?? '')),
+    ];
+}
+
+function normalize_design_items(array $items): array
+{
+    $normalized = [];
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $normalized[] = normalize_design_item($item);
     }
 
     return $normalized;
@@ -312,9 +489,17 @@ function default_section_for_type(string $type): array
         'image' => normalize_section([
             'type' => 'image',
             'image' => default_image_field('tiny-home.png', 'Full width image'),
+            'overlay' => normalize_image_overlay([]),
+        ]),
+        'designs' => normalize_section([
+            'type' => 'designs',
+            'items' => [],
         ]),
         'service_tiles' => normalize_section([
             'type' => 'service_tiles',
+            'eyebrow' => '',
+            'heading' => '',
+            'paragraphs' => [],
             'tiles' => [],
         ]),
         'layout' => normalize_section([

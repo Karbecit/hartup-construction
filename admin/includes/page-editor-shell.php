@@ -33,11 +33,27 @@ declare(strict_types=1);
           <button type="button" class="admin-btn admin-btn--ghost image-picker-btn" data-target="#hero-background-image">Choose image</button>
         </div>
       </label>
+      <div id="hero-slideshow-root"></div>
     <?php elseif ($editorConfig['mode'] === 'page'): ?>
       <h2>Page header</h2>
       <label>Eyebrow<input type="text" id="page-hero-eyebrow" value="<?= h($editorConfig['page']['page_hero']['eyebrow'] ?? '') ?>"></label>
       <label>Heading<input type="text" id="page-hero-heading" value="<?= h($editorConfig['page']['page_hero']['heading'] ?? '') ?>"></label>
       <label>Lead<textarea id="page-hero-lead" rows="2"><?= h($editorConfig['page']['page_hero']['lead'] ?? '') ?></textarea></label>
+      <?php if (($editorConfig['slug'] ?? '') !== 'home'): ?>
+        <label class="admin-checkbox"><input type="checkbox" id="page-in-menu" <?= !isset($editorConfig['page']['in_menu']) || !empty($editorConfig['page']['in_menu']) ? 'checked' : '' ?>> Show in main menu</label>
+        <label class="admin-checkbox"><input type="checkbox" id="page-visible" <?= !isset($editorConfig['page']['visible']) || !empty($editorConfig['page']['visible']) ? 'checked' : '' ?>> Enable page on site</label>
+      <?php endif; ?>
+      <?php if (($editorConfig['slug'] ?? '') === 'terms'): ?>
+        <label>Downloadable PDF
+          <div class="image-field-row">
+            <input type="text" id="page-download-pdf" value="<?= h($editorConfig['page']['download_pdf'] ?? '') ?>" placeholder="/files/terms.pdf">
+            <button type="button" class="admin-btn admin-btn--ghost" id="page-download-pdf-upload">Upload PDF</button>
+            <button type="button" class="admin-btn admin-btn--ghost" id="page-download-pdf-clear">Clear</button>
+          </div>
+        </label>
+        <input type="file" id="page-download-pdf-file" accept="application/pdf,.pdf" hidden>
+        <p class="admin-help" id="page-download-pdf-status">Upload a PDF for visitors to download on the Terms page. Leave empty to hide the download button. The page still appears in the footer when enabled.</p>
+      <?php endif; ?>
     <?php elseif ($editorConfig['mode'] === 'service'): ?>
       <h2>Service details</h2>
       <label>Title<input type="text" id="service-title" value="<?= h($editorConfig['page']['title'] ?? '') ?>"></label>
@@ -73,7 +89,7 @@ declare(strict_types=1);
         <button type="button" class="admin-btn admin-btn--ghost" id="add-section-btn">Add section</button>
       </div>
     </div>
-    <p class="admin-help">Drag sections by the ⋮⋮ handle to reorder. Click ▸/▾ to collapse sections. Use <strong>Pan / zoom</strong> on images to choose square or landscape display shape.</p>
+    <p class="admin-help">Drag sections by the ⋮⋮ handle to reorder. Click ▸/▾ to collapse sections. On full-width images, add overlay text and drag it into place. Design showcase sections use the standard layout with optional floor plan and video buttons.</p>
     <div id="sections-root" class="sections-root"></div>
   </div>
 </div>

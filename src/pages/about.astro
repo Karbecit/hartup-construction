@@ -1,10 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getPage, serviceArea, serviceAreaLong } from '../data/site';
+import { getPage, isCmsPageVisible, serviceAreaLong } from '../data/site';
 import CmsSections from '../components/CmsSections.astro';
 import CTA from '../components/CTA.astro';
 
 const aboutPage = getPage('about');
+if (!isCmsPageVisible('about')) {
+  return new Response('Not found', { status: 404, statusText: 'Not Found' });
+}
 const pageHero = aboutPage?.page_hero;
 const sections = aboutPage?.sections ?? [];
 ---

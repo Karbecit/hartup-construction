@@ -42,13 +42,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $page['title'] = sanitize_text($input['title'] ?? $page['title'], 120);
             $page['page_hero'] = is_array($input['page_hero'] ?? null) ? $input['page_hero'] : $page['page_hero'];
             $page['sections'] = parse_page_sections_from_post($input['sections'] ?? []);
+            if ($slug !== 'home') {
+                $page['visible'] = !empty($input['visible']);
+                $page['in_menu'] = !empty($input['in_menu']);
+            }
+            if ($slug === 'terms') {
+                $page['download_pdf'] = sanitize_text((string) ($input['download_pdf'] ?? ''), 300);
+            }
             $content['pages'][$slug] = normalize_page($page);
 
             if ($slug === 'home' && is_array($input['hero'] ?? null)) {
-                $content['hero']['tagline'] = sanitize_text($input['hero']['tagline'] ?? '', 200);
+                $heroInput = $input['hero'];
+                $content['hero']['tagline'] = sanitize_text($heroInput['tagline'] ?? '', 200);
                 $content['hero']['background_image'] = normalize_public_image_ref(
-                    sanitize_text($input['hero']['background_image'] ?? '', 200)
+                    sanitize_text($heroInput['background_image'] ?? '', 200)
                 );
+                $slides = [];
+                if (is_array($heroInput['background_slides'] ?? null)) {
+                    foreach ($heroInput['background_slides'] as $slideFile) {
+                        $ref = normalize_public_image_ref(sanitize_text((string) $slideFile, 200));
+                        if ($ref === '' || $ref === $content['hero']['background_image']) {
+                            continue;
+                        }
+                        $slides[] = $ref;
+                    }
+                }
+                $content['hero']['background_slides'] = $slides;
+                $slideshow = normalize_slideshow_settings($heroInput);
+                $content['hero']['transition'] = $slideshow['transition'];
+                $content['hero']['transition_ms'] = $slideshow['transition_ms'];
+                $content['hero']['hold_seconds'] = $slideshow['hold_seconds'];
             }
 
             if (save_content($content)) {

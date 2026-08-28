@@ -94,13 +94,26 @@
         image_scale: 1,
         image: { file: '', alt: '', crop_x: 0, crop_y: 0, crop_zoom: 1, aspect_ratio: 16 / 9 },
         caption: '',
+        overlay: defaultOverlay(),
       });
     }
     if (type === 'layout') {
       return Object.assign(base, { min_height: 480, blocks: [] });
     }
+    if (type === 'designs') {
+      return Object.assign(base, { items: [] });
+    }
     if (type === 'service_tiles') {
-      return Object.assign(base, { tiles: [] });
+      return Object.assign(base, {
+        eyebrow: '',
+        heading: '',
+        paragraphs: [],
+        heading_size: 'lg',
+        heading_weight: 'semibold',
+        text_size: 'normal',
+        eyebrow_size: 'sm',
+        tiles: [],
+      });
     }
     return base;
   }
@@ -131,14 +144,21 @@
   function sectionSummary(section) {
     if (section.type === 'service_tiles') {
       const count = (section.tiles || []).length;
-      return count ? count + ' service tile' + (count === 1 ? '' : 's') : 'No tiles yet';
+      const heading = section.heading || section.eyebrow || '';
+      const tiles = count ? count + ' tile' + (count === 1 ? '' : 's') : 'No tiles yet';
+      return heading ? heading + ' · ' + tiles : tiles;
     }
     if (section.type === 'layout') {
       const count = (section.blocks || []).length;
       return count ? count + ' layout block' + (count === 1 ? '' : 's') : 'Empty layout';
     }
     if (section.type === 'image') {
-      return section.caption || section.image?.file || 'Full-width image';
+      const overlayText = (section.overlay && section.overlay.text) || '';
+      return overlayText || section.caption || section.image?.file || 'Full-width image';
+    }
+    if (section.type === 'designs') {
+      const count = (section.items || []).length;
+      return count ? count + ' design' + (count === 1 ? '' : 's') : 'No designs yet';
     }
     return section.heading || section.eyebrow || 'Untitled section';
   }
@@ -324,18 +344,30 @@
       body.appendChild(
         fieldSelect('Image display size', 'image_scale', String(section.image_scale ?? 1), IMAGE_SCALE_OPTIONS)
       );
+      const overlayEditor = buildOverlayEditor(section);
       body.appendChild(
         buildImageFields('image', section.image || {}, section.image?.aspect_ratio || 16 / 9, {
           presetIds: ['wide', 'landscape', 'square'],
           onChange: function () {
             markSectionDirty(section.id);
+            overlayEditor.refresh();
           },
         })
       );
       body.appendChild(fieldInput('Caption (optional)', 'caption', section.caption || ''));
+      body.appendChild(overlayEditor.root);
+    }
+
+    if (section.type === 'designs') {
+      body.appendChild(el('p', 'admin-help', 'Each design uses the standard showcase layout: details on one side, one large image and two smaller images on the other. Floor plan download and View Video buttons only appear when a file or video URL is added.'));
+      body.appendChild(buildDesignsEditor(section));
     }
 
     if (section.type === 'service_tiles') {
+      body.appendChild(buildTextStyleFields(section));
+      body.appendChild(fieldInput('Eyebrow', 'eyebrow', section.eyebrow || ''));
+      body.appendChild(fieldInput('Heading', 'heading', section.heading || ''));
+      body.appendChild(fieldTextarea('Paragraphs (one per line)', 'paragraphs', (section.paragraphs || []).join('\n')));
       body.appendChild(buildServiceTilesEditor(section));
     }
 
@@ -532,6 +564,9 @@
       openCropModal: function (image, aspect, presetIds, onSave) {
         openCropModal(image, aspect, presetIds, onSave);
       },
+      buildImageFields: function (prefix, image, aspect, options) {
+        return buildImageFields(prefix, image, aspect, options);
+      },
       buildTextStyleFieldsHtml: buildTextStyleFieldsHtml,
       bindTextStyleFields: bindTextStyleFields,
       onChange: function () {
@@ -596,8 +631,338 @@
     return wrap;
   }
 
+  const IMAGE_TRANSITIONS = [
+    ['fade', 'Fade'],
+    ['slide', 'Slide left'],
+    ['slide-up', 'Slide up'],
+    ['zoom', 'Zoom in'],
+    ['wipe', 'Wipe'],
+  ];
+
+  function emptyImageSlide(aspect) {
+    return {
+      file: '',
+      alt: '',
+      crop_x: 0,
+      crop_y: 0,
+      crop_zoom: 1,
+      crop_x_mobile: 0,
+      crop_y_mobile: 0,
+      crop_zoom_mobile: 1,
+      aspect_ratio: aspect || 4 / 3,
+      cropped_area_pixels: '',
+    };
+  }
+
+  function ensureSlideshowFields(image) {
+    if (!image || typeof image !== 'object') return image;
+    if (!Array.isArray(image.slides)) image.slides = [];
+    if (!image.transition) image.transition = 'fade';
+    if (!image.transition_ms) image.transition_ms = 800;
+    if (!image.hold_seconds) image.hold_seconds = 5;
+    return image;
+  }
+
+  function slideshowSettingsHtml(target) {
+    const transition = target.transition || 'fade';
+    const speedSec = ((target.transition_ms || 800) / 1000).toFixed(1).replace(/\.0$/, '');
+    const hold = String(target.hold_seconds || 5);
+    let html =
+      '<div class="slideshow-editor__settings-grid">' +
+      '<label>Transition<select data-slideshow-field="transition">';
+    IMAGE_TRANSITIONS.forEach(function (option) {
+      html +=
+        '<option value="' +
+        option[0] +
+        '"' +
+        (option[0] === transition ? ' selected' : '') +
+        '>' +
+        option[1] +
+        '</option>';
+    });
+    html +=
+      '</select></label>' +
+      '<label>Transition speed<div class="slideshow-editor__unit">' +
+      '<input type="number" min="0.2" max="10" step="0.1" data-slideshow-field="transition_seconds" value="' +
+      escapeHtml(speedSec) +
+      '"><span>seconds</span></div></label>' +
+      '<label>Show each image for<div class="slideshow-editor__unit">' +
+      '<input type="number" min="0.5" max="60" step="0.5" data-slideshow-field="hold_seconds" value="' +
+      escapeHtml(hold) +
+      '"><span>seconds</span></div></label>' +
+      '</div>';
+    return html;
+  }
+
+  function bindSlideshowSettings(root, target, onChange) {
+    root.querySelectorAll('[data-slideshow-field]').forEach(function (input) {
+      const eventName = input.tagName === 'SELECT' ? 'change' : 'input';
+      input.addEventListener(eventName, function () {
+        const field = input.dataset.slideshowField;
+        if (field === 'transition') {
+          target.transition = input.value || 'fade';
+        } else if (field === 'transition_seconds') {
+          const seconds = parseFloat(input.value);
+          target.transition_ms = isNaN(seconds) ? 800 : Math.round(Math.max(0.15, Math.min(10, seconds)) * 1000);
+        } else if (field === 'hold_seconds') {
+          const seconds = parseFloat(input.value);
+          target.hold_seconds = isNaN(seconds) ? 5 : Math.max(0.5, Math.min(60, seconds));
+        }
+        if (typeof onChange === 'function') onChange();
+      });
+    });
+  }
+
+  function buildSlideshowEditor(image, options) {
+    options = options || {};
+    ensureSlideshowFields(image);
+    const box = el('div', 'slideshow-editor');
+    const allowCrop = options.allowCrop !== false;
+
+    function notify() {
+      if (typeof options.onChange === 'function') options.onChange();
+    }
+
+    function containerAspect() {
+      return image.aspect_ratio || options.aspect || 4 / 3;
+    }
+
+    function extraCount() {
+      return (image.slides || []).filter(function (slide) {
+        return slide && slide.file;
+      }).length;
+    }
+
+    function render() {
+      const total = (image.file ? 1 : 0) + extraCount();
+      box.innerHTML =
+        '<div class="slideshow-editor__head">' +
+        '<p class="slideshow-editor__title">Slideshow</p>' +
+        '<p class="slideshow-editor__hint">' +
+        (total > 1
+          ? total + ' images · plays automatically on the site'
+          : 'Add more images to play them in sequence') +
+        '</p></div>' +
+        '<div class="slideshow-editor__slides"></div>' +
+        '<button type="button" class="admin-btn admin-btn--ghost slideshow-editor__add" data-action="add-slide">+ Add image</button>' +
+        '<div class="slideshow-editor__settings"' +
+        (total > 1 ? '' : ' hidden') +
+        '>' +
+        slideshowSettingsHtml(image) +
+        '</div>';
+
+      const list = box.querySelector('.slideshow-editor__slides');
+      (image.slides || []).forEach(function (slide, index) {
+        list.appendChild(buildSlideRow(slide, index));
+      });
+
+      box.querySelector('[data-action="add-slide"]').addEventListener('click', function () {
+        image.slides.push(emptyImageSlide(containerAspect()));
+        render();
+        notify();
+        const pick = box.querySelector('.slideshow-editor__slide:last-child [data-action="pick-slide"]');
+        if (pick) pick.click();
+      });
+
+      bindSlideshowSettings(box, image, notify);
+    }
+
+    function buildSlideRow(slide, index) {
+      const row = el('div', 'slideshow-editor__slide');
+      row.innerHTML =
+        (slide.file
+          ? '<img class="slideshow-editor__thumb" src="' + escapeHtml(imageUrl(slide.file)) + '" alt="">'
+          : '<div class="slideshow-editor__thumb slideshow-editor__thumb--empty">No image</div>') +
+        '<div class="slideshow-editor__slide-fields">' +
+        '<div class="image-field-row">' +
+        '<input type="text" data-slide-field="file" value="' +
+        escapeHtml(slide.file || '') +
+        '">' +
+        '<button type="button" class="admin-btn admin-btn--ghost" data-action="pick-slide">Choose</button>' +
+        (allowCrop
+          ? '<button type="button" class="admin-btn admin-btn--ghost" data-action="crop-slide">Pan / zoom</button>'
+          : '') +
+        '</div>' +
+        (allowCrop
+          ? '<input type="text" data-slide-field="alt" placeholder="Alt text" value="' +
+            escapeHtml(slide.alt || '') +
+            '">'
+          : '') +
+        '</div>' +
+        '<div class="slideshow-editor__slide-actions">' +
+        '<button type="button" class="admin-btn admin-btn--ghost" data-action="move-up" title="Move up"' +
+        (index === 0 ? ' disabled' : '') +
+        '>↑</button>' +
+        '<button type="button" class="admin-btn admin-btn--ghost" data-action="move-down" title="Move down"' +
+        (index === image.slides.length - 1 ? ' disabled' : '') +
+        '>↓</button>' +
+        '<button type="button" class="slideshow-editor__remove" data-action="remove-slide">Remove</button>' +
+        '</div>';
+
+      const fileInput = row.querySelector('[data-slide-field="file"]');
+      row.querySelector('[data-action="pick-slide"]').addEventListener('click', function () {
+        openMediaPicker(fileInput, function () {
+          slide.file = fileInput.value;
+          if (!slide.aspect_ratio) slide.aspect_ratio = containerAspect();
+          render();
+          notify();
+        });
+      });
+
+      const cropBtn = row.querySelector('[data-action="crop-slide"]');
+      if (cropBtn) {
+        cropBtn.addEventListener('click', function () {
+          if (!slide.file) {
+            window.alert('Choose an image first.');
+            return;
+          }
+          openCropModal(slide, containerAspect(), options.presetIds, function () {
+            render();
+            notify();
+          });
+        });
+      }
+
+      row.querySelectorAll('[data-slide-field]').forEach(function (input) {
+        input.addEventListener('input', function () {
+          slide[input.dataset.slideField] = input.value;
+          notify();
+        });
+      });
+
+      row.querySelector('[data-action="move-up"]').addEventListener('click', function () {
+        if (index <= 0) return;
+        const moved = image.slides.splice(index, 1)[0];
+        image.slides.splice(index - 1, 0, moved);
+        render();
+        notify();
+      });
+      row.querySelector('[data-action="move-down"]').addEventListener('click', function () {
+        if (index >= image.slides.length - 1) return;
+        const moved = image.slides.splice(index, 1)[0];
+        image.slides.splice(index + 1, 0, moved);
+        render();
+        notify();
+      });
+      row.querySelector('[data-action="remove-slide"]').addEventListener('click', function () {
+        image.slides.splice(index, 1);
+        render();
+        notify();
+      });
+
+      return row;
+    }
+
+    render();
+    return box;
+  }
+
+  function buildHeroSlideshowEditor(hero) {
+    ensureSlideshowFields(hero);
+    if (!Array.isArray(hero.background_slides)) hero.background_slides = [];
+    const box = el('div', 'slideshow-editor');
+
+    function notify() {
+      markPageMetaDirty();
+    }
+
+    function render() {
+      const total = (document.getElementById('hero-background-image')?.value ? 1 : 0) + hero.background_slides.filter(Boolean).length;
+      box.innerHTML =
+        '<div class="slideshow-editor__head">' +
+        '<p class="slideshow-editor__title">Slideshow</p>' +
+        '<p class="slideshow-editor__hint">' +
+        (total > 1
+          ? total + ' images · plays automatically on the homepage'
+          : 'Add more background images to play them in sequence') +
+        '</p></div>' +
+        '<div class="slideshow-editor__slides"></div>' +
+        '<button type="button" class="admin-btn admin-btn--ghost slideshow-editor__add" data-action="add-slide">+ Add image</button>' +
+        '<div class="slideshow-editor__settings"' +
+        (total > 1 ? '' : ' hidden') +
+        '>' +
+        slideshowSettingsHtml(hero) +
+        '</div>';
+
+      const list = box.querySelector('.slideshow-editor__slides');
+      hero.background_slides.forEach(function (file, index) {
+        list.appendChild(buildHeroSlideRow(file, index));
+      });
+
+      box.querySelector('[data-action="add-slide"]').addEventListener('click', function () {
+        hero.background_slides.push('');
+        render();
+        notify();
+        const pick = box.querySelector('.slideshow-editor__slide:last-child [data-action="pick-slide"]');
+        if (pick) pick.click();
+      });
+
+      bindSlideshowSettings(box, hero, notify);
+    }
+
+    function buildHeroSlideRow(file, index) {
+      const row = el('div', 'slideshow-editor__slide');
+      row.innerHTML =
+        (file
+          ? '<img class="slideshow-editor__thumb" src="' + escapeHtml(imageUrl(file)) + '" alt="">'
+          : '<div class="slideshow-editor__thumb slideshow-editor__thumb--empty">No image</div>') +
+        '<div class="slideshow-editor__slide-fields">' +
+        '<div class="image-field-row">' +
+        '<input type="text" data-hero-slide-file value="' +
+        escapeHtml(file || '') +
+        '">' +
+        '<button type="button" class="admin-btn admin-btn--ghost" data-action="pick-slide">Choose</button>' +
+        '</div></div>' +
+        '<button type="button" class="slideshow-editor__remove" data-action="remove-slide">Remove</button>';
+
+      const fileInput = row.querySelector('[data-hero-slide-file]');
+      row.querySelector('[data-action="pick-slide"]').addEventListener('click', function () {
+        openMediaPicker(fileInput, function () {
+          hero.background_slides[index] = fileInput.value;
+          render();
+          notify();
+        });
+      });
+      fileInput.addEventListener('input', function () {
+        hero.background_slides[index] = fileInput.value;
+        notify();
+      });
+      row.querySelector('[data-action="remove-slide"]').addEventListener('click', function () {
+        hero.background_slides.splice(index, 1);
+        render();
+        notify();
+      });
+      return row;
+    }
+
+    render();
+    return box;
+  }
+
+  function refreshImagePreview(wrap, image, aspect) {
+    let preview = wrap.querySelector('.image-field-preview');
+    if (!image.file) {
+      if (preview) preview.remove();
+      return;
+    }
+    if (!preview) {
+      preview = el('div', 'image-field-preview');
+      const slideshow = wrap.querySelector('.slideshow-editor');
+      if (slideshow) wrap.insertBefore(preview, slideshow);
+      else wrap.appendChild(preview);
+    }
+    preview.innerHTML =
+      '<div class="image-field-preview__frame" style="aspect-ratio:' +
+      aspect +
+      '"><img src="' +
+      escapeHtml(imageUrl(image.file)) +
+      '" alt=""></div>';
+  }
+
   function buildImageFields(prefix, image, aspect, options) {
     options = options || {};
+    image = image || {};
+    ensureSlideshowFields(image);
     const currentAspect = image.aspect_ratio || aspect || 4 / 3;
     const preset = presetForAspect(currentAspect);
     const wrap = el('div', 'image-field-block');
@@ -616,32 +981,33 @@
       escapeHtml(preset.label + ' (' + preset.ratio + ')') +
       '</strong></p>';
 
-    if (image.file) {
-      const preview = el('div', 'image-field-preview');
-      preview.innerHTML =
-        '<div class="image-field-preview__frame" style="aspect-ratio:' +
-        currentAspect +
-        '"><img src="' +
-        escapeHtml(imageUrl(image.file)) +
-        '" alt=""></div>';
-      wrap.appendChild(preview);
-    }
+    refreshImagePreview(wrap, image, currentAspect);
+    wrap.appendChild(
+      buildSlideshowEditor(image, {
+        aspect: currentAspect,
+        presetIds: options.presetIds,
+        onChange: options.onChange,
+      })
+    );
 
     wrap.querySelector('[data-action="pick-image"]').addEventListener('click', function () {
-      openMediaPicker(wrap.querySelector('[data-image-field="file"]'));
+      const fileInput = wrap.querySelector('[data-image-field="file"]');
+      openMediaPicker(fileInput, function () {
+        image.file = fileInput.value;
+        refreshImagePreview(wrap, image, image.aspect_ratio || currentAspect);
+        if (typeof options.onChange === 'function') options.onChange();
+      });
     });
     wrap.querySelector('[data-action="crop-image"]').addEventListener('click', function () {
       if (!image.file) {
         window.alert('Choose an image first.');
         return;
       }
-      state.cropTarget = {
-        wrap: wrap,
-        image: image,
-        aspect: currentAspect,
-        presetIds: options.presetIds || CROP_PRESET_IDS,
-      };
-      openCropModal(image, currentAspect, options.presetIds, function () {
+      openCropModal(image, image.aspect_ratio || currentAspect, options.presetIds, function () {
+        const label = wrap.querySelector('[data-aspect-label]');
+        const nextPreset = presetForAspect(image.aspect_ratio || currentAspect);
+        if (label) label.textContent = nextPreset.label + ' (' + nextPreset.ratio + ')';
+        refreshImagePreview(wrap, image, image.aspect_ratio || currentAspect);
         if (typeof options.onChange === 'function') options.onChange();
       });
     });
@@ -649,6 +1015,9 @@
     wrap.querySelectorAll('[data-image-field]').forEach(function (input) {
       input.addEventListener('input', function () {
         image[input.dataset.imageField] = input.value;
+        if (input.dataset.imageField === 'file') {
+          refreshImagePreview(wrap, image, image.aspect_ratio || currentAspect);
+        }
         if (typeof options.onChange === 'function') options.onChange();
       });
     });
@@ -878,6 +1247,18 @@
       if (typeof notifyChange === 'function') notifyChange();
     });
 
+    tile.image = tile.image || {};
+    item.appendChild(
+      buildSlideshowEditor(tile.image, {
+        aspect: tile.image.aspect_ratio || 4 / 3,
+        presetIds: ['square', 'landscape'],
+        onChange: function () {
+          updateServiceTileThumb(item, tile);
+          if (typeof notifyChange === 'function') notifyChange();
+        },
+      })
+    );
+
     return item;
   }
 
@@ -925,6 +1306,350 @@
     wrap.appendChild(addBtn);
     renderServiceTiles(section, list, notifyChange);
     return wrap;
+  }
+
+  function defaultOverlay() {
+    return { text: '', size: 'lg', color: 'light', x: 10, y: 32, w: 80, h: 36 };
+  }
+
+  function emptyImageField(aspect) {
+    return {
+      file: '',
+      alt: '',
+      crop_x: 0,
+      crop_y: 0,
+      crop_zoom: 1,
+      aspect_ratio: aspect || 4 / 3,
+    };
+  }
+
+  function clampOverlay(overlay) {
+    overlay.w = Math.max(8, Math.min(100, Number(overlay.w) || 80));
+    overlay.h = Math.max(8, Math.min(100, Number(overlay.h) || 30));
+    overlay.x = Math.max(0, Math.min(100 - overlay.w, Number(overlay.x) || 0));
+    overlay.y = Math.max(0, Math.min(100 - overlay.h, Number(overlay.y) || 0));
+    return overlay;
+  }
+
+  function buildOverlayEditor(section) {
+    if (!section.overlay || typeof section.overlay !== 'object') {
+      section.overlay = defaultOverlay();
+    }
+    const overlay = clampOverlay(section.overlay);
+    const wrap = el('div', 'overlay-editor');
+
+    function notify() {
+      markSectionDirty(section.id);
+      const summary = document.querySelector(
+        '.section-card[data-section-id="' + section.id + '"] .section-card__summary'
+      );
+      if (summary) summary.textContent = sectionSummary(section);
+    }
+
+    function applyBox(box) {
+      box.style.left = overlay.x + '%';
+      box.style.top = overlay.y + '%';
+      box.style.width = overlay.w + '%';
+      box.style.height = overlay.h + '%';
+      box.className =
+        'overlay-editor__box overlay-editor__box--' +
+        (overlay.color === 'dark' ? 'dark' : 'light') +
+        ' overlay-editor__box--' +
+        (overlay.size || 'lg');
+      const label = box.querySelector('.overlay-editor__text');
+      if (label) label.textContent = overlay.text || 'Overlay text';
+    }
+
+    function refresh() {
+      const img = wrap.querySelector('.overlay-editor__image');
+      const file = section.image && section.image.file;
+      if (!img) return;
+      if (file) {
+        img.src = imageUrl(file);
+        img.hidden = false;
+      } else {
+        img.removeAttribute('src');
+        img.hidden = true;
+      }
+    }
+
+    wrap.innerHTML =
+      '<div class="overlay-editor__head">' +
+      '<p class="overlay-editor__title">Overlay text</p>' +
+      '<p class="admin-help">Optional text on top of the image. Drag to place, use the corner to resize. Leave blank to hide it on the site.</p>' +
+      '</div>' +
+      '<div class="overlay-editor__fields">' +
+      '<label>Text<input type="text" data-overlay-field="text" value="' +
+      escapeHtml(overlay.text || '') +
+      '" placeholder="e.g. OUR DESIGNS"></label>' +
+      '<label>Size<select data-overlay-field="size">' +
+      ['sm', 'md', 'lg', 'xl']
+        .map(function (size) {
+          const labels = { sm: 'Small', md: 'Medium', lg: 'Large', xl: 'Extra large' };
+          return (
+            '<option value="' +
+            size +
+            '"' +
+            (overlay.size === size ? ' selected' : '') +
+            '>' +
+            labels[size] +
+            '</option>'
+          );
+        })
+        .join('') +
+      '</select></label>' +
+      '<label>Colour<select data-overlay-field="color">' +
+      '<option value="light"' +
+      (overlay.color !== 'dark' ? ' selected' : '') +
+      '>Light text</option>' +
+      '<option value="dark"' +
+      (overlay.color === 'dark' ? ' selected' : '') +
+      '>Dark text</option>' +
+      '</select></label>' +
+      '</div>' +
+      '<div class="overlay-editor__canvas" data-overlay-canvas>' +
+      '<img class="overlay-editor__image" alt="">' +
+      '<div class="overlay-editor__placeholder">Choose an image to position the overlay</div>' +
+      '<div class="overlay-editor__box" data-overlay-box>' +
+      '<span class="overlay-editor__text"></span>' +
+      '<span class="overlay-editor__resize" title="Drag to resize"></span>' +
+      '</div></div>';
+
+    const canvas = wrap.querySelector('[data-overlay-canvas]');
+    const box = wrap.querySelector('[data-overlay-box]');
+    applyBox(box);
+    refresh();
+
+    wrap.querySelectorAll('[data-overlay-field]').forEach(function (input) {
+      const eventName = input.tagName === 'SELECT' ? 'change' : 'input';
+      input.addEventListener(eventName, function () {
+        overlay[input.dataset.overlayField] = input.value;
+        applyBox(box);
+        notify();
+      });
+    });
+
+    box.addEventListener('pointerdown', function (event) {
+      if (event.target.closest('.overlay-editor__resize')) return;
+      event.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const startX = event.clientX;
+      const startY = event.clientY;
+      const origX = overlay.x;
+      const origY = overlay.y;
+      function move(ev) {
+        const dx = ((ev.clientX - startX) / rect.width) * 100;
+        const dy = ((ev.clientY - startY) / rect.height) * 100;
+        overlay.x = origX + dx;
+        overlay.y = origY + dy;
+        clampOverlay(overlay);
+        applyBox(box);
+      }
+      function up() {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        notify();
+      }
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+    });
+
+    const handle = wrap.querySelector('.overlay-editor__resize');
+    handle.addEventListener('pointerdown', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const rect = canvas.getBoundingClientRect();
+      const startX = event.clientX;
+      const startY = event.clientY;
+      const origW = overlay.w;
+      const origH = overlay.h;
+      function move(ev) {
+        overlay.w = origW + ((ev.clientX - startX) / rect.width) * 100;
+        overlay.h = origH + ((ev.clientY - startY) / rect.height) * 100;
+        clampOverlay(overlay);
+        applyBox(box);
+      }
+      function up() {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        notify();
+      }
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+    });
+
+    return { root: wrap, refresh: refresh };
+  }
+
+  function emptyDesignItem() {
+    return {
+      id: 'des_' + Math.random().toString(16).slice(2, 10),
+      name: '',
+      description: [],
+      bullets: [],
+      price_from: '',
+      width: '',
+      length: '',
+      area: '',
+      bedrooms: '',
+      bathrooms: '',
+      floorplan_pdf: '',
+      video_url: '',
+      image_position: 'right',
+      hero_image: emptyImageField(4 / 3),
+      hero_caption: 'Floor Plan',
+      image_2: emptyImageField(4 / 3),
+      image_2_caption: 'Exterior view',
+      image_3: emptyImageField(4 / 3),
+      image_3_caption: 'Exterior view',
+    };
+  }
+
+  function buildDesignsEditor(section) {
+    if (!Array.isArray(section.items)) section.items = [];
+    const wrap = el('div', 'designs-editor');
+    const list = el('div', 'designs-editor__list');
+    wrap.appendChild(list);
+
+    function notifyChange() {
+      markSectionDirty(section.id);
+      const summary = document.querySelector(
+        '.section-card[data-section-id="' + section.id + '"] .section-card__summary'
+      );
+      if (summary) summary.textContent = sectionSummary(section);
+    }
+
+    const addBtn = el('button', 'admin-btn admin-btn--ghost', 'Add design');
+    addBtn.type = 'button';
+    addBtn.addEventListener('click', function () {
+      section.items.push(emptyDesignItem());
+      renderDesignItems(section, list, notifyChange);
+      notifyChange();
+    });
+    wrap.appendChild(addBtn);
+    renderDesignItems(section, list, notifyChange);
+    return wrap;
+  }
+
+  function renderDesignItems(section, list, notifyChange) {
+    list.innerHTML = '';
+    (section.items || []).forEach(function (item, index) {
+      list.appendChild(buildDesignItem(section, item, index, list, notifyChange));
+    });
+  }
+
+  function buildDesignItem(section, item, index, list, notifyChange) {
+    const card = el('article', 'design-admin-item');
+    card.dataset.designIndex = String(index);
+    const title = item.name || 'Untitled design';
+    card.innerHTML =
+      '<div class="design-admin-item__header">' +
+      '<button type="button" class="gallery-admin-item__drag" aria-label="Drag to reorder" title="Drag to reorder">⋮⋮</button>' +
+      '<strong class="design-admin-item__title">' +
+      escapeHtml(title) +
+      '</strong>' +
+      '<button type="button" class="gallery-admin-item__remove" data-action="remove-design">Remove</button>' +
+      '</div>' +
+      '<div class="design-admin-item__body admin-form"></div>';
+
+    const body = card.querySelector('.design-admin-item__body');
+    body.appendChild(fieldInput('Name', 'name', item.name || ''));
+    body.appendChild(fieldTextarea('Description (one paragraph per line)', 'description', (item.description || []).join('\n')));
+    body.appendChild(fieldTextarea('Bullet points (one per line)', 'bullets', (item.bullets || []).join('\n')));
+    body.appendChild(fieldInput('Priced from', 'price_from', item.price_from || ''));
+
+    const dims = el('div', 'design-admin-item__row');
+    dims.appendChild(fieldInput('Width (m)', 'width', item.width || ''));
+    dims.appendChild(fieldInput('Length (m)', 'length', item.length || ''));
+    dims.appendChild(fieldInput('Area (m²)', 'area', item.area || ''));
+    body.appendChild(dims);
+
+    const rooms = el('div', 'design-admin-item__row');
+    rooms.appendChild(fieldInput('Bedrooms', 'bedrooms', item.bedrooms || ''));
+    rooms.appendChild(fieldInput('Bathrooms', 'bathrooms', item.bathrooms || ''));
+    body.appendChild(rooms);
+
+    body.appendChild(fieldSelect('Images position', 'image_position', item.image_position || 'right', [
+      ['right', 'Images on the right'],
+      ['left', 'Images on the left'],
+    ]));
+    body.appendChild(fieldInput('Floor plan PDF (URL or path)', 'floorplan_pdf', item.floorplan_pdf || ''));
+    body.appendChild(fieldInput('Video URL (optional)', 'video_url', item.video_url || ''));
+
+    const imageFields = [
+      ['hero_image', 'hero_caption', 'Large image', item.hero_caption || 'Floor Plan'],
+      ['image_2', 'image_2_caption', 'Small image 1', item.image_2_caption || 'Exterior view'],
+      ['image_3', 'image_3_caption', 'Small image 2', item.image_3_caption || 'Exterior view'],
+    ];
+    imageFields.forEach(function (entry) {
+      const imageKey = entry[0];
+      const captionKey = entry[1];
+      const label = entry[2];
+      const captionValue = entry[3];
+      const group = el('div', 'design-admin-item__image');
+      group.appendChild(el('p', 'design-admin-item__image-label', label));
+      if (!item[imageKey] || typeof item[imageKey] !== 'object') item[imageKey] = emptyImageField(4 / 3);
+      group.appendChild(
+        buildImageFields(imageKey, item[imageKey], item[imageKey].aspect_ratio || 4 / 3, {
+          presetIds: ['landscape', 'square', 'wide'],
+          onChange: notifyChange,
+        })
+      );
+      group.appendChild(fieldInput('Caption', captionKey, captionValue));
+      body.appendChild(group);
+    });
+
+    body.querySelectorAll('[data-field]').forEach(function (input) {
+      const eventName = input.tagName === 'SELECT' ? 'change' : 'input';
+      input.addEventListener(eventName, function () {
+        const field = input.dataset.field;
+        if (field === 'description' || field === 'bullets') item[field] = lines(input.value);
+        else item[field] = input.value;
+        if (field === 'name') {
+          const titleEl = card.querySelector('.design-admin-item__title');
+          if (titleEl) titleEl.textContent = item.name || 'Untitled design';
+        }
+        notifyChange();
+      });
+    });
+
+    card.querySelector('[data-action="remove-design"]').addEventListener('click', function () {
+      section.items.splice(index, 1);
+      renderDesignItems(section, list, notifyChange);
+      notifyChange();
+    });
+
+    const handle = card.querySelector('.gallery-admin-item__drag');
+    handle.draggable = true;
+    handle.addEventListener('dragstart', function (event) {
+      card.classList.add('is-dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', String(index));
+    });
+    handle.addEventListener('dragend', function () {
+      card.classList.remove('is-dragging');
+    });
+    card.addEventListener('dragover', function (event) {
+      event.preventDefault();
+      card.classList.add('is-drag-over');
+    });
+    card.addEventListener('dragleave', function () {
+      card.classList.remove('is-drag-over');
+    });
+    card.addEventListener('drop', function (event) {
+      event.preventDefault();
+      card.classList.remove('is-drag-over');
+      const from = parseInt(event.dataTransfer.getData('text/plain'), 10);
+      if (isNaN(from) || from === index) return;
+      const items = section.items.slice();
+      const [moved] = items.splice(from, 1);
+      items.splice(index, 0, moved);
+      section.items = items;
+      renderDesignItems(section, list, notifyChange);
+      notifyChange();
+    });
+
+    return card;
   }
 
   function openMediaPicker(input, callback) {
@@ -1196,7 +1921,17 @@
         payload.hero = {
           tagline: document.getElementById('hero-tagline')?.value || '',
           background_image: document.getElementById('hero-background-image')?.value || '',
+          background_slides: (state.hero.background_slides || []).filter(Boolean),
+          transition: state.hero.transition || 'fade',
+          transition_ms: state.hero.transition_ms || 800,
+          hold_seconds: state.hero.hold_seconds || 5,
         };
+      } else {
+        payload.visible = document.getElementById('page-visible')?.checked || false;
+        payload.in_menu = document.getElementById('page-in-menu')?.checked || false;
+        if (config.slug === 'terms') {
+          payload.download_pdf = document.getElementById('page-download-pdf')?.value || '';
+        }
       }
     }
 
@@ -1212,6 +1947,58 @@
     }
 
     return payload;
+  }
+
+  function bindPdfUpload() {
+    const input = document.getElementById('page-download-pdf');
+    const fileInput = document.getElementById('page-download-pdf-file');
+    const uploadBtn = document.getElementById('page-download-pdf-upload');
+    const clearBtn = document.getElementById('page-download-pdf-clear');
+    const status = document.getElementById('page-download-pdf-status');
+    if (!input || !fileInput || !uploadBtn) return;
+
+    uploadBtn.addEventListener('click', function () {
+      fileInput.click();
+    });
+
+    clearBtn?.addEventListener('click', function () {
+      input.value = '';
+      fileInput.value = '';
+      if (status) status.textContent = 'PDF cleared. Save the page to hide the download button.';
+      markPageMetaDirty();
+    });
+
+    fileInput.addEventListener('change', function () {
+      const file = this.files && this.files[0];
+      if (!file) return;
+      const data = new FormData();
+      data.append('csrf_token', config.csrfToken);
+      data.append('pdf', file);
+      if (status) status.textContent = 'Uploading…';
+      fetch('/admin/api/document.php', { method: 'POST', body: data })
+        .then(function (response) {
+          return response.json().catch(function () {
+            throw new Error('Upload failed — server returned an invalid response.');
+          }).then(function (result) {
+            if (!response.ok || !result.success) {
+              throw new Error(result.message || 'Upload failed');
+            }
+            return result;
+          });
+        })
+        .then(function (result) {
+          input.value = result.file?.url || '';
+          if (status) status.textContent = 'PDF uploaded. Save the page to publish the download button.';
+          markPageMetaDirty();
+        })
+        .catch(function (error) {
+          if (status) status.textContent = error.message || 'Upload failed';
+          alert(error.message || 'Upload failed');
+        })
+        .finally(function () {
+          fileInput.value = '';
+        });
+    });
   }
 
   function savePage(options) {
@@ -1276,6 +2063,12 @@
     initSectionSnapshots();
     initCropModal();
 
+    const heroSlideshowRoot = document.getElementById('hero-slideshow-root');
+    if (heroSlideshowRoot) {
+      ensureSlideshowFields(state.hero);
+      heroSlideshowRoot.appendChild(buildHeroSlideshowEditor(state.hero));
+    }
+
     document.getElementById('add-section-btn')?.addEventListener('click', function () {
       const type = document.getElementById('add-section-type')?.value || 'text';
       const section = defaultSection(type);
@@ -1289,12 +2082,14 @@
       savePage();
     });
 
-    ['hero-tagline', 'hero-background-image', 'page-hero-eyebrow', 'page-hero-heading', 'page-hero-lead', 'service-title', 'service-nav-label', 'service-href', 'service-tag', 'service-description', 'service-in-menu', 'service-visible', 'service-parent-slug'].forEach(function (id) {
+    ['hero-tagline', 'hero-background-image', 'page-hero-eyebrow', 'page-hero-heading', 'page-hero-lead', 'page-in-menu', 'page-visible', 'page-download-pdf', 'service-title', 'service-nav-label', 'service-href', 'service-tag', 'service-description', 'service-in-menu', 'service-visible', 'service-parent-slug'].forEach(function (id) {
       const node = document.getElementById(id);
       if (!node) return;
       node.addEventListener('input', markPageMetaDirty);
       node.addEventListener('change', markPageMetaDirty);
     });
+
+    bindPdfUpload();
 
     document.querySelectorAll('[data-close-modal]').forEach(function (button) {
       button.addEventListener('click', function () {

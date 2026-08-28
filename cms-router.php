@@ -74,6 +74,7 @@ function media_mime_type_for_router(string $path): string
         'svg' => 'image/svg+xml',
         'css' => 'text/css',
         'js' => 'application/javascript',
+        'pdf' => 'application/pdf',
         default => 'application/octet-stream',
     };
 }

@@ -2,12 +2,10 @@
 import type { BedroomCategory } from '../data/designs';
 import { bedroomOptions } from '../data/bedroomOptions';
 import IntroSection from './IntroSection.astro';
-import OurDesignsBanner from './OurDesignsBanner.astro';
-import DesignShowcase from './DesignShowcase.astro';
 import BedroomGrid from './BedroomGrid.astro';
 import CTA from './CTA.astro';
-import Lightbox from './Lightbox.astro';
-import VideoModal from './VideoModal.astro';
+import CmsSections from './CmsSections.astro';
+import { serviceBySlug } from '../lib/cms';
 
 interface Props {
   category: BedroomCategory;
@@ -15,64 +13,76 @@ interface Props {
 
 const { category } = Astro.props;
 
+const service = serviceBySlug(category.slug);
+const allSections = (service?.sections ?? []).filter((section) => section.enabled !== false);
+const hasSections = allSections.length > 0;
+
 const otherCategories = bedroomOptions.filter((opt) => !opt.href.includes(category.slug));
 
 const introBackgrounds: ('default' | 'elevated')[] = ['default', 'elevated', 'default'];
+
+const eyebrow = service?.tag || 'New Builds';
+const heading = service?.title || category.pageTitle;
+const lead = service?.description || category.heroLead;
 ---
 
-<section class="page-hero">
+<section class="page-hero page-hero--compact">
   <div class="container">
-    <span class="eyebrow">New Builds</span>
-    <h1 class="page-title-serif">{category.pageTitle}</h1>
-    <p class="lead">{category.heroLead}</p>
+    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+    <h1 class="page-title-serif">{heading}</h1>
+    {lead && <p class="lead">{lead}</p>}
   </div>
 </section>
 
-{category.introSections.map((section, i) => (
-  <IntroSection
-    eyebrow={section.eyebrow}
-    heading={section.heading}
-    text={section.text}
-    button={section.button}
-    image={section.image}
-    imageAlt={section.imageAlt}
-    imagePosition={section.imagePosition}
-    imageFit={section.imageFit}
-    background={introBackgrounds[i]}
-    eager={i === 0}
-  />
-))}
-
-<OurDesignsBanner
-  image={category.ourDesignsFeatureImage.src}
-  imageAlt={category.ourDesignsFeatureImage.alt}
-/>
-
-{category.designs.map((design, index) => (
-  <DesignShowcase design={design} index={index} />
-))}
-
-<section class="section section--bg-elevated">
-  <div class="container">
-    <div class="section-header">
-      <span class="eyebrow">Explore More</span>
-      <h2>Other Configurations</h2>
-      <p>
-        {otherCategories.length === 2
-          ? `Compare our ${otherCategories.map((c) => c.shortLabel.toLowerCase()).join(' and ')} tiny home layouts to find your ideal fit.`
-          : 'Explore our full range of tiny home configurations.'}
-      </p>
-    </div>
-    <BedroomGrid />
-  </div>
-</section>
+{hasSections ? (
+  <CmsSections sections={allSections} />
+) : (
+  <>
+    {category.introSections.map((section, i) => (
+      <IntroSection
+        eyebrow={section.eyebrow}
+        heading={section.heading}
+        text={section.text}
+        button={section.button}
+        image={section.image}
+        imageAlt={section.imageAlt}
+        imagePosition={section.imagePosition}
+        imageFit={section.imageFit}
+        background={introBackgrounds[i]}
+        eager={i === 0}
+      />
+    ))}
+    <section class="section section--bg-elevated">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">Explore More</span>
+          <h2>Other Configurations</h2>
+          <p>
+            {otherCategories.length === 2
+              ? `Compare our ${otherCategories.map((c) => c.shortLabel.toLowerCase()).join(' and ')} tiny home layouts to find your ideal fit.`
+              : 'Explore our full range of tiny home configurations.'}
+          </p>
+        </div>
+        <BedroomGrid />
+      </div>
+    </section>
+  </>
+)}
 
 <CTA
-  title={`Interested in a ${category.pageTitle} Tiny Home?`}
+  title={`Interested in a ${heading} Tiny Home?`}
   description="Speak with our team about floor plans, site requirements, and customisation options."
   buttonLabel="Get a Quote"
   sectionClass="section--bg-default"
 />
 
-<Lightbox />
-<VideoModal />
+<style>
+  .page-hero--compact {
+    padding: calc(var(--header-height) + var(--space-md)) 0 var(--space-md);
+  }
+
+  .page-hero--compact + :global(.section) {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+  }
+</style>

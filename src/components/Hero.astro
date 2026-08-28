@@ -8,11 +8,43 @@ function heroBackgroundUrl(path: string): string {
   return `/images/${cleaned}`;
 }
 
-const heroImage = heroBackgroundUrl(cms.hero.background_image);
+const heroImages = [
+  cms.hero.background_image,
+  ...(cms.hero.background_slides ?? []),
+]
+  .map((path) => (path || '').trim())
+  .filter(Boolean)
+  .filter((path, index, list) => list.indexOf(path) === index)
+  .map(heroBackgroundUrl);
+
+const heroImage = heroImages[0] || heroBackgroundUrl('');
+const isSlideshow = heroImages.length > 1;
+const transition = cms.hero.transition || 'fade';
+const transitionMs = cms.hero.transition_ms ?? 800;
+const holdSeconds = cms.hero.hold_seconds ?? 5;
 ---
 
 <section class="hero">
-  <div class="hero-bg" aria-hidden="true" style={`--hero-image: url('${heroImage}')`}></div>
+  {isSlideshow ? (
+    <div
+      class="hero-slideshow cms-slideshow"
+      aria-hidden="true"
+      data-slideshow
+      data-transition={transition}
+      data-transition-ms={transitionMs}
+      data-hold-seconds={holdSeconds}
+      style={`--slide-duration: ${transitionMs}ms`}
+    >
+      {heroImages.map((src, index) => (
+        <div
+          class:list={['hero-bg', 'cms-slideshow__slide', { 'is-active': index === 0 }]}
+          style={`--hero-image: url('${src}')`}
+        ></div>
+      ))}
+    </div>
+  ) : (
+    <div class="hero-bg" aria-hidden="true" style={`--hero-image: url('${heroImage}')`}></div>
+  )}
   <div class="hero-overlay" aria-hidden="true"></div>
   <div class="container hero-content">
     <h1 class="hero-tagline">{cms.hero.tagline}</h1>
@@ -27,6 +59,12 @@ const heroImage = heroBackgroundUrl(cms.hero.background_image);
     align-items: center;
     justify-content: center;
     padding: calc(var(--header-height) + var(--space-lg)) 0 var(--space-xl);
+    overflow: hidden;
+  }
+
+  .hero-slideshow {
+    position: absolute;
+    inset: 0;
     overflow: hidden;
   }
 
@@ -74,22 +112,19 @@ const heroImage = heroBackgroundUrl(cms.hero.background_image);
       text-shadow:
         0 2px 24px rgba(0, 0, 0, 0.6),
         0 0 60px rgba(0, 0, 0, 0.4);
+    }
+    76% {
+      opacity: 1;
+      text-shadow:
+        0 2px 24px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(0, 0, 0, 0.4);
       animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
     }
-    72% {
-      opacity: 1;
-    }
-    85% {
-      opacity: 0.72;
-      text-shadow:
-        0 2px 16px rgba(0, 0, 0, 0.35),
-        0 0 30px rgba(0, 0, 0, 0.2);
-    }
     100% {
-      opacity: 0.55;
+      opacity: 0;
       text-shadow:
-        0 2px 12px rgba(0, 0, 0, 0.22),
-        0 0 18px rgba(0, 0, 0, 0.1);
+        0 2px 24px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(0, 0, 0, 0.4);
     }
   }
 
@@ -100,10 +135,9 @@ const heroImage = heroBackgroundUrl(cms.hero.background_image);
     }
     68% {
       transform: scale(1.5);
-      animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
     }
     100% {
-      transform: scale(1);
+      transform: scale(1.5);
     }
   }
 
@@ -133,10 +167,9 @@ const heroImage = heroBackgroundUrl(cms.hero.background_image);
     }
     68% {
       transform: scale(2.25);
-      animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
     }
     100% {
-      transform: scale(1);
+      transform: scale(2.25);
     }
   }
 
@@ -167,3 +200,5 @@ const heroImage = heroBackgroundUrl(cms.hero.background_image);
     }
   }
 </style>
+
+{isSlideshow && <script src="/image-slideshow.js?v=2" defer></script>}

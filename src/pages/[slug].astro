@@ -1,0 +1,17 @@
+---
+import CmsServicePage from '../components/CmsServicePage.astro';
+import { genericCmsServiceSlugs, serviceBySlug } from '../lib/cms';
+
+export function getStaticPaths() {
+  return genericCmsServiceSlugs().map((slug) => ({ params: { slug } }));
+}
+
+const slug = Astro.params.slug ?? '';
+const service = serviceBySlug(slug);
+
+if (!service || service.visible === false) {
+  return new Response('Not found', { status: 404, statusText: 'Not Found' });
+}
+---
+
+<CmsServicePage slug={slug} />

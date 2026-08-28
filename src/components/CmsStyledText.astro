@@ -48,9 +48,20 @@ const richContent = content?.trim();
 )}
 
 <style is:global>
+  .cms-styled-text .cms-heading,
+  .cms-styled-text .cms-body,
+  .cms-styled-text .cms-eyebrow {
+    margin-top: 0;
+    margin-bottom: 0.35em;
+  }
+
+  .cms-styled-text > :last-child {
+    margin-bottom: 0;
+  }
+
   .cms-styled-text .cms-styled-text__list,
   .cms-styled-text--rich .cms-styled-text__list {
-    margin: var(--space-md) 0 var(--space-lg);
+    margin: 0.35em 0;
     list-style: none;
     padding: 0;
   }
@@ -70,5 +81,12 @@ const richContent = content?.trim();
     left: 0;
     color: var(--color-accent);
     font-weight: 700;
+  }
+
+  .cms-styled-text sup,
+  .cms-styled-text--rich sup {
+    font-size: 0.7em;
+    line-height: 0;
+    vertical-align: super;
   }
 </style>

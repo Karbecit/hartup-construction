@@ -9,6 +9,10 @@ interface CmsImageData {
   crop_y_mobile?: number;
   crop_zoom_mobile?: number;
   aspect_ratio?: number;
+  slides?: CmsImageData[];
+  transition?: string;
+  transition_ms?: number;
+  hold_seconds?: number;
 }
 
 interface Props {
@@ -26,11 +30,25 @@ function imageSrc(file: string): string {
   return `/images/${parts.join('/')}`;
 }
 
-const src = imageSrc(image.file);
+function imageFrames(value: CmsImageData): CmsImageData[] {
+  const frames: CmsImageData[] = [];
+  if (value.file) frames.push(value);
+  for (const slide of value.slides ?? []) {
+    if (slide?.file) frames.push(slide);
+  }
+  return frames;
+}
+
+const frames = imageFrames(image);
+const src = frames[0] ? imageSrc(frames[0].file) : '';
 const ratio = aspect ?? image.aspect_ratio ?? (fullWidth ? 16 / 9 : 4 / 3);
+const isSlideshow = frames.length > 1;
+const transition = image.transition || 'fade';
+const transitionMs = image.transition_ms ?? 800;
+const holdSeconds = image.hold_seconds ?? 5;
 ---
 
-{src && (
+{src && !isSlideshow && (
   <div
     class:list={['cms-image', 'image-crop-view', className, { 'cms-image--full': fullWidth }]}
     style={`--cms-aspect: ${ratio}`}
@@ -43,6 +61,38 @@ const ratio = aspect ?? image.aspect_ratio ?? (fullWidth ? 16 / 9 : 4 / 3);
     data-aspect={ratio}
   >
     <img src={src} alt={image.alt ?? ''} loading="lazy" width="1200" height="800" />
+  </div>
+)}
+
+{src && isSlideshow && (
+  <div
+    class:list={['cms-image', 'cms-slideshow', className, { 'cms-image--full': fullWidth }]}
+    style={`--cms-aspect: ${ratio}; --slide-duration: ${transitionMs}ms`}
+    data-slideshow
+    data-transition={transition}
+    data-transition-ms={transitionMs}
+    data-hold-seconds={holdSeconds}
+  >
+    {frames.map((frame, index) => (
+      <div
+        class:list={['cms-slideshow__slide', 'image-crop-view', { 'is-active': index === 0 }]}
+        data-crop-x={frame.crop_x ?? 0}
+        data-crop-y={frame.crop_y ?? 0}
+        data-crop-zoom={frame.crop_zoom ?? 1}
+        data-crop-x-mobile={frame.crop_x_mobile ?? frame.crop_x ?? 0}
+        data-crop-y-mobile={frame.crop_y_mobile ?? frame.crop_y ?? 0}
+        data-crop-zoom-mobile={frame.crop_zoom_mobile ?? frame.crop_zoom ?? 1}
+        data-aspect={ratio}
+      >
+        <img
+          src={imageSrc(frame.file)}
+          alt={frame.alt ?? image.alt ?? ''}
+          loading={index === 0 ? 'eager' : 'lazy'}
+          width="1200"
+          height="800"
+        />
+      </div>
+    ))}
   </div>
 )}
 
@@ -68,6 +118,17 @@ const ratio = aspect ?? image.aspect_ratio ?? (fullWidth ? 16 / 9 : 4 / 3);
     height: auto;
     object-fit: unset;
   }
+
+  .cms-slideshow__slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    aspect-ratio: unset;
+    overflow: hidden;
+  }
 </style>
 
 <script src="/image-crop-view.js" defer></script>
+<script src="/image-slideshow.js?v=2" defer></script>

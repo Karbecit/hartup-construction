@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/sections.php';
 
-const GENERAL_PAGE_SLUGS = ['home', 'about', 'contact'];
+const GENERAL_PAGE_SLUGS = ['home', 'about', 'contact', 'terms'];
 
 function default_home_sections(): array
 {
@@ -125,6 +125,24 @@ function default_contact_sections(): array
     ]);
 }
 
+function default_terms_sections(): array
+{
+    return normalize_sections([
+        [
+            'id' => 'terms_intro',
+            'type' => 'text',
+            'enabled' => true,
+            'background' => 'default',
+            'eyebrow' => 'Legal',
+            'heading' => 'Terms of use',
+            'paragraphs' => [
+                'These terms and conditions apply to work carried out by Hartup Construction. Please read them carefully before engaging our services.',
+                'If a PDF copy has been uploaded, you can download it from this page. Contact us if you have any questions about these terms.',
+            ],
+        ],
+    ]);
+}
+
 function default_pages(): array
 {
     return [
@@ -141,6 +159,8 @@ function default_pages(): array
             'slug' => 'about',
             'title' => 'About Us',
             'path' => '/about',
+            'visible' => true,
+            'in_menu' => true,
             'page_hero' => [
                 'eyebrow' => 'Our Story',
                 'heading' => 'About Hartup Construction',
@@ -152,6 +172,8 @@ function default_pages(): array
             'slug' => 'contact',
             'title' => 'Contact Us',
             'path' => '/contact',
+            'visible' => true,
+            'in_menu' => true,
             'page_hero' => [
                 'eyebrow' => 'Get In Touch',
                 'heading' => 'Contact Us',
@@ -159,24 +181,67 @@ function default_pages(): array
             ],
             'sections' => default_contact_sections(),
         ],
+        'terms' => [
+            'slug' => 'terms',
+            'title' => 'Terms and Conditions',
+            'path' => '/terms',
+            'visible' => true,
+            'in_menu' => false,
+            'download_pdf' => '',
+            'page_hero' => [
+                'eyebrow' => 'Legal',
+                'heading' => 'Terms and Conditions',
+                'lead' => 'Please review our terms and conditions. A downloadable PDF is available when a document has been uploaded.',
+            ],
+            'sections' => default_terms_sections(),
+        ],
     ];
+}
+
+function normalize_download_pdf(string $value): string
+{
+    $value = trim($value);
+    if ($value === '') {
+        return '';
+    }
+    if (preg_match('#^(https?:)?//#i', $value) || str_starts_with($value, '/')) {
+        return $value;
+    }
+
+    return '/files/' . ltrim(str_replace('\\', '/', $value), '/');
 }
 
 function normalize_page(array $page): array
 {
     $slug = trim((string) ($page['slug'] ?? ''));
     $defaults = default_pages()[$slug] ?? [];
+    $isHome = $slug === 'home';
 
-    return [
+    $flag = static function (array $source, string $key, bool $default) {
+        if (!array_key_exists($key, $source)) {
+            return $default;
+        }
+        return !empty($source[$key]);
+    };
+
+    $normalized = [
         'slug' => $slug,
         'title' => trim((string) ($page['title'] ?? $defaults['title'] ?? ucfirst($slug))),
         'path' => trim((string) ($page['path'] ?? $defaults['path'] ?? '/' . $slug)),
+        'visible' => $isHome ? true : $flag($page, 'visible', true),
+        'in_menu' => $isHome ? true : $flag($page, 'in_menu', $slug !== 'terms'),
         'page_hero' => array_replace_recursive(
             $defaults['page_hero'] ?? [],
             is_array($page['page_hero'] ?? null) ? $page['page_hero'] : []
         ),
         'sections' => normalize_sections(is_array($page['sections'] ?? null) ? $page['sections'] : []),
     ];
+
+    if ($slug === 'terms') {
+        $normalized['download_pdf'] = normalize_download_pdf((string) ($page['download_pdf'] ?? $defaults['download_pdf'] ?? ''));
+    }
+
+    return $normalized;
 }
 
 function merge_pages(array $defaults, array $saved): array

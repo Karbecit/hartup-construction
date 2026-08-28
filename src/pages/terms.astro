@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { cmsDocumentUrl, getPage, isCmsPageVisible, serviceAreaLong } from '../data/site';
+import CmsSections from '../components/CmsSections.astro';
+
+const termsPage = getPage('terms');
+if (!isCmsPageVisible('terms')) {
+  return new Response('Not found', { status: 404, statusText: 'Not Found' });
+}
+const pageHero = termsPage?.page_hero;
+const sections = termsPage?.sections ?? [];
+const pdfHref = cmsDocumentUrl(termsPage?.download_pdf);
+---
+
+<Layout
+  title="Terms and Conditions"
+  description={`Terms and conditions for Hartup Construction services in ${serviceAreaLong}.`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">{pageHero?.eyebrow ?? 'Legal'}</span>
+      <h1>{pageHero?.heading ?? 'Terms and Conditions'}</h1>
+      <p class="lead">{pageHero?.lead ?? 'Please review our terms and conditions. A downloadable PDF is available when a document has been uploaded.'}</p>
+      {pdfHref && (
+        <p class="terms-download">
+          <a class="btn btn-primary" href={pdfHref} download="Hartup-Terms-and-Conditions.pdf">Download PDF</a>
+        </p>
+      )}
+    </div>
+  </section>
+
+  <CmsSections sections={sections} />
+</Layout>
+
+<style>
+  .page-hero .container {
+    max-width: 820px;
+  }
+
+  .terms-download {
+    margin-top: var(--space-md);
+  }
+</style>

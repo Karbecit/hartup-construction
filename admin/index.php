@@ -19,7 +19,7 @@ require __DIR__ . '/includes/header.php';
   <div class="admin-grid">
     <a class="admin-tile" href="/admin/pages.php">
       <strong>Pages</strong>
-      <span>Edit home, about &amp; contact page sections</span>
+      <span>Edit home, about, contact &amp; terms page sections</span>
     </a>
     <a class="admin-tile" href="/admin/services.php">
       <strong>Services &amp; categories</strong>

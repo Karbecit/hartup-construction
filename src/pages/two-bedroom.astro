@@ -2,10 +2,15 @@
 import Layout from '../layouts/Layout.astro';
 import BedroomPageLayout from '../components/BedroomPageLayout.astro';
 import { bedroomCategories } from '../data/designs';
+import { serviceBySlug } from '../lib/cms';
 
 const category = bedroomCategories['two-bedroom'];
+const service = serviceBySlug(category.slug);
 ---
 
-<Layout title={`${category.pageTitle} Tiny Home`} description={category.metaDescription}>
+<Layout
+  title={service?.title || `${category.pageTitle} Tiny Home`}
+  description={service?.description || category.metaDescription}
+>
   <BedroomPageLayout category={category} />
 </Layout>

@@ -2,7 +2,9 @@
 import CmsImage from './CmsImage.astro';
 import CmsStyledText from './CmsStyledText.astro';
 import ServiceTile from './ServiceTile.astro';
+import DesignShowcase from './DesignShowcase.astro';
 import { serviceBySlug } from '../lib/cms';
+import type { CmsImageField } from '../lib/cms';
 
 export interface CmsLayoutBlock {
   id: string;
@@ -11,6 +13,10 @@ export interface CmsLayoutBlock {
   y: number;
   w: number;
   h: number;
+  width_px?: number;
+  height_px?: number;
+  rotate?: number;
+  content?: string;
   eyebrow?: string;
   heading?: string;
   paragraphs?: string[];
@@ -52,7 +58,43 @@ export interface CmsSection {
     aspect_ratio?: number;
   };
   caption?: string;
+  overlay?: {
+    text?: string;
+    size?: string;
+    color?: string;
+    x?: number;
+    y?: number;
+    w?: number;
+    h?: number;
+  };
   min_height?: number;
+  blocks?: CmsLayoutBlock[];
+  tiles?: Array<{
+    service_slug: string;
+    label?: string;
+    image?: { file: string; alt?: string; crop_x?: number; crop_y?: number; crop_zoom?: number; aspect_ratio?: number };
+  }>;
+  items?: Array<{
+    id?: string;
+    name?: string;
+    description?: string[];
+    bullets?: string[];
+    price_from?: string;
+    width?: string;
+    length?: string;
+    area?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+    floorplan_pdf?: string;
+    video_url?: string;
+    image_position?: 'left' | 'right';
+    hero_image?: CmsImageField;
+    hero_caption?: string;
+    image_2?: CmsImageField;
+    image_2_caption?: string;
+    image_3?: CmsImageField;
+    image_3_caption?: string;
+  }>;
   blocks?: CmsLayoutBlock[];
   tiles?: Array<{
     service_slug: string;
@@ -67,13 +109,43 @@ interface Props {
 
 const { sections } = Astro.props;
 const visibleSections = sections.filter((section) => section.enabled !== false);
+
+function layoutBlockStyle(block: CmsLayoutBlock): string {
+  const width = block.width_px ? `${block.width_px}px` : `${block.w}%`;
+  const height = block.height_px ? `${block.height_px}px` : `${block.h}%`;
+  const rotate = Number(block.rotate) || 0;
+  const parts = [
+    `left: ${block.x}%`,
+    `top: ${block.y}%`,
+    `width: ${width}`,
+    `height: ${height}`,
+  ];
+  if (rotate !== 0) {
+    parts.push(`transform: rotate(${rotate}deg)`);
+  }
+  return parts.join('; ');
+}
 ---
 
 {visibleSections.map((section) => {
   if (section.type === 'service_tiles') {
+    const hasIntro = Boolean(section.eyebrow || section.heading || (section.paragraphs ?? []).length);
     return (
-      <section class="section section--bg-default service-tiles-section">
+      <section class:list={['section', 'service-tiles-section', section.background === 'elevated' ? 'section--bg-elevated' : 'section--bg-default']}>
         <div class="container">
+          {hasIntro && (
+            <div class="section-header">
+              <CmsStyledText
+                eyebrow={section.eyebrow}
+                heading={section.heading}
+                paragraphs={section.paragraphs}
+                headingSize={section.heading_size}
+                headingWeight={section.heading_weight}
+                textSize={section.text_size}
+                eyebrowSize={section.eyebrow_size}
+              />
+            </div>
+          )}
           <div class="service-tiles-grid">
             {(section.tiles ?? []).map((tile) => {
               const service = tile.service_slug ? serviceBySlug(tile.service_slug) : null;
@@ -106,10 +178,10 @@ const visibleSections = sections.filter((section) => section.enabled !== false);
             {(section.blocks ?? []).map((block) => (
               <div
                 class:list={['cms-layout-block', `cms-layout-block--${block.type}`]}
-                style={`left: ${block.x}%; top: ${block.y}%; width: ${block.w}%; height: ${block.h}%;`}
+                style={layoutBlockStyle(block)}
               >
                 {block.type === 'image' && block.image?.file ? (
-                  <CmsImage image={block.image} aspect={block.image.aspect_ratio ?? 4 / 3} class="cms-layout-block__image" />
+                  <CmsImage image={block.image} aspect={0} class="cms-layout-block__image" />
                 ) : block.type === 'text' ? (
                   <CmsStyledText
                     content={block.content}
@@ -131,14 +203,51 @@ const visibleSections = sections.filter((section) => section.enabled !== false);
     );
   }
 
+  if (section.type === 'designs') {
+    return (
+      <>
+        {(section.items ?? []).map((item, index) => (
+          <DesignShowcase design={item} index={index} />
+        ))}
+      </>
+    );
+  }
+
   if (section.type === 'image') {
     const imageScale = section.image_scale ?? 1;
+    const overlay = section.overlay;
+    const overlayText = (overlay?.text || '').trim();
+    const overlayStyle = overlayText
+      ? `left:${overlay?.x ?? 10}%;top:${overlay?.y ?? 35}%;width:${overlay?.w ?? 80}%;height:${overlay?.h ?? 30}%`
+      : '';
     return (
-      <section class:list={['section', 'cms-image-section', section.background === 'elevated' ? 'section--bg-elevated' : 'section--bg-default']}>
-        <div class="container cms-image-section__inner" style={`--image-scale: ${imageScale}`}>
-          {section.image && <CmsImage image={section.image} fullWidth aspect={section.image.aspect_ratio ?? 16 / 9} />}
-          {section.caption && <p class="cms-image-section__caption cms-text--sm">{section.caption}</p>}
-        </div>
+      <section
+        class:list={['section', 'cms-image-section', overlayText && 'cms-image-section--has-overlay', section.background === 'elevated' ? 'section--bg-elevated' : 'section--bg-default']}
+        id={overlayText.toUpperCase() === 'OUR DESIGNS' ? 'our-designs' : undefined}
+      >
+        {overlayText ? (
+          <div class="cms-image-section__bleed">
+            <div class:list={['cms-image-section__frame', overlay?.color !== 'dark' && 'cms-image-section__frame--scrim']}>
+              {section.image && <CmsImage image={section.image} fullWidth aspect={section.image.aspect_ratio ?? 16 / 9} />}
+              <div
+                class:list={[
+                  'cms-image-overlay',
+                  `cms-image-overlay--${overlay?.size || 'lg'}`,
+                  `cms-image-overlay--${overlay?.color === 'dark' ? 'dark' : 'light'}`,
+                ]}
+                style={overlayStyle}
+              >
+                {overlay?.size === 'xl' || overlay?.size === 'lg' ? <h2>{overlayText}</h2> : <p>{overlayText}</p>}
+              </div>
+            </div>
+            {section.caption && <p class="cms-image-section__caption cms-text--sm">{section.caption}</p>}
+          </div>
+        ) : (
+          <div class="container cms-image-section__inner" style={`--image-scale: ${imageScale}`}>
+            {section.image && <CmsImage image={section.image} fullWidth aspect={section.image.aspect_ratio ?? 16 / 9} />}
+            {section.caption && <p class="cms-image-section__caption cms-text--sm">{section.caption}</p>}
+          </div>
+        )}
       </section>
     );
   }
@@ -267,11 +376,17 @@ const visibleSections = sections.filter((section) => section.enabled !== false);
   .cms-layout-canvas {
     position: relative;
     width: 100%;
+    overflow: visible;
+  }
+
+  .cms-layout-section .container {
+    overflow: visible;
   }
 
   .cms-layout-block {
     position: absolute;
     overflow: hidden;
+    transform-origin: center center;
   }
 
   .cms-layout-block--image {
@@ -299,6 +414,78 @@ const visibleSections = sections.filter((section) => section.enabled !== false);
     margin-top: var(--space-sm);
     text-align: center;
     color: var(--color-text-muted);
+  }
+
+  .cms-image-section--has-overlay {
+    padding-block: 0;
+  }
+
+  .cms-image-section__bleed {
+    width: 100%;
+  }
+
+  .cms-image-section__frame {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cms-image-section__frame :global(.cms-image) {
+    border-radius: 0;
+  }
+
+  .cms-image-section__frame--scrim::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .cms-image-overlay {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.35em 0.5em;
+    pointer-events: none;
+  }
+
+  .cms-image-overlay h2,
+  .cms-image-overlay p {
+    margin: 0;
+    max-width: 100%;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    font-weight: inherit;
+  }
+
+  .cms-image-overlay--light {
+    color: #ffffff;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+  }
+
+  .cms-image-overlay--dark {
+    color: #0f1419;
+    text-shadow: 0 1px 12px rgba(255, 255, 255, 0.7);
+  }
+
+  .cms-image-overlay--sm { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 600; }
+  .cms-image-overlay--md { font-size: clamp(1.35rem, 3vw, 1.85rem); font-weight: 600; }
+  .cms-image-overlay--lg {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+  .cms-image-overlay--xl {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: 0.04em;
   }
 
   .cms-text-section__inner {

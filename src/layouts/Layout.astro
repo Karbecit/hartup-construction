@@ -8,6 +8,8 @@ interface Props {
 import { STAGING } from 'astro:env/server';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Lightbox from '../components/Lightbox.astro';
+import VideoModal from '../components/VideoModal.astro';
 import '../styles/global.css';
 
 const { title, description, canonical } = Astro.props;
@@ -53,5 +55,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
       <slot />
     </main>
     <Footer />
+    <Lightbox />
+    <VideoModal />
   </body>
 </html>

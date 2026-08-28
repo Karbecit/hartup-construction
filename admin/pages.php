@@ -17,13 +17,18 @@ require __DIR__ . '/includes/header.php';
 
 <div class="admin-card">
   <h1>Pages</h1>
-  <p class="admin-lead">Edit general site pages — home, about, and contact. Add sections, images, and text blocks for each page.</p>
+  <p class="admin-lead">Edit general site pages — home, about, contact, and terms. Add sections, images, and text blocks for each page.</p>
 
   <div class="admin-grid">
     <?php foreach ($pages as $page): ?>
       <a class="admin-tile" href="/admin/page-edit.php?slug=<?= h(rawurlencode($page['slug'])) ?>">
         <strong><?= h($page['title']) ?></strong>
-        <span><?= count($page['sections'] ?? []) ?> section(s) · <?= h($page['path']) ?></span>
+        <span><?= count($page['sections'] ?? []) ?> section(s) · <?= h($page['path']) ?><?php
+          if (($page['slug'] ?? '') !== 'home') {
+              $enabled = !isset($page['visible']) || !empty($page['visible']);
+              echo $enabled ? ' · Enabled' : ' · Disabled';
+          }
+        ?></span>
       </a>
     <?php endforeach; ?>
   </div>

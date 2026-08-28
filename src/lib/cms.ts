@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import siteDefaults from '../../content/site.defaults.json';
 
+export type CmsImageTransition = 'fade' | 'slide' | 'slide-up' | 'zoom' | 'wipe';
+
 export interface CmsImageField {
   file: string;
   alt?: string;
@@ -12,11 +14,15 @@ export interface CmsImageField {
   crop_y_mobile?: number;
   crop_zoom_mobile?: number;
   aspect_ratio?: number;
+  slides?: CmsImageField[];
+  transition?: CmsImageTransition | string;
+  transition_ms?: number;
+  hold_seconds?: number;
 }
 
 export interface CmsSection {
   id: string;
-  type: 'image_text' | 'text' | 'image' | 'service_tiles' | string;
+  type: 'image_text' | 'text' | 'image' | 'service_tiles' | 'designs' | string;
   enabled?: boolean;
   background?: 'default' | 'elevated';
   eyebrow?: string;
@@ -37,6 +43,9 @@ export interface CmsSection {
     y: number;
     w: number;
     h: number;
+    width_px?: number;
+    height_px?: number;
+    rotate?: number;
     content?: string;
     eyebrow?: string;
     heading?: string;
@@ -49,10 +58,40 @@ export interface CmsSection {
   }>;
   image?: CmsImageField;
   caption?: string;
+  overlay?: {
+    text?: string;
+    size?: string;
+    color?: string;
+    x?: number;
+    y?: number;
+    w?: number;
+    h?: number;
+  };
   tiles?: Array<{
     service_slug: string;
     label?: string;
     image?: CmsImageField;
+  }>;
+  items?: Array<{
+    id?: string;
+    name?: string;
+    description?: string[];
+    bullets?: string[];
+    price_from?: string;
+    width?: string;
+    length?: string;
+    area?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+    floorplan_pdf?: string;
+    video_url?: string;
+    image_position?: 'left' | 'right';
+    hero_image?: CmsImageField;
+    hero_caption?: string;
+    image_2?: CmsImageField;
+    image_2_caption?: string;
+    image_3?: CmsImageField;
+    image_3_caption?: string;
   }>;
 }
 
@@ -60,6 +99,9 @@ export interface CmsPage {
   slug: string;
   title: string;
   path: string;
+  visible?: boolean;
+  in_menu?: boolean;
+  download_pdf?: string;
   page_hero?: {
     use_site_hero?: boolean;
     eyebrow?: string;
@@ -85,7 +127,14 @@ export interface CmsService {
 
 export interface CmsContent {
   meta: { title: string; description: string };
-  hero: { tagline: string; background_image: string };
+  hero: {
+    tagline: string;
+    background_image: string;
+    background_slides?: string[];
+    transition?: string;
+    transition_ms?: number;
+    hold_seconds?: number;
+  };
   contact: {
     eyebrow: string;
     heading: string;
@@ -164,8 +213,45 @@ export function getPage(slug: string): CmsPage | undefined {
   return getCms().pages?.[slug];
 }
 
+export function isCmsPageVisible(slug: string): boolean {
+  const page = getPage(slug);
+  return page?.visible !== false;
+}
+
+export function isCmsPageInMenu(slug: string): boolean {
+  const page = getPage(slug);
+  return page?.visible !== false && page?.in_menu !== false;
+}
+
 export function serviceBySlug(slug: string): CmsService | undefined {
   return getCms().services?.find((service) => service.slug === slug);
+}
+
+/** Service slugs that have a dedicated Astro page (not the generic [slug] route). */
+export const DEDICATED_SERVICE_SLUGS = [
+  'new-builds',
+  'one-bedroom',
+  'two-bedroom',
+  'three-bedroom',
+  'upgrades',
+  'restorations',
+] as const;
+
+export function cmsServicePathSlug(service: CmsService): string | null {
+  const href = String(service.href || `/${service.slug}`).replace(/\/+$/, '');
+  const match = href.match(/^\/([^/]+)$/);
+  return match ? match[1] : null;
+}
+
+export function genericCmsServiceSlugs(): string[] {
+  const dedicated = new Set<string>([...DEDICATED_SERVICE_SLUGS, 'about', 'contact', 'terms']);
+  const slugs = new Set<string>();
+  for (const service of getCms().services ?? []) {
+    if (service.visible === false) continue;
+    const slug = cmsServicePathSlug(service);
+    if (slug && !dedicated.has(slug)) slugs.add(slug);
+  }
+  return [...slugs];
 }
 
 export function navLinksFromCms() {
@@ -197,9 +283,17 @@ export function navLinksFromCms() {
   return [
     ...staticLinks,
     ...serviceLinks,
-    { href: '/about', label: 'About Us' },
-    { href: '/contact', label: 'Contact Us' },
+    ...(isCmsPageInMenu('about') ? [{ href: '/about', label: 'About Us' }] : []),
+    ...(isCmsPageInMenu('contact') ? [{ href: '/contact', label: 'Contact Us' }] : []),
+    ...(isCmsPageInMenu('terms') ? [{ href: '/terms', label: 'Terms' }] : []),
   ];
+}
+
+export function cmsDocumentUrl(ref?: string): string {
+  const value = (ref || '').trim();
+  if (!value) return '';
+  if (/^https?:\/\//i.test(value) || value.startsWith('/')) return value;
+  return '/files/' + value.replace(/^files\//, '');
 }
 
 export const serviceArea = cms.contact.service_area;

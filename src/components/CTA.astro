@@ -1,4 +1,6 @@
 ---
+import { isCmsPageVisible } from '../lib/cms';
+
 interface Props {
   title?: string;
   description?: string;
@@ -14,8 +16,12 @@ const {
   buttonHref = '/contact',
   sectionClass = '',
 } = Astro.props;
+
+const contactLive = isCmsPageVisible('contact');
+const showCta = buttonHref !== '/contact' || contactLive;
 ---
 
+{showCta && (
 <section class:list={['cta-section', 'section', sectionClass]}>
   <div class="container">
     <div class="cta-inner">
@@ -25,6 +31,7 @@ const {
     </div>
   </div>
 </section>
+)}
 
 <style>
   .cta-inner {

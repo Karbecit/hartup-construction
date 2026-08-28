@@ -8,6 +8,7 @@ interface Props {
   slug: string;
   title?: string;
   description?: string;
+  showHero?: boolean;
   showCta?: boolean;
   ctaTitle?: string;
   ctaDescription?: string;
@@ -17,6 +18,7 @@ const {
   slug,
   title,
   description,
+  showHero = true,
   showCta = true,
   ctaTitle,
   ctaDescription,
@@ -24,19 +26,21 @@ const {
 
 const service = serviceBySlug(slug);
 const pageTitle = title ?? service?.title ?? 'Service';
-const pageDescription = description ?? service?.description ?? '';
+const pageDescription = (service?.description || '').trim() || description || '';
 const sections = service?.sections ?? [];
 const hasSections = sections.some((section) => section.enabled !== false);
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <section class="page-hero">
-    <div class="container">
-      {service?.tag && <span class="eyebrow">{service.tag}</span>}
-      <h1 class:list={[{ 'page-title-serif': slug === 'new-builds' }]}>{pageTitle}</h1>
-      {pageDescription && <p class="lead">{pageDescription}</p>}
-    </div>
-  </section>
+  {showHero && (
+    <section class="page-hero">
+      <div class="container">
+        {service?.tag && <span class="eyebrow">{service.tag}</span>}
+        <h1 class:list={[{ 'page-title-serif': slug === 'new-builds' }]}>{pageTitle}</h1>
+        {pageDescription && <p class="lead">{pageDescription}</p>}
+      </div>
+    </section>
+  )}
 
   {hasSections && <CmsSections sections={sections} />}
 

@@ -1,11 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CmsSections from '../components/CmsSections.astro';
-import { businessHours, cms, getPage, officeContact, projectManagementContact, serviceArea, serviceAreaLong } from '../data/site';
+import { businessHours, cms, getPage, isCmsPageVisible, officeContact, projectManagementContact, serviceArea, serviceAreaLong } from '../data/site';
 
 const contactPage = getPage('contact');
+if (!isCmsPageVisible('contact')) {
+  return new Response('Not found', { status: 404, statusText: 'Not Found' });
+}
 const pageHero = contactPage?.page_hero;
 const sections = contactPage?.sections ?? [];
+const termsLive = isCmsPageVisible('terms');
 ---
 
 <Layout
@@ -144,6 +148,12 @@ const sections = contactPage?.sections ?? [];
 
           <p class="form-disclaimer">
             By submitting this form, you agree to be contacted by Hartup Construction regarding your enquiry. We respect your privacy and will never share your details.
+            {termsLive && (
+              <>
+                {' '}
+                Please also review our <a href="/terms">Terms and Conditions</a>.
+              </>
+            )}
           </p>
 
           <div class="form-success" id="form-success" hidden role="status">
@@ -261,6 +271,12 @@ const sections = contactPage?.sections ?? [];
     font-size: 0.75rem;
     margin-top: var(--space-sm);
     color: var(--color-text-muted);
+  }
+
+  .form-disclaimer a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .form-honeypot {

@@ -1,7 +1,8 @@
 ---
-import { navLinksFromCms } from '../lib/cms';
+import { navLinksFromCms, isCmsPageVisible } from '../lib/cms';
 
 const navLinks = navLinksFromCms();
+const showQuoteCta = isCmsPageVisible('contact');
 
 const currentPath = Astro.url.pathname;
 
@@ -75,7 +76,7 @@ function isActive(href: string, children?: { href: string }[]) {
           </li>
         ))}
       </ul>
-      <a href="/contact" class="btn btn-primary nav-cta">Get a Quote</a>
+      {showQuoteCta && <a href="/contact" class="btn btn-primary nav-cta">Get a Quote</a>}
     </nav>
   </div>
 </header>

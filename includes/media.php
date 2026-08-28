@@ -39,6 +39,7 @@ function media_mime_type(string $path, ?string $hintFilename = null): string
         'png' => 'image/png',
         'webp' => 'image/webp',
         'gif' => 'image/gif',
+        'pdf' => 'application/pdf',
         default => '',
     };
 }
@@ -138,6 +139,75 @@ function upload_media_file(array $file): ?string
     $base = preg_replace('/[^a-zA-Z0-9_-]+/', '_', pathinfo($original, PATHINFO_FILENAME)) ?: 'upload';
     $filename = $base . '_' . bin2hex(random_bytes(3)) . '.' . $ext;
     $targetDir = media_storage_dir();
+
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
+    }
+
+    $target = $targetDir . DIRECTORY_SEPARATOR . $filename;
+    if (!move_uploaded_file($tmp, $target)) {
+        return null;
+    }
+
+    return $filename;
+}
+
+function document_storage_dir(): string
+{
+    return base_path('public/files');
+}
+
+function document_public_path(string $filename): string
+{
+    $filename = ltrim(str_replace('\\', '/', $filename), '/');
+    if (str_starts_with($filename, 'files/')) {
+        return '/' . $filename;
+    }
+
+    return '/files/' . $filename;
+}
+
+function is_pdf_upload(string $tmp, string $original): bool
+{
+    $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
+    if ($ext !== 'pdf') {
+        return false;
+    }
+
+    $handle = fopen($tmp, 'rb');
+    $head = $handle ? (string) fread($handle, 8) : '';
+    if ($handle) {
+        fclose($handle);
+    }
+    if (str_starts_with($head, '%PDF-')) {
+        return true;
+    }
+
+    $mime = media_mime_type($tmp, $original);
+
+    return in_array($mime, ['application/pdf', 'application/x-pdf'], true);
+}
+
+function upload_pdf_file(array $file): ?string
+{
+    $uploadError = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+    if ($uploadError !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    $tmp = (string) ($file['tmp_name'] ?? '');
+    if ($tmp === '' || !is_uploaded_file($tmp)) {
+        return null;
+    }
+
+    $original = basename((string) ($file['name'] ?? 'document.pdf'));
+    if (!is_pdf_upload($tmp, $original)) {
+        return null;
+    }
+
+    $base = preg_replace('/[^a-zA-Z0-9_-]+/', '_', pathinfo($original, PATHINFO_FILENAME)) ?: 'document';
+    $filename = $base . '_' . bin2hex(random_bytes(3)) . '.pdf';
+    $targetDir = document_storage_dir();
 
     if (!is_dir($targetDir)) {
         mkdir($targetDir, 0755, true);

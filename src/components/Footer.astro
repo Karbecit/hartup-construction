@@ -1,14 +1,15 @@
 ---
-import { serviceArea, officeContact, projectManagementContact } from '../data/site';
+import { serviceArea, officeContact, projectManagementContact, isCmsPageInMenu, isCmsPageVisible } from '../data/site';
 
 const year = new Date().getFullYear();
 const assetVersion = '2';
+const showTerms = isCmsPageVisible('terms');
 
 const quickLinks = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About Us' },
+  ...(isCmsPageInMenu('about') ? [{ href: '/about', label: 'About Us' }] : []),
   { href: '/new-builds', label: 'New Builds' },
-  { href: '/contact', label: 'Contact Us' },
+  ...(isCmsPageInMenu('contact') ? [{ href: '/contact', label: 'Contact Us' }] : []),
 ];
 
 const serviceLinks = [
@@ -106,7 +107,20 @@ const socialLinks = [
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; {year} Hartup Construction. All rights reserved.</p>
+      <div class="footer-bottom-copy">
+        <p>
+          &copy; {year} Hartup Construction. All rights reserved.
+          {showTerms && (
+            <>
+              {' '}
+              <a class="footer-legal-link" href="/terms">Terms and Conditions</a>
+            </>
+          )}
+        </p>
+        <p class="footer-credit">
+          <a href="https://www.karbec.com.au" target="_blank" rel="noopener noreferrer">Website created by KarBec IT Services</a>
+        </p>
+      </div>
       <p class="footer-domain">hartupconstruction.com.au</p>
     </div>
   </div>
@@ -275,16 +289,42 @@ const socialLinks = [
   .footer-bottom {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+    gap: 1rem;
     padding-top: var(--space-md);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 0.8125rem;
     color: var(--color-text-muted);
   }
 
+  .footer-bottom-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .footer-credit a {
+    color: var(--color-text-muted);
+  }
+
+  .footer-credit a:hover {
+    color: var(--color-accent);
+  }
+
   .footer-domain {
     color: var(--color-accent);
     font-weight: 500;
+  }
+
+  .footer-legal-link {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-left: 0.35rem;
+  }
+
+  .footer-legal-link:hover {
+    color: var(--color-accent);
   }
 
   @media (max-width: 900px) {

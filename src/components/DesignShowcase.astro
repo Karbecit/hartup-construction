@@ -1,19 +1,71 @@
 ---
-import type { Design } from '../data/designs';
-import { formatPrice, formatDimensions } from '../data/designs';
+import CmsImage from './CmsImage.astro';
+import { isCmsPageVisible, type CmsImageField } from '../lib/cms';
+
+export interface CmsDesignItem {
+  id?: string;
+  name?: string;
+  description?: string[];
+  bullets?: string[];
+  price_from?: string;
+  width?: string;
+  length?: string;
+  area?: string;
+  bedrooms?: string;
+  bathrooms?: string;
+  floorplan_pdf?: string;
+  video_url?: string;
+  image_position?: 'left' | 'right';
+  hero_image?: CmsImageField;
+  hero_caption?: string;
+  image_2?: CmsImageField;
+  image_2_caption?: string;
+  image_3?: CmsImageField;
+  image_3_caption?: string;
+}
 
 interface Props {
-  design: Design;
+  design: CmsDesignItem;
   index: number;
 }
 
 const { design, index } = Astro.props;
 
 const bgClass = index % 2 === 0 ? 'section--bg-default' : 'section--bg-elevated';
-const enquiryHref = `/contact?design=${encodeURIComponent(design.name)}`;
-const priceFormatted = formatPrice(design.priceFrom);
-const dimensionsFormatted = formatDimensions(design.width, design.length, design.totalArea);
-const sectionId = `design-${design.slug}`;
+const name = design.name || 'Design';
+const enquiryHref = `/contact?design=${encodeURIComponent(name)}`;
+const showEnquire = isCmsPageVisible('contact');
+const slug = (design.id || name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'design';
+const sectionId = `design-${slug}`;
+const imagesLeft = design.image_position === 'left';
+const pdfUrl = (design.floorplan_pdf || '').trim();
+const videoUrl = toEmbedUrl((design.video_url || '').trim());
+const width = (design.width || '').trim();
+const length = (design.length || '').trim();
+const area = (design.area || '').trim();
+const dimensionsFormatted = [width, length].filter(Boolean).length
+  ? `${width}${width && length ? ' × ' : ''}${length}${width || length ? ' m' : ''}${area ? ` | ${area} m²` : ''}`
+  : area
+    ? `${area} m²`
+    : '';
+
+function toEmbedUrl(url: string): string {
+  if (!url) return '';
+  const watch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/i);
+  if (watch) return `https://www.youtube.com/embed/${watch[1]}`;
+  return url;
+}
+
+function lightboxSrc(image?: CmsImageField): string {
+  const file = image?.file || '';
+  if (!file) return '';
+  const parts = file.replace(/^\/?images\//, '').split('/').map(encodeURIComponent);
+  return `/images/${parts.join('/')}`;
+}
+
+const heroSrc = lightboxSrc(design.hero_image);
+const image2Src = lightboxSrc(design.image_2);
+const image3Src = lightboxSrc(design.image_3);
 ---
 
 <section
@@ -22,134 +74,143 @@ const sectionId = `design-${design.slug}`;
   aria-labelledby={`${sectionId}-title`}
 >
   <div class="container">
-    <div class="design-showcase__grid">
+    <div class:list={['design-showcase__grid', { 'design-showcase__grid--images-left': imagesLeft }]}>
       <div class="design-showcase__info">
         <div class="design-showcase__panel">
-          <h3 id={`${sectionId}-title`} class="design-showcase__name">{design.name}</h3>
-          <div class="design-showcase__description">
-            {design.description.map((paragraph) => (
-              <p>{paragraph}</p>
-            ))}
-          </div>
+          <h3 id={`${sectionId}-title`} class="design-showcase__name">{name}</h3>
+          {((design.description ?? []).length > 0 || (design.bullets ?? []).length > 0) && (
+            <div class="design-showcase__description">
+              {(design.description ?? []).map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+              {(design.bullets ?? []).length > 0 && (
+                <ul class="design-showcase__bullets">
+                  {(design.bullets ?? []).map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
 
           <div class="design-showcase__specs">
-            <p class="design-showcase__price">
-              Priced from: <strong>{priceFormatted}</strong>
-            </p>
-            <table class="design-showcase__table" aria-label={`${design.name} dimensions`}>
-              <caption class="sr-only">{design.name} specifications</caption>
-              <tbody>
-                <tr>
-                  <th scope="row">Overall dimensions</th>
-                  <td>{dimensionsFormatted}</td>
-                </tr>
-              </tbody>
-            </table>
+            {design.price_from && (
+              <p class="design-showcase__price">
+                Priced from: <strong>{design.price_from}</strong>
+              </p>
+            )}
+            {dimensionsFormatted && (
+              <table class="design-showcase__table" aria-label={`${name} dimensions`}>
+                <caption class="sr-only">{name} specifications</caption>
+                <tbody>
+                  <tr>
+                    <th scope="row">Overall dimensions</th>
+                    <td>{dimensionsFormatted}</td>
+                  </tr>
+                </tbody>
+              </table>
+            )}
             <ul class="design-showcase__icons" aria-label="Room counts">
-              <li class="design-showcase__spec">
-                <span class="design-showcase__icon" aria-hidden="true">
-                  <img src="/images/icon_bed_blue_small.png" alt="" width="22" height="22" />
-                </span>
-                <span class="design-showcase__spec-text">
-                  <span class="design-showcase__spec-label">Bedrooms</span>
-                  <span class="design-showcase__spec-value">{design.bedrooms}</span>
-                </span>
-              </li>
-              <li class="design-showcase__spec">
-                <span class="design-showcase__icon" aria-hidden="true">
-                  <img src="/images/icon_shower_blue_small.png" alt="" width="22" height="22" />
-                </span>
-                <span class="design-showcase__spec-text">
-                  <span class="design-showcase__spec-label">Bathrooms</span>
-                  <span class="design-showcase__spec-value">{design.bathrooms}</span>
-                </span>
-              </li>
+              {design.bedrooms && (
+                <li class="design-showcase__spec">
+                  <span class="design-showcase__icon" aria-hidden="true">
+                    <img src="/images/icon_bed_blue_small.png" alt="" width="22" height="22" />
+                  </span>
+                  <span class="design-showcase__spec-text">
+                    <span class="design-showcase__spec-label">Bedrooms</span>
+                    <span class="design-showcase__spec-value">{design.bedrooms}</span>
+                  </span>
+                </li>
+              )}
+              {design.bathrooms && (
+                <li class="design-showcase__spec">
+                  <span class="design-showcase__icon" aria-hidden="true">
+                    <img src="/images/icon_shower_blue_small.png" alt="" width="22" height="22" />
+                  </span>
+                  <span class="design-showcase__spec-text">
+                    <span class="design-showcase__spec-label">Bathrooms</span>
+                    <span class="design-showcase__spec-value">{design.bathrooms}</span>
+                  </span>
+                </li>
+              )}
             </ul>
           </div>
 
           <div class="design-showcase__actions btn-group">
-            <a
-              href={design.floorplanPdfUrl}
-              class="btn btn-outline"
-              download={design.floorplanPdfUrl !== '#' ? `${design.slug}-floorplan.pdf` : undefined}
-              target={design.floorplanPdfUrl === '#' ? undefined : '_blank'}
-              rel={design.floorplanPdfUrl === '#' ? undefined : 'noopener noreferrer'}
-            >
-              Download Floorplan
-            </a>
-            {design.videoUrl && (
+            {pdfUrl && (
+              <a
+                href={pdfUrl}
+                class="btn btn-outline"
+                download={`${slug}-floorplan.pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download Floorplan
+              </a>
+            )}
+            {videoUrl && (
               <button
                 type="button"
                 class="btn btn-outline video-trigger"
-                data-video-url={design.videoUrl}
-                data-video-title={`${design.name} walkthrough video`}
+                data-video-url={videoUrl}
+                data-video-title={`${name} walkthrough video`}
               >
                 View Video
               </button>
             )}
-            <a href={enquiryHref} class="btn btn-primary">Enquire About This Design</a>
+            {showEnquire && <a href={enquiryHref} class="btn btn-primary">Enquire About This Design</a>}
           </div>
         </div>
       </div>
 
       <div class="design-showcase__gallery">
-        <figure class="design-showcase__figure design-showcase__figure--hero design-showcase__figure--floorplan">
-          <button
-            type="button"
-            class="design-showcase__image-btn lightbox-trigger"
-            data-lightbox-src={design.floorplanImage}
-            data-lightbox-alt={design.floorplanImageAlt}
-            aria-label={`View larger image: ${design.floorplanImageAlt}`}
-          >
-            <img
-              src={design.floorplanImage}
-              alt={design.floorplanImageAlt}
-              loading="lazy"
-              width="900"
-              height="600"
-            />
-          </button>
-          <figcaption>{design.floorplanImageCaption ?? 'Floor Plan'}</figcaption>
-        </figure>
+        {heroSrc && design.hero_image && (
+          <figure class="design-showcase__figure design-showcase__figure--hero design-showcase__figure--floorplan">
+            <button
+              type="button"
+              class="design-showcase__image-btn lightbox-trigger"
+              data-lightbox-src={heroSrc}
+              data-lightbox-alt={design.hero_image.alt || design.hero_caption || name}
+              aria-label={`View larger image: ${design.hero_image.alt || design.hero_caption || name}`}
+            >
+              <CmsImage image={design.hero_image} aspect={design.hero_image.aspect_ratio ?? 4 / 3} class="design-showcase__cms-image" />
+            </button>
+            <figcaption>{design.hero_caption || 'Floor Plan'}</figcaption>
+          </figure>
+        )}
 
-        <div class="design-showcase__floorplans">
-          <figure class="design-showcase__figure design-showcase__figure--zoom">
-            <button
-              type="button"
-              class="design-showcase__image-btn lightbox-trigger"
-              data-lightbox-src={design.exteriorImage}
-              data-lightbox-alt={design.exteriorImageAlt}
-              aria-label={`View larger image: ${design.exteriorImageAlt}`}
-            >
-              <img
-                src={design.exteriorImage}
-                alt={design.exteriorImageAlt}
-                loading="lazy"
-                width="450"
-                height="350"
-              />
-            </button>
-            <figcaption>{design.exteriorImageCaption ?? 'Exterior view'}</figcaption>
-          </figure>
-          <figure class="design-showcase__figure design-showcase__figure--zoom">
-            <button
-              type="button"
-              class="design-showcase__image-btn lightbox-trigger"
-              data-lightbox-src={design.floorplan3dImage}
-              data-lightbox-alt={design.floorplan3dImageAlt}
-              aria-label={`View larger image: ${design.floorplan3dImageAlt}`}
-            >
-              <img
-                src={design.floorplan3dImage}
-                alt={design.floorplan3dImageAlt}
-                loading="lazy"
-                width="450"
-                height="350"
-              />
-            </button>
-            <figcaption>{design.thirdImageCaption ?? 'Exterior view'}</figcaption>
-          </figure>
-        </div>
+        {(image2Src || image3Src) && (
+          <div class="design-showcase__floorplans">
+            {image2Src && design.image_2 && (
+              <figure class="design-showcase__figure design-showcase__figure--zoom">
+                <button
+                  type="button"
+                  class="design-showcase__image-btn lightbox-trigger"
+                  data-lightbox-src={image2Src}
+                  data-lightbox-alt={design.image_2.alt || design.image_2_caption || name}
+                  aria-label={`View larger image: ${design.image_2.alt || design.image_2_caption || name}`}
+                >
+                  <CmsImage image={design.image_2} aspect={design.image_2.aspect_ratio ?? 4 / 3} class="design-showcase__cms-image" />
+                </button>
+                <figcaption>{design.image_2_caption || 'Exterior view'}</figcaption>
+              </figure>
+            )}
+            {image3Src && design.image_3 && (
+              <figure class="design-showcase__figure design-showcase__figure--zoom">
+                <button
+                  type="button"
+                  class="design-showcase__image-btn lightbox-trigger"
+                  data-lightbox-src={image3Src}
+                  data-lightbox-alt={design.image_3.alt || design.image_3_caption || name}
+                  aria-label={`View larger image: ${design.image_3.alt || design.image_3_caption || name}`}
+                >
+                  <CmsImage image={design.image_3} aspect={design.image_3.aspect_ratio ?? 4 / 3} class="design-showcase__cms-image" />
+                </button>
+                <figcaption>{design.image_3_caption || 'Exterior view'}</figcaption>
+              </figure>
+            )}
+          </div>
+        )}
       </div>
     </div>
   </div>
@@ -161,6 +222,18 @@ const sectionId = `design-${design.slug}`;
     grid-template-columns: 1fr 1.1fr;
     gap: var(--space-xl);
     align-items: start;
+  }
+
+  .design-showcase__grid--images-left {
+    grid-template-columns: 1.1fr 1fr;
+  }
+
+  .design-showcase__grid--images-left .design-showcase__gallery {
+    order: 1;
+  }
+
+  .design-showcase__grid--images-left .design-showcase__info {
+    order: 2;
   }
 
   .design-showcase__panel {
@@ -191,6 +264,31 @@ const sectionId = `design-${design.slug}`;
 
   .design-showcase__description p:last-child {
     margin-bottom: 0;
+  }
+
+  .design-showcase__bullets {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-sm) 0 0;
+  }
+
+  .design-showcase__bullets li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #475569;
+  }
+
+  .design-showcase__bullets li:last-child {
+    margin-bottom: 0;
+  }
+
+  .design-showcase__bullets li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 700;
   }
 
   .design-showcase__specs {
@@ -327,10 +425,12 @@ const sectionId = `design-${design.slug}`;
     outline-offset: 3px;
   }
 
-  .design-showcase__image-btn img {
+  .design-showcase__image-btn :global(.cms-image),
+  .design-showcase__image-btn :global(.design-showcase__cms-image) {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    border-radius: 0;
+    aspect-ratio: unset;
   }
 
   .design-showcase__figure--hero .design-showcase__image-btn {
@@ -347,8 +447,7 @@ const sectionId = `design-${design.slug}`;
     aspect-ratio: 4 / 3;
   }
 
-  .design-showcase__figure--zoom .design-showcase__image-btn img {
-    object-fit: cover;
+  .design-showcase__figure--zoom .design-showcase__image-btn :global(.cms-image img) {
     transform: scale(1.2);
   }
 
@@ -356,7 +455,7 @@ const sectionId = `design-${design.slug}`;
     background: #f8fafc;
   }
 
-  .design-showcase__figure--floorplan img {
+  .design-showcase__figure--floorplan :global(.cms-image img) {
     object-fit: contain;
   }
 
@@ -371,15 +470,18 @@ const sectionId = `design-${design.slug}`;
   }
 
   @media (max-width: 768px) {
-    .design-showcase__grid {
+    .design-showcase__grid,
+    .design-showcase__grid--images-left {
       grid-template-columns: 1fr;
     }
 
-    .design-showcase__info {
+    .design-showcase__info,
+    .design-showcase__grid--images-left .design-showcase__info {
       order: 1;
     }
 
-    .design-showcase__gallery {
+    .design-showcase__gallery,
+    .design-showcase__grid--images-left .design-showcase__gallery {
       order: 2;
     }
 

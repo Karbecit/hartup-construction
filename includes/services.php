@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/sections.php';
+require_once __DIR__ . '/design-defaults.php';
 
 function default_services(): array
 {
@@ -20,51 +21,211 @@ function default_services(): array
             'visible' => true,
             'sections' => normalize_sections([
                 [
-                    'type' => 'text',
-                    'heading' => 'Quality New Builds',
-                    'paragraphs' => ['Explore our range of one, two, and three bedroom tiny home designs.'],
+                    'id' => 'new_builds_bedroom_tiles',
+                    'type' => 'service_tiles',
+                    'enabled' => true,
+                    'eyebrow' => 'Configurations',
+                    'heading' => 'Choose Your Bedroom Layout',
+                    'paragraphs' => [
+                        'Explore our one, two, and three bedroom tiny home configurations to find the right fit for your lifestyle.',
+                    ],
+                    'tiles' => [
+                        [
+                            'service_slug' => 'one-bedroom',
+                            'label' => 'One Bedroom',
+                            'image' => [
+                                'file' => 'one-bedroom/exterior-alt.png',
+                                'alt' => 'One bedroom tiny home exterior with timber cladding and deck',
+                            ],
+                        ],
+                        [
+                            'service_slug' => 'two-bedroom',
+                            'label' => 'Two Bedroom',
+                            'image' => [
+                                'file' => 'two-bedroom/exterior-alt.png',
+                                'alt' => 'Two bedroom tiny home exterior with timber cladding and deck',
+                            ],
+                        ],
+                        [
+                            'service_slug' => 'three-bedroom',
+                            'label' => 'Three Bedroom',
+                            'image' => [
+                                'file' => 'three-bedroom/exterior-alt.png',
+                                'alt' => 'Three bedroom tiny home exterior with timber cladding and deck',
+                            ],
+                        ],
+                    ],
                 ],
             ]),
         ],
-        [
-            'slug' => 'one-bedroom',
-            'title' => 'One Bedroom',
-            'nav_label' => 'One Bedroom',
-            'href' => '/one-bedroom',
-            'tag' => 'Compact tiny home',
-            'description' => 'Efficient one bedroom tiny home designs for compact sites and simplified living.',
-            'in_menu' => true,
-            'menu_order' => 11,
-            'parent_slug' => 'new-builds',
-            'visible' => true,
-            'sections' => [],
-        ],
-        [
-            'slug' => 'two-bedroom',
-            'title' => 'Two Bedroom',
-            'nav_label' => 'Two Bedroom',
-            'href' => '/two-bedroom',
-            'tag' => 'Family-friendly tiny home',
-            'description' => 'Two bedroom tiny home designs with flexible living spaces for couples and small families.',
-            'in_menu' => true,
-            'menu_order' => 12,
-            'parent_slug' => 'new-builds',
-            'visible' => true,
-            'sections' => [],
-        ],
-        [
-            'slug' => 'three-bedroom',
-            'title' => 'Three Bedroom',
-            'nav_label' => 'Three Bedroom',
-            'href' => '/three-bedroom',
-            'tag' => 'Premium tiny home',
-            'description' => 'Our most spacious tiny home — three bedrooms for families who need room without a full-scale build.',
-            'in_menu' => true,
-            'menu_order' => 13,
-            'parent_slug' => 'new-builds',
-            'visible' => true,
-            'sections' => [],
-        ],
+        default_bedroom_service(
+            [
+                'slug' => 'one-bedroom',
+                'title' => 'One Bedroom',
+                'nav_label' => 'One Bedroom',
+                'href' => '/one-bedroom',
+                'tag' => 'New Builds',
+                'description' => 'Our one bedroom tiny home delivers smart, efficient living in a compact footprint — perfect for singles, couples, granny flats, or investment properties.',
+                'in_menu' => true,
+                'menu_order' => 11,
+                'parent_slug' => 'new-builds',
+                'visible' => true,
+            ],
+            [
+                [
+                    'id' => 'one_bedroom_intro_1',
+                    'eyebrow' => 'Compact Living',
+                    'heading' => 'Maximum Comfort in Minimal Space',
+                    'paragraphs' => [
+                        'The one bedroom configuration is our most compact option, designed to maximise every square metre without compromising on comfort or style. Open-plan living flows seamlessly into a dedicated bedroom and fully functional kitchen and bathroom.',
+                    ],
+                    'image_position' => 'left',
+                    'image' => [
+                        'file' => 'one-bedroom/exterior.png',
+                        'alt' => 'One bedroom tiny home exterior with timber cladding and deck',
+                    ],
+                ],
+                [
+                    'id' => 'one_bedroom_intro_2',
+                    'eyebrow' => 'Smart Design',
+                    'heading' => 'Built for Everyday Living',
+                    'paragraphs' => [
+                        'Every Hartup one bedroom design features open-plan living and dining, a separate bedroom with built-in storage, and a contemporary kitchen and bathroom — all finished with quality materials selected for durability and low maintenance.',
+                    ],
+                    'image_position' => 'right',
+                    'image' => [
+                        'file' => 'one-bedroom/exterior-alt.png',
+                        'alt' => 'One bedroom tiny home alternate exterior view with timber deck',
+                    ],
+                ],
+                [
+                    'id' => 'one_bedroom_intro_3',
+                    'eyebrow' => 'Versatile Use',
+                    'heading' => 'Ideal for Any Setting',
+                    'paragraphs' => [
+                        'From granny flats and guest accommodation to rural retreats and investment properties, our one bedroom tiny homes adapt to your lifestyle. Customisable finishes, colours, and layout options ensure your home reflects your vision.',
+                    ],
+                    'image_position' => 'left',
+                    'image' => [
+                        'file' => 'one-bedroom/floorplan.png',
+                        'alt' => 'One bedroom tiny home floorplan layout',
+                    ],
+                ],
+            ],
+            ['two-bedroom', 'three-bedroom']
+        ),
+        default_bedroom_service(
+            [
+                'slug' => 'two-bedroom',
+                'title' => 'Two Bedroom',
+                'nav_label' => 'Two Bedroom',
+                'href' => '/two-bedroom',
+                'tag' => 'New Builds',
+                'description' => 'Our two bedroom tiny home offers the perfect balance of space and efficiency — ideal for small families, couples who want a home office, or rental investment properties.',
+                'in_menu' => true,
+                'menu_order' => 12,
+                'parent_slug' => 'new-builds',
+                'visible' => true,
+            ],
+            [
+                [
+                    'id' => 'two_bedroom_intro_1',
+                    'eyebrow' => 'Versatile Space',
+                    'heading' => 'Room to Grow and Adapt',
+                    'paragraphs' => [
+                        'The two bedroom configuration adds an extra room without sacrificing the smart design principles that define every Hartup tiny home. Whether you need a second bedroom, a home office, or guest accommodation, this layout adapts to your lifestyle.',
+                    ],
+                    'image_position' => 'left',
+                    'image' => [
+                        'file' => 'two-bedroom/exterior.png',
+                        'alt' => 'Two bedroom tiny home exterior with timber cladding and deck',
+                    ],
+                ],
+                [
+                    'id' => 'two_bedroom_intro_2',
+                    'eyebrow' => 'Family Friendly',
+                    'heading' => 'Designed for Modern Households',
+                    'paragraphs' => [
+                        'Spacious open-plan living, dining, and kitchen areas flow into two separate bedrooms with built-in storage. Optional ensuite layouts and flexible floor plans make this configuration a popular choice for small families and rental investors.',
+                    ],
+                    'image_position' => 'right',
+                    'image' => [
+                        'file' => 'two-bedroom/exterior-alt.png',
+                        'alt' => 'Two bedroom tiny home alternate exterior view with timber deck',
+                    ],
+                ],
+                [
+                    'id' => 'two_bedroom_intro_3',
+                    'eyebrow' => 'Investment Ready',
+                    'heading' => 'Built for Long-Term Value',
+                    'paragraphs' => [
+                        'Energy-efficient insulation, quality fixtures, and contemporary external finishes ensure your two bedroom tiny home delivers strong returns — whether as a primary residence, granny flat, or holiday rental.',
+                    ],
+                    'image_position' => 'left',
+                    'image' => [
+                        'file' => 'two-bedroom/floorplan.png',
+                        'alt' => 'Two bedroom tiny home floorplan layout',
+                    ],
+                ],
+            ],
+            ['one-bedroom', 'three-bedroom']
+        ),
+        default_bedroom_service(
+            [
+                'slug' => 'three-bedroom',
+                'title' => 'Three Bedroom',
+                'nav_label' => 'Three Bedroom',
+                'href' => '/three-bedroom',
+                'tag' => 'New Builds',
+                'description' => 'Our largest tiny home configuration — three bedrooms of smart, efficient living designed for families, multi-generational households, or high-yield investment properties.',
+                'in_menu' => true,
+                'menu_order' => 13,
+                'parent_slug' => 'new-builds',
+                'visible' => true,
+            ],
+            [
+                [
+                    'id' => 'three_bedroom_intro_1',
+                    'eyebrow' => 'Family Sized',
+                    'heading' => 'Compact Living Without Compromise',
+                    'paragraphs' => [
+                        'The three bedroom configuration proves that tiny home living does not mean sacrificing space. With three dedicated bedrooms, a full kitchen, and well-appointed bathrooms, this layout delivers genuine family accommodation in an efficient, affordable package.',
+                    ],
+                    'image_position' => 'left',
+                    'image' => [
+                        'file' => 'three-bedroom/exterior.png',
+                        'alt' => 'Three bedroom tiny home exterior with timber cladding and deck',
+                    ],
+                ],
+                [
+                    'id' => 'three_bedroom_intro_2',
+                    'eyebrow' => 'Thoughtful Layout',
+                    'heading' => 'Space for Everyone',
+                    'paragraphs' => [
+                        'Generous open-plan living, dining, and kitchen zones connect to three separate bedrooms — each with built-in wardrobe storage. Master bedroom ensuite options and flexible floor plans accommodate growing families and multi-generational living.',
+                    ],
+                    'image_position' => 'right',
+                    'image' => [
+                        'file' => 'three-bedroom/exterior-alt.png',
+                        'alt' => 'Three bedroom tiny home alternate exterior view with timber deck',
+                    ],
+                ],
+                [
+                    'id' => 'three_bedroom_intro_3',
+                    'eyebrow' => 'Premium Build',
+                    'heading' => 'Quality That Lasts',
+                    'paragraphs' => [
+                        'Energy-efficient insulation, ventilation, and LED lighting combine with contemporary external finishes and large glazed openings. Every three bedroom Hartup tiny home is built to Australian standards with a comprehensive workmanship warranty.',
+                    ],
+                    'image_position' => 'left',
+                    'image' => [
+                        'file' => 'three-bedroom/floorplan.png',
+                        'alt' => 'Three bedroom tiny home floorplan layout',
+                    ],
+                ],
+            ],
+            ['one-bedroom', 'two-bedroom']
+        ),
         [
             'slug' => 'kitchens',
             'title' => 'Kitchens',
@@ -136,6 +297,74 @@ function default_services(): array
     ];
 
     return array_map('normalize_service', $services);
+}
+
+function default_bedroom_tile(string $slug): array
+{
+    $tiles = [
+        'one-bedroom' => [
+            'service_slug' => 'one-bedroom',
+            'label' => 'One Bedroom',
+            'image' => [
+                'file' => 'one-bedroom/exterior-alt.png',
+                'alt' => 'One bedroom tiny home exterior with timber cladding and deck',
+            ],
+        ],
+        'two-bedroom' => [
+            'service_slug' => 'two-bedroom',
+            'label' => 'Two Bedroom',
+            'image' => [
+                'file' => 'two-bedroom/exterior-alt.png',
+                'alt' => 'Two bedroom tiny home exterior with timber cladding and deck',
+            ],
+        ],
+        'three-bedroom' => [
+            'service_slug' => 'three-bedroom',
+            'label' => 'Three Bedroom',
+            'image' => [
+                'file' => 'three-bedroom/exterior-alt.png',
+                'alt' => 'Three bedroom tiny home exterior with timber cladding and deck',
+            ],
+        ],
+    ];
+
+    return $tiles[$slug];
+}
+
+function default_bedroom_service(array $meta, array $intros, array $otherSlugs): array
+{
+    $labels = [
+        'one-bedroom' => '1 bedroom',
+        'two-bedroom' => '2 bedroom',
+        'three-bedroom' => '3 bedroom',
+    ];
+    $otherLabels = array_map(static fn($slug) => $labels[$slug] ?? $slug, $otherSlugs);
+
+    $sections = [];
+    foreach ($intros as $index => $intro) {
+        $sections[] = array_merge($intro, [
+            'type' => 'image_text',
+            'background' => $index === 1 ? 'elevated' : 'default',
+        ]);
+    }
+
+    $slug = (string) $meta['slug'];
+    $sections[] = default_our_designs_banner($slug);
+    $sections[] = default_bedroom_designs_section($slug);
+
+    $sections[] = [
+        'id' => str_replace('-', '_', $slug) . '_other_tiles',
+        'type' => 'service_tiles',
+        'background' => 'elevated',
+        'eyebrow' => 'Explore More',
+        'heading' => 'Other Configurations',
+        'paragraphs' => [
+            'Compare our ' . implode(' and ', $otherLabels) . ' tiny home layouts to find your ideal fit.',
+        ],
+        'tiles' => array_map('default_bedroom_tile', $otherSlugs),
+    ];
+
+    return array_merge($meta, ['sections' => normalize_sections($sections)]);
 }
 
 function normalize_service(array $service): array

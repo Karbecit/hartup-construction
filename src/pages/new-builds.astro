@@ -1,38 +1,12 @@
 ---
 import CmsServicePage from '../components/CmsServicePage.astro';
-import BedroomGrid from '../components/BedroomGrid.astro';
-import { serviceBySlug } from '../data/site';
-
-const service = serviceBySlug('new-builds');
-const hasCmsSections = (service?.sections ?? []).some((section) => section.enabled !== false);
 ---
 
 <CmsServicePage
   slug="new-builds"
-  description="Hartup Construction tiny homes — smart space design, modern finishes, and quality craftsmanship. Explore 1, 2, and 3 bedroom configurations."
+  showHero={false}
   ctaTitle="Ready to Build Your Tiny Home?"
   ctaDescription="Contact our team to discuss floor plans, finishes, and timelines for your new build."
 >
-  {!hasCmsSections && (
-    <>
-      <section class="section section--bg-default bedroom-row-section">
-        <div class="container">
-          <BedroomGrid />
-        </div>
-      </section>
-    </>
-  )}
-
-  <section class="section section--bg-default bedroom-row-section">
-    <div class="container">
-      {hasCmsSections && (
-        <div class="section-header">
-          <span class="eyebrow">Configurations</span>
-          <h2>Choose Your Bedroom Layout</h2>
-          <p>Explore our one, two, and three bedroom tiny home configurations to find the right fit for your lifestyle.</p>
-        </div>
-      )}
-      <BedroomGrid variant={hasCmsSections ? 'alt' : undefined} />
-    </div>
-  </section>
+  <h1 class="sr-only">New Builds</h1>
 </CmsServicePage>

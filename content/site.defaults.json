@@ -309,6 +309,8 @@
             "slug": "about",
             "title": "About Us",
             "path": "/about",
+            "visible": true,
+            "in_menu": true,
             "page_hero": {
                 "eyebrow": "Our Story",
                 "heading": "About Hartup Construction",
@@ -368,6 +370,8 @@
             "slug": "contact",
             "title": "Contact Us",
             "path": "/contact",
+            "visible": true,
+            "in_menu": true,
             "page_hero": {
                 "eyebrow": "Get In Touch",
                 "heading": "Contact Us",
@@ -391,6 +395,38 @@
                     "bullets": []
                 }
             ]
+        },
+        "terms": {
+            "slug": "terms",
+            "title": "Terms and Conditions",
+            "path": "/terms",
+            "visible": true,
+            "in_menu": false,
+            "download_pdf": "",
+            "page_hero": {
+                "eyebrow": "Legal",
+                "heading": "Terms and Conditions",
+                "lead": "Please review our terms and conditions. A downloadable PDF is available when a document has been uploaded."
+            },
+            "sections": [
+                {
+                    "id": "terms_intro",
+                    "type": "text",
+                    "enabled": true,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Legal",
+                    "heading": "Terms of use",
+                    "paragraphs": [
+                        "These terms and conditions apply to work carried out by Hartup Construction. Please read them carefully before engaging our services.",
+                        "If a PDF copy has been uploaded, you can download it from this page. Contact us if you have any questions about these terms."
+                    ],
+                    "bullets": []
+                }
+            ]
         }
     },
     "services": [
@@ -407,20 +443,69 @@
             "visible": true,
             "sections": [
                 {
-                    "id": "sec_cafbc958",
-                    "type": "text",
+                    "id": "new_builds_bedroom_tiles",
+                    "type": "service_tiles",
                     "enabled": true,
                     "background": "default",
                     "heading_size": "lg",
                     "heading_weight": "semibold",
                     "text_size": "normal",
                     "eyebrow_size": "sm",
-                    "eyebrow": "",
-                    "heading": "Quality New Builds",
+                    "eyebrow": "Configurations",
+                    "heading": "Choose Your Bedroom Layout",
                     "paragraphs": [
-                        "Explore our range of one, two, and three bedroom tiny home designs."
+                        "Explore our one, two, and three bedroom tiny home configurations to find the right fit for your lifestyle."
                     ],
-                    "bullets": []
+                    "tiles": [
+                        {
+                            "service_slug": "one-bedroom",
+                            "label": "One Bedroom",
+                            "image": {
+                                "file": "one-bedroom/exterior-alt.png",
+                                "alt": "One bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        },
+                        {
+                            "service_slug": "two-bedroom",
+                            "label": "Two Bedroom",
+                            "image": {
+                                "file": "two-bedroom/exterior-alt.png",
+                                "alt": "Two bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        },
+                        {
+                            "service_slug": "three-bedroom",
+                            "label": "Three Bedroom",
+                            "image": {
+                                "file": "three-bedroom/exterior-alt.png",
+                                "alt": "Three bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -429,13 +514,103 @@
             "title": "One Bedroom",
             "nav_label": "One Bedroom",
             "href": "/one-bedroom",
-            "tag": "Compact tiny home",
-            "description": "Efficient one bedroom tiny home designs for compact sites and simplified living.",
+            "tag": "New Builds",
+            "description": "Our one bedroom tiny home delivers smart, efficient living in a compact footprint — perfect for singles, couples, granny flats, or investment properties.",
             "in_menu": true,
             "menu_order": 11,
             "parent_slug": "new-builds",
             "visible": true,
             "sections": [
+                {
+                    "id": "one_bedroom_intro_1",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Compact Living",
+                    "heading": "Maximum Comfort in Minimal Space",
+                    "paragraphs": [
+                        "The one bedroom configuration is our most compact option, designed to maximise every square metre without compromising on comfort or style. Open-plan living flows seamlessly into a dedicated bedroom and fully functional kitchen and bathroom."
+                    ],
+                    "bullets": [],
+                    "image_position": "left",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "one-bedroom/exterior.png",
+                        "alt": "One bedroom tiny home exterior with timber cladding and deck",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
+                {
+                    "id": "one_bedroom_intro_2",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "elevated",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Smart Design",
+                    "heading": "Built for Everyday Living",
+                    "paragraphs": [
+                        "Every Hartup one bedroom design features open-plan living and dining, a separate bedroom with built-in storage, and a contemporary kitchen and bathroom — all finished with quality materials selected for durability and low maintenance."
+                    ],
+                    "bullets": [],
+                    "image_position": "right",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "one-bedroom/exterior-alt.png",
+                        "alt": "One bedroom tiny home alternate exterior view with timber deck",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
+                {
+                    "id": "one_bedroom_intro_3",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Versatile Use",
+                    "heading": "Ideal for Any Setting",
+                    "paragraphs": [
+                        "From granny flats and guest accommodation to rural retreats and investment properties, our one bedroom tiny homes adapt to your lifestyle. Customisable finishes, colours, and layout options ensure your home reflects your vision."
+                    ],
+                    "bullets": [],
+                    "image_position": "left",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "one-bedroom/floorplan.png",
+                        "alt": "One bedroom tiny home floorplan layout",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
                 {
                     "id": "sec_b51ee1dd",
                     "type": "image_text",
@@ -479,6 +654,300 @@
                         "aspect_ratio": 1.3333,
                         "cropped_area_pixels": ""
                     }
+                },
+                {
+                    "id": "one_bedroom_designs_banner",
+                    "type": "image",
+                    "enabled": true,
+                    "background": "default",
+                    "image": {
+                        "file": "exterior.png",
+                        "alt": "Hartup one bedroom tiny home exterior with modern timber cladding",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.7778,
+                        "cropped_area_pixels": "",
+                        "transition": "fade",
+                        "transition_ms": 800,
+                        "hold_seconds": 5,
+                        "slides": []
+                    },
+                    "image_scale": 1,
+                    "caption": "",
+                    "overlay": {
+                        "text": "OUR DESIGNS",
+                        "size": "xl",
+                        "color": "light",
+                        "x": 5,
+                        "y": 28,
+                        "w": 90,
+                        "h": 44
+                    }
+                },
+                {
+                    "id": "one_bedroom_designs",
+                    "type": "designs",
+                    "enabled": true,
+                    "background": "default",
+                    "items": [
+                        {
+                            "id": "des_the_studio",
+                            "name": "The Studio",
+                            "description": [
+                                "A streamlined single-bedroom layout with open-plan living, full kitchen, and ensuite bathroom. Perfect for couples or solo occupants who want simplicity without sacrifice.",
+                                "The Studio makes intelligent use of every square metre, with clearly defined zones for sleeping, cooking, and relaxing that feel generous despite the compact footprint. Quality fixtures, durable finishes, and large windows create a bright, comfortable home ideal for granny flats, guest accommodation, or rural retreats."
+                            ],
+                            "price_from": "$89,500",
+                            "width": "7.2",
+                            "length": "4.2",
+                            "area": "30",
+                            "bedrooms": "1",
+                            "bathrooms": "1",
+                            "floorplan_pdf": "",
+                            "video_url": "",
+                            "image_position": "right",
+                            "hero_image": {
+                                "file": "one-bedroom/floorplan.png",
+                                "alt": "The Studio floorplan layout",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "hero_caption": "Floor Plan",
+                            "image_2": {
+                                "file": "one-bedroom/exterior.png",
+                                "alt": "The Studio exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_2_caption": "Exterior view",
+                            "image_3": {
+                                "file": "one-bedroom/exterior-alt.png",
+                                "alt": "The Studio alternate exterior view",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_3_caption": "Exterior view"
+                        },
+                        {
+                            "id": "des_the_haven",
+                            "name": "The Haven",
+                            "description": [
+                                "A slightly wider one bedroom design with a dedicated study nook and expanded living area. Ideal for remote workers or those who want a little extra breathing room without stepping up to a two bedroom layout.",
+                                "The Haven balances efficiency with flexibility — the additional width allows for a separate work zone, more kitchen bench space, and improved storage throughout. Contemporary external finishes and optional deck extensions make this a popular choice for backyard studios and premium rental accommodation."
+                            ],
+                            "price_from": "$98,500",
+                            "width": "7.8",
+                            "length": "4.6",
+                            "area": "36",
+                            "bedrooms": "1",
+                            "bathrooms": "1",
+                            "floorplan_pdf": "",
+                            "video_url": "",
+                            "image_position": "right",
+                            "hero_image": {
+                                "file": "one-bedroom/floorplan.png",
+                                "alt": "The Haven floorplan layout",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "hero_caption": "Floor Plan",
+                            "image_2": {
+                                "file": "one-bedroom/exterior.png",
+                                "alt": "The Haven exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_2_caption": "Exterior view",
+                            "image_3": {
+                                "file": "one-bedroom/exterior-alt.png",
+                                "alt": "The Haven alternate exterior view",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_3_caption": "Exterior view"
+                        },
+                        {
+                            "id": "des_the_retreat",
+                            "name": "The Retreat",
+                            "description": [
+                                "Our premium one bedroom offering with a covered deck, larger glazing, and upgraded kitchen package. Designed for those who want a touch of luxury in a compact footprint.",
+                                "The Retreat elevates tiny home living with premium inclusions — stone benchtops, upgraded appliances, and expansive glazing that connects indoor and outdoor spaces. The covered deck extends your living area and makes this design well suited to coastal blocks, vineyard settings, and high-end short-stay rentals."
+                            ],
+                            "price_from": "$112,000",
+                            "width": "8.4",
+                            "length": "5.0",
+                            "area": "42",
+                            "bedrooms": "1",
+                            "bathrooms": "1",
+                            "floorplan_pdf": "",
+                            "video_url": "",
+                            "image_position": "right",
+                            "hero_image": {
+                                "file": "one-bedroom/floorplan.png",
+                                "alt": "The Retreat floorplan layout",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "hero_caption": "Floor Plan",
+                            "image_2": {
+                                "file": "one-bedroom/exterior.png",
+                                "alt": "The Retreat exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_2_caption": "Exterior view",
+                            "image_3": {
+                                "file": "one-bedroom/exterior-alt.png",
+                                "alt": "The Retreat alternate exterior view",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_3_caption": "Exterior view"
+                        }
+                    ]
+                },
+                {
+                    "id": "one_bedroom_other_tiles",
+                    "type": "service_tiles",
+                    "enabled": true,
+                    "background": "elevated",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Explore More",
+                    "heading": "Other Configurations",
+                    "paragraphs": [
+                        "Compare our 2 bedroom and 3 bedroom tiny home layouts to find your ideal fit."
+                    ],
+                    "tiles": [
+                        {
+                            "service_slug": "two-bedroom",
+                            "label": "Two Bedroom",
+                            "image": {
+                                "file": "two-bedroom/exterior-alt.png",
+                                "alt": "Two bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        },
+                        {
+                            "service_slug": "three-bedroom",
+                            "label": "Three Bedroom",
+                            "image": {
+                                "file": "three-bedroom/exterior-alt.png",
+                                "alt": "Three bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -487,26 +956,728 @@
             "title": "Two Bedroom",
             "nav_label": "Two Bedroom",
             "href": "/two-bedroom",
-            "tag": "Family-friendly tiny home",
-            "description": "Two bedroom tiny home designs with flexible living spaces for couples and small families.",
+            "tag": "New Builds",
+            "description": "Our two bedroom tiny home offers the perfect balance of space and efficiency — ideal for small families, couples who want a home office, or rental investment properties.",
             "in_menu": true,
             "menu_order": 12,
             "parent_slug": "new-builds",
             "visible": true,
-            "sections": []
+            "sections": [
+                {
+                    "id": "two_bedroom_intro_1",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Versatile Space",
+                    "heading": "Room to Grow and Adapt",
+                    "paragraphs": [
+                        "The two bedroom configuration adds an extra room without sacrificing the smart design principles that define every Hartup tiny home. Whether you need a second bedroom, a home office, or guest accommodation, this layout adapts to your lifestyle."
+                    ],
+                    "bullets": [],
+                    "image_position": "left",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "two-bedroom/exterior.png",
+                        "alt": "Two bedroom tiny home exterior with timber cladding and deck",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
+                {
+                    "id": "two_bedroom_intro_2",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "elevated",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Family Friendly",
+                    "heading": "Designed for Modern Households",
+                    "paragraphs": [
+                        "Spacious open-plan living, dining, and kitchen areas flow into two separate bedrooms with built-in storage. Optional ensuite layouts and flexible floor plans make this configuration a popular choice for small families and rental investors."
+                    ],
+                    "bullets": [],
+                    "image_position": "right",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "two-bedroom/exterior-alt.png",
+                        "alt": "Two bedroom tiny home alternate exterior view with timber deck",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
+                {
+                    "id": "two_bedroom_intro_3",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Investment Ready",
+                    "heading": "Built for Long-Term Value",
+                    "paragraphs": [
+                        "Energy-efficient insulation, quality fixtures, and contemporary external finishes ensure your two bedroom tiny home delivers strong returns — whether as a primary residence, granny flat, or holiday rental."
+                    ],
+                    "bullets": [],
+                    "image_position": "left",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "two-bedroom/floorplan.png",
+                        "alt": "Two bedroom tiny home floorplan layout",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
+                {
+                    "id": "two_bedroom_designs_banner",
+                    "type": "image",
+                    "enabled": true,
+                    "background": "default",
+                    "image": {
+                        "file": "exterior.png",
+                        "alt": "Hartup two bedroom tiny home exterior with modern timber cladding",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.7778,
+                        "cropped_area_pixels": "",
+                        "transition": "fade",
+                        "transition_ms": 800,
+                        "hold_seconds": 5,
+                        "slides": []
+                    },
+                    "image_scale": 1,
+                    "caption": "",
+                    "overlay": {
+                        "text": "OUR DESIGNS",
+                        "size": "xl",
+                        "color": "light",
+                        "x": 5,
+                        "y": 28,
+                        "w": 90,
+                        "h": 44
+                    }
+                },
+                {
+                    "id": "two_bedroom_designs",
+                    "type": "designs",
+                    "enabled": true,
+                    "background": "default",
+                    "items": [
+                        {
+                            "id": "des_the_duo",
+                            "name": "The Duo",
+                            "description": [
+                                "A compact two bedroom layout with equal-sized bedrooms and a shared bathroom. Efficient and affordable, perfect for couples with a home office or small rental properties.",
+                                "The Duo keeps construction costs down while delivering genuine two-room flexibility — use the second bedroom as a guest room, nursery, or dedicated office. Open-plan living and a practical kitchen layout ensure the home feels spacious and easy to live in day to day."
+                            ],
+                            "price_from": "$128,000",
+                            "width": "9.0",
+                            "length": "5.4",
+                            "area": "49",
+                            "bedrooms": "2",
+                            "bathrooms": "1",
+                            "floorplan_pdf": "",
+                            "video_url": "",
+                            "image_position": "right",
+                            "hero_image": {
+                                "file": "two-bedroom/floorplan.png",
+                                "alt": "The Duo floorplan layout",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "hero_caption": "Floor Plan",
+                            "image_2": {
+                                "file": "two-bedroom/exterior.png",
+                                "alt": "The Duo exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_2_caption": "Exterior view",
+                            "image_3": {
+                                "file": "two-bedroom/exterior-alt.png",
+                                "alt": "The Duo alternate exterior view",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_3_caption": "Exterior view"
+                        },
+                        {
+                            "id": "des_the_family",
+                            "name": "The Family",
+                            "description": [
+                                "Our most popular two bedroom design featuring a master bedroom with optional ensuite, generous living area, and full-size kitchen. Ideal for small families or premium rental accommodation.",
+                                "The Family is designed around everyday living — with separated bedrooms, ample storage, and a kitchen that handles real cooking rather than just reheating. Optional ensuite layouts and a choice of external finishes let you tailor the home to your site, budget, and intended use."
+                            ],
+                            "price_from": "$145,000",
+                            "width": "10.2",
+                            "length": "6.0",
+                            "area": "61",
+                            "bedrooms": "2",
+                            "bathrooms": "2",
+                            "floorplan_pdf": "",
+                            "video_url": "",
+                            "image_position": "right",
+                            "hero_image": {
+                                "file": "two-bedroom/floorplan.png",
+                                "alt": "The Family floorplan layout",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "hero_caption": "Floor Plan",
+                            "image_2": {
+                                "file": "two-bedroom/exterior.png",
+                                "alt": "The Family exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_2_caption": "Exterior view",
+                            "image_3": {
+                                "file": "two-bedroom/exterior-alt.png",
+                                "alt": "The Family alternate exterior view",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_3_caption": "Exterior view"
+                        },
+                        {
+                            "id": "des_the_horizon",
+                            "name": "The Horizon",
+                            "description": [
+                                "A wider two bedroom design with an extended deck, floor-to-ceiling glazing, and premium kitchen package. Built for those who want extra space and elevated finishes.",
+                                "The Horizon prioritises light, outlook, and indoor-outdoor connection — with full-height glazing, an extended deck, and a generous open-plan living zone. Premium fixtures and contemporary cladding options make this our standout two bedroom design for owner-occupiers and high-yield holiday rentals."
+                            ],
+                            "price_from": "$162,000",
+                            "width": "11.4",
+                            "length": "6.6",
+                            "area": "75",
+                            "bedrooms": "2",
+                            "bathrooms": "2",
+                            "floorplan_pdf": "",
+                            "video_url": "",
+                            "image_position": "right",
+                            "hero_image": {
+                                "file": "two-bedroom/floorplan.png",
+                                "alt": "The Horizon floorplan layout",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "hero_caption": "Floor Plan",
+                            "image_2": {
+                                "file": "two-bedroom/exterior.png",
+                                "alt": "The Horizon exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_2_caption": "Exterior view",
+                            "image_3": {
+                                "file": "two-bedroom/exterior-alt.png",
+                                "alt": "The Horizon alternate exterior view",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_3_caption": "Exterior view"
+                        }
+                    ]
+                },
+                {
+                    "id": "two_bedroom_other_tiles",
+                    "type": "service_tiles",
+                    "enabled": true,
+                    "background": "elevated",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Explore More",
+                    "heading": "Other Configurations",
+                    "paragraphs": [
+                        "Compare our 1 bedroom and 3 bedroom tiny home layouts to find your ideal fit."
+                    ],
+                    "tiles": [
+                        {
+                            "service_slug": "one-bedroom",
+                            "label": "One Bedroom",
+                            "image": {
+                                "file": "one-bedroom/exterior-alt.png",
+                                "alt": "One bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        },
+                        {
+                            "service_slug": "three-bedroom",
+                            "label": "Three Bedroom",
+                            "image": {
+                                "file": "three-bedroom/exterior-alt.png",
+                                "alt": "Three bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        }
+                    ]
+                }
+            ]
         },
         {
             "slug": "three-bedroom",
             "title": "Three Bedroom",
             "nav_label": "Three Bedroom",
             "href": "/three-bedroom",
-            "tag": "Premium tiny home",
-            "description": "Our most spacious tiny home — three bedrooms for families who need room without a full-scale build.",
+            "tag": "New Builds",
+            "description": "Our largest tiny home configuration — three bedrooms of smart, efficient living designed for families, multi-generational households, or high-yield investment properties.",
             "in_menu": true,
             "menu_order": 13,
             "parent_slug": "new-builds",
             "visible": true,
-            "sections": []
+            "sections": [
+                {
+                    "id": "three_bedroom_intro_1",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Family Sized",
+                    "heading": "Compact Living Without Compromise",
+                    "paragraphs": [
+                        "The three bedroom configuration proves that tiny home living does not mean sacrificing space. With three dedicated bedrooms, a full kitchen, and well-appointed bathrooms, this layout delivers genuine family accommodation in an efficient, affordable package."
+                    ],
+                    "bullets": [],
+                    "image_position": "left",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "three-bedroom/exterior.png",
+                        "alt": "Three bedroom tiny home exterior with timber cladding and deck",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
+                {
+                    "id": "three_bedroom_intro_2",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "elevated",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Thoughtful Layout",
+                    "heading": "Space for Everyone",
+                    "paragraphs": [
+                        "Generous open-plan living, dining, and kitchen zones connect to three separate bedrooms — each with built-in wardrobe storage. Master bedroom ensuite options and flexible floor plans accommodate growing families and multi-generational living."
+                    ],
+                    "bullets": [],
+                    "image_position": "right",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "three-bedroom/exterior-alt.png",
+                        "alt": "Three bedroom tiny home alternate exterior view with timber deck",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
+                {
+                    "id": "three_bedroom_intro_3",
+                    "type": "image_text",
+                    "enabled": true,
+                    "background": "default",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Premium Build",
+                    "heading": "Quality That Lasts",
+                    "paragraphs": [
+                        "Energy-efficient insulation, ventilation, and LED lighting combine with contemporary external finishes and large glazed openings. Every three bedroom Hartup tiny home is built to Australian standards with a comprehensive workmanship warranty."
+                    ],
+                    "bullets": [],
+                    "image_position": "left",
+                    "image_scale": 1,
+                    "image": {
+                        "file": "three-bedroom/floorplan.png",
+                        "alt": "Three bedroom tiny home floorplan layout",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.3333,
+                        "cropped_area_pixels": ""
+                    }
+                },
+                {
+                    "id": "three_bedroom_designs_banner",
+                    "type": "image",
+                    "enabled": true,
+                    "background": "default",
+                    "image": {
+                        "file": "exterior.png",
+                        "alt": "Hartup three bedroom tiny home exterior with modern timber cladding",
+                        "crop_x": 0,
+                        "crop_y": 0,
+                        "crop_zoom": 1,
+                        "crop_x_mobile": 0,
+                        "crop_y_mobile": 0,
+                        "crop_zoom_mobile": 1,
+                        "aspect_ratio": 1.7778,
+                        "cropped_area_pixels": "",
+                        "transition": "fade",
+                        "transition_ms": 800,
+                        "hold_seconds": 5,
+                        "slides": []
+                    },
+                    "image_scale": 1,
+                    "caption": "",
+                    "overlay": {
+                        "text": "OUR DESIGNS",
+                        "size": "xl",
+                        "color": "light",
+                        "x": 5,
+                        "y": 28,
+                        "w": 90,
+                        "h": 44
+                    }
+                },
+                {
+                    "id": "three_bedroom_designs",
+                    "type": "designs",
+                    "enabled": true,
+                    "background": "default",
+                    "items": [
+                        {
+                            "id": "des_the_homestead",
+                            "name": "The Homestead",
+                            "description": [
+                                "Our entry-level three bedroom design with a central living hub, shared bathroom, and three equal-sized bedrooms. A practical choice for families on a budget who need genuine three-bedroom accommodation.",
+                                "The Homestead delivers real family functionality without unnecessary complexity — three bedrooms, a full kitchen, and a shared bathroom arranged around a central living area. Built-in wardrobes, energy-efficient construction, and low-maintenance external finishes make this a smart option for growing families and long-term rental investment."
+                            ],
+                            "price_from": "$185,000",
+                            "width": "12.0",
+                            "length": "7.2",
+                            "area": "86",
+                            "bedrooms": "3",
+                            "bathrooms": "1",
+                            "floorplan_pdf": "",
+                            "video_url": "",
+                            "image_position": "right",
+                            "hero_image": {
+                                "file": "three-bedroom/floorplan.png",
+                                "alt": "The Homestead floorplan layout",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "hero_caption": "Floor Plan",
+                            "image_2": {
+                                "file": "three-bedroom/exterior.png",
+                                "alt": "The Homestead exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_2_caption": "Exterior view",
+                            "image_3": {
+                                "file": "three-bedroom/exterior-alt.png",
+                                "alt": "The Homestead alternate exterior view",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_3_caption": "Exterior view"
+                        },
+                        {
+                            "id": "des_the_estate",
+                            "name": "The Estate",
+                            "description": [
+                                "Our flagship three bedroom design featuring a master suite with ensuite, two additional bedrooms, main bathroom, and expansive open-plan living. Premium finishes and optional deck extensions available.",
+                                "The Estate is Hartup's most spacious tiny home — designed for families who need room to spread out without committing to a full-scale build. A master suite with ensuite, two further bedrooms, and a generous living and dining zone create a home that works for multi-generational living, large families, or premium accommodation with strong rental appeal."
+                            ],
+                            "price_from": "$218,000",
+                            "width": "13.8",
+                            "length": "8.4",
+                            "area": "116",
+                            "bedrooms": "3",
+                            "bathrooms": "2",
+                            "floorplan_pdf": "",
+                            "video_url": "",
+                            "image_position": "right",
+                            "hero_image": {
+                                "file": "three-bedroom/floorplan.png",
+                                "alt": "The Estate floorplan layout",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "hero_caption": "Floor Plan",
+                            "image_2": {
+                                "file": "three-bedroom/exterior.png",
+                                "alt": "The Estate exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_2_caption": "Exterior view",
+                            "image_3": {
+                                "file": "three-bedroom/exterior-alt.png",
+                                "alt": "The Estate alternate exterior view",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": "",
+                                "transition": "fade",
+                                "transition_ms": 800,
+                                "hold_seconds": 5,
+                                "slides": []
+                            },
+                            "image_3_caption": "Exterior view"
+                        }
+                    ]
+                },
+                {
+                    "id": "three_bedroom_other_tiles",
+                    "type": "service_tiles",
+                    "enabled": true,
+                    "background": "elevated",
+                    "heading_size": "lg",
+                    "heading_weight": "semibold",
+                    "text_size": "normal",
+                    "eyebrow_size": "sm",
+                    "eyebrow": "Explore More",
+                    "heading": "Other Configurations",
+                    "paragraphs": [
+                        "Compare our 1 bedroom and 2 bedroom tiny home layouts to find your ideal fit."
+                    ],
+                    "tiles": [
+                        {
+                            "service_slug": "one-bedroom",
+                            "label": "One Bedroom",
+                            "image": {
+                                "file": "one-bedroom/exterior-alt.png",
+                                "alt": "One bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        },
+                        {
+                            "service_slug": "two-bedroom",
+                            "label": "Two Bedroom",
+                            "image": {
+                                "file": "two-bedroom/exterior-alt.png",
+                                "alt": "Two bedroom tiny home exterior with timber cladding and deck",
+                                "crop_x": 0,
+                                "crop_y": 0,
+                                "crop_zoom": 1,
+                                "crop_x_mobile": 0,
+                                "crop_y_mobile": 0,
+                                "crop_zoom_mobile": 1,
+                                "aspect_ratio": 1.3333,
+                                "cropped_area_pixels": ""
+                            }
+                        }
+                    ]
+                }
+            ]
         },
         {
             "slug": "kitchens",
