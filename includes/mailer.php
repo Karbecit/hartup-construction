@@ -27,12 +27,12 @@ class SmtpMailer
     ): void {
         $socket = $this->connect();
         $this->expect($socket, 220);
-        $ehlo = parse_url(site_url(), PHP_URL_HOST) ?: 'localhost';
+        $ehlo = $this->ehloHost();
         $this->command($socket, 'EHLO ' . $ehlo, 250);
 
         if ($this->encryption === 'tls') {
             $this->command($socket, 'STARTTLS', 220);
-            if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+            if (!stream_socket_enable_crypto($socket, true, $this->cryptoMethod())) {
                 throw new RuntimeException('Unable to enable TLS for SMTP connection.');
             }
             $this->command($socket, 'EHLO ' . $ehlo, 250);
@@ -42,7 +42,13 @@ class SmtpMailer
         $this->command($socket, base64_encode($this->username), 334);
         $this->command($socket, base64_encode($this->password), 235);
 
-        $fromAddress = $from !== '' ? $from : $this->username;
+        $fromAddress = $from !== '' ? $from : '';
+        if (!filter_var($fromAddress, FILTER_VALIDATE_EMAIL)) {
+            throw new RuntimeException('A verified From email address is required. Do not use the SMTP username as MAIL FROM.');
+        }
+        if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+            throw new RuntimeException('A valid recipient email address is required.');
+        }
         $fromHeader = $fromName !== '' ? $this->encodeHeaderName($fromName) . ' <' . $fromAddress . '>' : $fromAddress;
 
         $this->command($socket, 'MAIL FROM:<' . $fromAddress . '>', 250);
@@ -50,6 +56,8 @@ class SmtpMailer
         $this->command($socket, 'DATA', 354);
 
         $headers = [
+            'Date: ' . date('r'),
+            'Message-ID: <' . bin2hex(random_bytes(16)) . '@' . $ehlo . '>',
             'From: ' . $fromHeader,
             'To: <' . $to . '>',
             'Subject: ' . $this->encodeSubject($subject),
@@ -80,7 +88,7 @@ class SmtpMailer
             $body = $this->normalizeBody($textBody);
         }
 
-        $message = implode("\r\n", $headers) . "\r\n\r\n" . $body . "\r\n.";
+        $message = implode("\r\n", $headers) . "\r\n\r\n" . $this->dotStuff($body) . "\r\n.";
         fwrite($socket, $message . "\r\n");
         $this->expect($socket, 250);
         $this->command($socket, 'QUIT', 221);
@@ -93,12 +101,50 @@ class SmtpMailer
             ? 'ssl://' . $this->host . ':' . $this->port
             : $this->host . ':' . $this->port;
 
-        $socket = @stream_socket_client($remote, $errno, $errstr, 20, STREAM_CLIENT_CONNECT);
+        $context = stream_context_create([
+            'ssl' => [
+                'crypto_method' => $this->cryptoMethod(),
+                'verify_peer' => true,
+                'verify_peer_name' => true,
+            ],
+        ]);
+
+        $socket = @stream_socket_client($remote, $errno, $errstr, 20, STREAM_CLIENT_CONNECT, $context);
         if (!$socket) {
             throw new RuntimeException('SMTP connection failed: ' . $errstr);
         }
         stream_set_timeout($socket, 20);
         return $socket;
+    }
+
+    private function ehloHost(): string
+    {
+        $host = (string) (parse_url(site_url(), PHP_URL_HOST) ?: '');
+        if ($host === '' || $host === 'localhost' || str_starts_with($host, '127.') || $host === '::1') {
+            $host = (string) ($_SERVER['SERVER_NAME'] ?? $_SERVER['HTTP_HOST'] ?? '');
+            $host = (string) (parse_url('https://' . $host, PHP_URL_HOST) ?: $host);
+        }
+        $host = preg_replace('/[^a-zA-Z0-9.-]/', '', $host) ?? '';
+        if ($host === '' || $host === 'localhost') {
+            return 'hartupconstruction.com.au';
+        }
+
+        return $host;
+    }
+
+    private function cryptoMethod(): int
+    {
+        $method = STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT;
+        if (defined('STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT')) {
+            $method |= STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT;
+        }
+
+        return $method;
+    }
+
+    private function dotStuff(string $body): string
+    {
+        return preg_replace('/^\./m', '..', $body) ?? $body;
     }
 
     private function command($socket, string $command, int $expectedCode): void
@@ -154,16 +200,22 @@ function create_smtp_mailer(): SmtpMailer
     );
 }
 
-function send_enquiry_email(string $name, string $email, string $service, string $message, string $phone = ''): void
-{
+function send_enquiry_email(
+    string $name,
+    string $email,
+    string $service,
+    string $message,
+    string $phone = '',
+    string $location = ''
+): void {
     $mailer = create_smtp_mailer();
     $to = (string) config('mail_to', 'hello@example.com');
     $from = (string) config('mail_from', $to);
     $fromName = (string) config('mail_from_name', email_brand_name());
     $brandName = email_brand_name();
 
-    $notificationHtml = build_enquiry_notification_html($name, $email, $phone, $service, $message);
-    $notificationText = build_enquiry_notification_text($name, $email, $phone, $service, $message);
+    $notificationHtml = build_enquiry_notification_html($name, $email, $phone, $service, $message, $location);
+    $notificationText = build_enquiry_notification_text($name, $email, $phone, $service, $message, $location);
     $mailer->send(
         $to,
         'Website enquiry: ' . $service,
@@ -174,15 +226,42 @@ function send_enquiry_email(string $name, string $email, string $service, string
         $notificationHtml
     );
 
-    $autoReplyHtml = build_enquiry_autoreply_html($name, $service);
-    $autoReplyText = build_enquiry_autoreply_text($name, $service);
+    try {
+        $autoReplyHtml = build_enquiry_autoreply_html($name, $service);
+        $autoReplyText = build_enquiry_autoreply_text($name, $service);
+        $mailer->send(
+            $email,
+            'Thank you for contacting ' . $brandName,
+            $autoReplyText,
+            $to,
+            $from,
+            $brandName,
+            $autoReplyHtml
+        );
+    } catch (Throwable $exception) {
+        error_log('Enquiry auto-reply failed: ' . $exception->getMessage());
+    }
+}
+
+function send_admin_password_reset_email(string $resetUrl): void
+{
+    $to = admin_recovery_email();
+    if (!validate_email($to)) {
+        throw new RuntimeException('Admin recovery email is not configured.');
+    }
+
+    $mailer = create_smtp_mailer();
+    $from = (string) config('mail_from', $to);
+    $fromName = (string) config('mail_from_name', email_brand_name());
+    $brandName = email_brand_name();
+
     $mailer->send(
-        $email,
-        'Thank you for contacting ' . $brandName,
-        $autoReplyText,
         $to,
+        'Reset your ' . $brandName . ' admin password',
+        build_admin_password_reset_text($resetUrl),
+        '',
         $from,
-        $brandName,
-        $autoReplyHtml
+        $fromName,
+        build_admin_password_reset_html($resetUrl)
     );
 }

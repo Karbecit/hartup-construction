@@ -48,7 +48,7 @@
                             "service_slug": "new-builds",
                             "label": "New Builds",
                             "image": {
-                                "file": "Designer_38__c5a607.png",
+                                "file": "Designer_38__c5a607.jpg",
                                 "alt": "Modern new home exterior",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -64,7 +64,7 @@
                             "service_slug": "kitchens",
                             "label": "Kitchens",
                             "image": {
-                                "file": "KItchen_a4e142.png",
+                                "file": "KItchen_a4e142.jpg",
                                 "alt": "Modern kitchen interior",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -80,7 +80,7 @@
                             "service_slug": "bathrooms",
                             "label": "Bathrooms",
                             "image": {
-                                "file": "Bathroom_7f6929.png",
+                                "file": "Bathroom_7f6929.jpg",
                                 "alt": "Modern bathroom interior",
                                 "crop_x": 0,
                                 "crop_y": -0.4714,
@@ -96,7 +96,7 @@
                             "service_slug": "restorations",
                             "label": "Restorations",
                             "image": {
-                                "file": "Restoration__e76580.png",
+                                "file": "Restoration__e76580.jpg",
                                 "alt": "Restored heritage home",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -136,7 +136,7 @@
                     "image_position": "right",
                     "image_scale": 1,
                     "image": {
-                        "file": "Aura_68_Front_6bb4f4.png",
+                        "file": "Aura_68_Front_6bb4f4.jpg",
                         "alt": "Modern tiny home exterior",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -173,7 +173,7 @@
                     "image_position": "right",
                     "image_scale": 1,
                     "image": {
-                        "file": "Couple_with_plans_3_5a6f23.png",
+                        "file": "Couple_with_plans_3_5a6f23.jpg",
                         "alt": "House plans",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -191,7 +191,7 @@
                     "enabled": true,
                     "background": "elevated",
                     "image": {
-                        "file": "3rd_Main_Photo_84a4a6.png",
+                        "file": "3rd_Main_Photo_84a4a6.jpg",
                         "alt": "3 Bedroom design external",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -233,7 +233,7 @@
                     "image_position": "right",
                     "image_scale": 1,
                     "image": {
-                        "file": "Gem_47_Front_0fb381.png",
+                        "file": "Gem_47_Front_0fb381.jpg",
                         "alt": "Gem 47 front view",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -260,7 +260,7 @@
                             "w": 38.72214946133277,
                             "h": 90.6896551724135,
                             "image": {
-                                "file": "Designer_16__a31d71.png",
+                                "file": "Designer_16__a31d71.jpg",
                                 "alt": "",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -289,7 +289,7 @@
                     "enabled": true,
                     "background": "default",
                     "image": {
-                        "file": "Swimming_pool_3_slim_57f834.png",
+                        "file": "Swimming_pool_3_slim_57f834.jpg",
                         "alt": "",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -352,7 +352,7 @@
                     "image_position": "left",
                     "image_scale": 1,
                     "image": {
-                        "file": "exterior.png",
+                        "file": "two-bedroom/exterior.jpg",
                         "alt": "Two bedroom tiny home exterior",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -461,7 +461,7 @@
                             "service_slug": "one-bedroom",
                             "label": "One Bedroom",
                             "image": {
-                                "file": "one-bedroom/exterior-alt.png",
+                                "file": "one-bedroom/exterior-alt.jpg",
                                 "alt": "One bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -477,7 +477,7 @@
                             "service_slug": "two-bedroom",
                             "label": "Two Bedroom",
                             "image": {
-                                "file": "two-bedroom/exterior-alt.png",
+                                "file": "two-bedroom/exterior-alt.jpg",
                                 "alt": "Two bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -493,7 +493,7 @@
                             "service_slug": "three-bedroom",
                             "label": "Three Bedroom",
                             "image": {
-                                "file": "three-bedroom/exterior-alt.png",
+                                "file": "three-bedroom/exterior-alt.jpg",
                                 "alt": "Three bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -539,7 +539,7 @@
                     "image_position": "left",
                     "image_scale": 1,
                     "image": {
-                        "file": "one-bedroom/exterior.png",
+                        "file": "one-bedroom/exterior.jpg",
                         "alt": "One bedroom tiny home exterior with timber cladding and deck",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -569,7 +569,7 @@
                     "image_position": "right",
                     "image_scale": 1,
                     "image": {
-                        "file": "one-bedroom/exterior-alt.png",
+                        "file": "one-bedroom/exterior-alt.jpg",
                         "alt": "One bedroom tiny home alternate exterior view with timber deck",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -599,7 +599,7 @@
                     "image_position": "left",
                     "image_scale": 1,
                     "image": {
-                        "file": "one-bedroom/floorplan.png",
+                        "file": "one-bedroom/floorplan.jpg",
                         "alt": "One bedroom tiny home floorplan layout",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -643,7 +643,7 @@
                     "image_position": "right",
                     "image_scale": 1,
                     "image": {
-                        "file": "Designer_22__ff03de.png",
+                        "file": "Designer_22__ff03de.jpg",
                         "alt": "",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -661,7 +661,7 @@
                     "enabled": true,
                     "background": "default",
                     "image": {
-                        "file": "exterior.png",
+                        "file": "one-bedroom/exterior.jpg",
                         "alt": "Hartup one bedroom tiny home exterior with modern timber cladding",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -711,7 +711,7 @@
                             "video_url": "",
                             "image_position": "right",
                             "hero_image": {
-                                "file": "one-bedroom/floorplan.png",
+                                "file": "one-bedroom/floorplan.jpg",
                                 "alt": "The Studio floorplan layout",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -728,7 +728,7 @@
                             },
                             "hero_caption": "Floor Plan",
                             "image_2": {
-                                "file": "one-bedroom/exterior.png",
+                                "file": "one-bedroom/exterior.jpg",
                                 "alt": "The Studio exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -745,7 +745,7 @@
                             },
                             "image_2_caption": "Exterior view",
                             "image_3": {
-                                "file": "one-bedroom/exterior-alt.png",
+                                "file": "one-bedroom/exterior-alt.jpg",
                                 "alt": "The Studio alternate exterior view",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -779,7 +779,7 @@
                             "video_url": "",
                             "image_position": "right",
                             "hero_image": {
-                                "file": "one-bedroom/floorplan.png",
+                                "file": "one-bedroom/floorplan.jpg",
                                 "alt": "The Haven floorplan layout",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -796,7 +796,7 @@
                             },
                             "hero_caption": "Floor Plan",
                             "image_2": {
-                                "file": "one-bedroom/exterior.png",
+                                "file": "one-bedroom/exterior.jpg",
                                 "alt": "The Haven exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -813,7 +813,7 @@
                             },
                             "image_2_caption": "Exterior view",
                             "image_3": {
-                                "file": "one-bedroom/exterior-alt.png",
+                                "file": "one-bedroom/exterior-alt.jpg",
                                 "alt": "The Haven alternate exterior view",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -847,7 +847,7 @@
                             "video_url": "",
                             "image_position": "right",
                             "hero_image": {
-                                "file": "one-bedroom/floorplan.png",
+                                "file": "one-bedroom/floorplan.jpg",
                                 "alt": "The Retreat floorplan layout",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -864,7 +864,7 @@
                             },
                             "hero_caption": "Floor Plan",
                             "image_2": {
-                                "file": "one-bedroom/exterior.png",
+                                "file": "one-bedroom/exterior.jpg",
                                 "alt": "The Retreat exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -881,7 +881,7 @@
                             },
                             "image_2_caption": "Exterior view",
                             "image_3": {
-                                "file": "one-bedroom/exterior-alt.png",
+                                "file": "one-bedroom/exterior-alt.jpg",
                                 "alt": "The Retreat alternate exterior view",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -919,7 +919,7 @@
                             "service_slug": "two-bedroom",
                             "label": "Two Bedroom",
                             "image": {
-                                "file": "two-bedroom/exterior-alt.png",
+                                "file": "two-bedroom/exterior-alt.jpg",
                                 "alt": "Two bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -935,7 +935,7 @@
                             "service_slug": "three-bedroom",
                             "label": "Three Bedroom",
                             "image": {
-                                "file": "three-bedroom/exterior-alt.png",
+                                "file": "three-bedroom/exterior-alt.jpg",
                                 "alt": "Three bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -981,7 +981,7 @@
                     "image_position": "left",
                     "image_scale": 1,
                     "image": {
-                        "file": "two-bedroom/exterior.png",
+                        "file": "two-bedroom/exterior.jpg",
                         "alt": "Two bedroom tiny home exterior with timber cladding and deck",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1011,7 +1011,7 @@
                     "image_position": "right",
                     "image_scale": 1,
                     "image": {
-                        "file": "two-bedroom/exterior-alt.png",
+                        "file": "two-bedroom/exterior-alt.jpg",
                         "alt": "Two bedroom tiny home alternate exterior view with timber deck",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1041,7 +1041,7 @@
                     "image_position": "left",
                     "image_scale": 1,
                     "image": {
-                        "file": "two-bedroom/floorplan.png",
+                        "file": "two-bedroom/floorplan.jpg",
                         "alt": "Two bedroom tiny home floorplan layout",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1059,7 +1059,7 @@
                     "enabled": true,
                     "background": "default",
                     "image": {
-                        "file": "exterior.png",
+                        "file": "two-bedroom/exterior.jpg",
                         "alt": "Hartup two bedroom tiny home exterior with modern timber cladding",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1109,7 +1109,7 @@
                             "video_url": "",
                             "image_position": "right",
                             "hero_image": {
-                                "file": "two-bedroom/floorplan.png",
+                                "file": "two-bedroom/floorplan.jpg",
                                 "alt": "The Duo floorplan layout",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1126,7 +1126,7 @@
                             },
                             "hero_caption": "Floor Plan",
                             "image_2": {
-                                "file": "two-bedroom/exterior.png",
+                                "file": "two-bedroom/exterior.jpg",
                                 "alt": "The Duo exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1143,7 +1143,7 @@
                             },
                             "image_2_caption": "Exterior view",
                             "image_3": {
-                                "file": "two-bedroom/exterior-alt.png",
+                                "file": "two-bedroom/exterior-alt.jpg",
                                 "alt": "The Duo alternate exterior view",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1177,7 +1177,7 @@
                             "video_url": "",
                             "image_position": "right",
                             "hero_image": {
-                                "file": "two-bedroom/floorplan.png",
+                                "file": "two-bedroom/floorplan.jpg",
                                 "alt": "The Family floorplan layout",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1194,7 +1194,7 @@
                             },
                             "hero_caption": "Floor Plan",
                             "image_2": {
-                                "file": "two-bedroom/exterior.png",
+                                "file": "two-bedroom/exterior.jpg",
                                 "alt": "The Family exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1211,7 +1211,7 @@
                             },
                             "image_2_caption": "Exterior view",
                             "image_3": {
-                                "file": "two-bedroom/exterior-alt.png",
+                                "file": "two-bedroom/exterior-alt.jpg",
                                 "alt": "The Family alternate exterior view",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1245,7 +1245,7 @@
                             "video_url": "",
                             "image_position": "right",
                             "hero_image": {
-                                "file": "two-bedroom/floorplan.png",
+                                "file": "two-bedroom/floorplan.jpg",
                                 "alt": "The Horizon floorplan layout",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1262,7 +1262,7 @@
                             },
                             "hero_caption": "Floor Plan",
                             "image_2": {
-                                "file": "two-bedroom/exterior.png",
+                                "file": "two-bedroom/exterior.jpg",
                                 "alt": "The Horizon exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1279,7 +1279,7 @@
                             },
                             "image_2_caption": "Exterior view",
                             "image_3": {
-                                "file": "two-bedroom/exterior-alt.png",
+                                "file": "two-bedroom/exterior-alt.jpg",
                                 "alt": "The Horizon alternate exterior view",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1317,7 +1317,7 @@
                             "service_slug": "one-bedroom",
                             "label": "One Bedroom",
                             "image": {
-                                "file": "one-bedroom/exterior-alt.png",
+                                "file": "one-bedroom/exterior-alt.jpg",
                                 "alt": "One bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1333,7 +1333,7 @@
                             "service_slug": "three-bedroom",
                             "label": "Three Bedroom",
                             "image": {
-                                "file": "three-bedroom/exterior-alt.png",
+                                "file": "three-bedroom/exterior-alt.jpg",
                                 "alt": "Three bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1379,7 +1379,7 @@
                     "image_position": "left",
                     "image_scale": 1,
                     "image": {
-                        "file": "three-bedroom/exterior.png",
+                        "file": "three-bedroom/exterior.jpg",
                         "alt": "Three bedroom tiny home exterior with timber cladding and deck",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1409,7 +1409,7 @@
                     "image_position": "right",
                     "image_scale": 1,
                     "image": {
-                        "file": "three-bedroom/exterior-alt.png",
+                        "file": "three-bedroom/exterior-alt.jpg",
                         "alt": "Three bedroom tiny home alternate exterior view with timber deck",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1439,7 +1439,7 @@
                     "image_position": "left",
                     "image_scale": 1,
                     "image": {
-                        "file": "three-bedroom/floorplan.png",
+                        "file": "three-bedroom/floorplan.jpg",
                         "alt": "Three bedroom tiny home floorplan layout",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1457,7 +1457,7 @@
                     "enabled": true,
                     "background": "default",
                     "image": {
-                        "file": "exterior.png",
+                        "file": "three-bedroom/exterior.jpg",
                         "alt": "Hartup three bedroom tiny home exterior with modern timber cladding",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1507,7 +1507,7 @@
                             "video_url": "",
                             "image_position": "right",
                             "hero_image": {
-                                "file": "three-bedroom/floorplan.png",
+                                "file": "three-bedroom/floorplan.jpg",
                                 "alt": "The Homestead floorplan layout",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1524,7 +1524,7 @@
                             },
                             "hero_caption": "Floor Plan",
                             "image_2": {
-                                "file": "three-bedroom/exterior.png",
+                                "file": "three-bedroom/exterior.jpg",
                                 "alt": "The Homestead exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1541,7 +1541,7 @@
                             },
                             "image_2_caption": "Exterior view",
                             "image_3": {
-                                "file": "three-bedroom/exterior-alt.png",
+                                "file": "three-bedroom/exterior-alt.jpg",
                                 "alt": "The Homestead alternate exterior view",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1575,7 +1575,7 @@
                             "video_url": "",
                             "image_position": "right",
                             "hero_image": {
-                                "file": "three-bedroom/floorplan.png",
+                                "file": "three-bedroom/floorplan.jpg",
                                 "alt": "The Estate floorplan layout",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1592,7 +1592,7 @@
                             },
                             "hero_caption": "Floor Plan",
                             "image_2": {
-                                "file": "three-bedroom/exterior.png",
+                                "file": "three-bedroom/exterior.jpg",
                                 "alt": "The Estate exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1609,7 +1609,7 @@
                             },
                             "image_2_caption": "Exterior view",
                             "image_3": {
-                                "file": "three-bedroom/exterior-alt.png",
+                                "file": "three-bedroom/exterior-alt.jpg",
                                 "alt": "The Estate alternate exterior view",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1647,7 +1647,7 @@
                             "service_slug": "one-bedroom",
                             "label": "One Bedroom",
                             "image": {
-                                "file": "one-bedroom/exterior-alt.png",
+                                "file": "one-bedroom/exterior-alt.jpg",
                                 "alt": "One bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1663,7 +1663,7 @@
                             "service_slug": "two-bedroom",
                             "label": "Two Bedroom",
                             "image": {
-                                "file": "two-bedroom/exterior-alt.png",
+                                "file": "two-bedroom/exterior-alt.jpg",
                                 "alt": "Two bedroom tiny home exterior with timber cladding and deck",
                                 "crop_x": 0,
                                 "crop_y": 0,
@@ -1735,7 +1735,7 @@
                     "image_position": "right",
                     "image_scale": 1,
                     "image": {
-                        "file": "kitchen1.png",
+                        "file": "kitchen1.jpg",
                         "alt": "Modern kitchen upgrade",
                         "crop_x": 0,
                         "crop_y": 0,
@@ -1779,7 +1779,7 @@
                     "image_position": "left",
                     "image_scale": 1,
                     "image": {
-                        "file": "kitchen-restore.png",
+                        "file": "kitchen-restore.jpg",
                         "alt": "Restored property interior",
                         "crop_x": 0,
                         "crop_y": 0,

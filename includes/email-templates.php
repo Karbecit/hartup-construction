@@ -6,12 +6,12 @@ require_once __DIR__ . '/bootstrap.php';
 
 function email_brand_name(): string
 {
-    return 'Site Template';
+    return 'Hartup Construction';
 }
 
 function email_logo_url(): string
 {
-    return site_url('assets/images/logo.svg');
+    return site_url('images/logo.png');
 }
 
 function email_escape(?string $value): string
@@ -114,7 +114,7 @@ function render_email_layout(string $innerHtml, string $preheader = ''): string
         . '</body></html>';
 }
 
-function build_enquiry_notification_html(string $name, string $email, string $phone, string $service, string $message): string
+function build_enquiry_notification_html(string $name, string $email, string $phone, string $service, string $message, string $location = ''): string
 {
     $safeName = email_escape($name);
     $safeEmail = email_escape($email);
@@ -132,6 +132,9 @@ function build_enquiry_notification_html(string $name, string $email, string $ph
             : $safePhone;
         $details .= email_field_line('Mobile', $phoneValue);
     }
+    if ($location !== '') {
+        $details .= email_field_line('Location', email_escape($location));
+    }
     $details .= email_field_line('Service', $safeService);
 
     $inner = email_eyebrow('New website enquiry')
@@ -148,7 +151,7 @@ function build_enquiry_notification_html(string $name, string $email, string $ph
     return render_email_layout($inner, 'New enquiry from ' . $name . ' about ' . $service);
 }
 
-function build_enquiry_notification_text(string $name, string $email, string $phone, string $service, string $message): string
+function build_enquiry_notification_text(string $name, string $email, string $phone, string $service, string $message, string $location = ''): string
 {
     $lines = [
         'New enquiry from ' . parse_url(site_url(), PHP_URL_HOST),
@@ -158,6 +161,9 @@ function build_enquiry_notification_text(string $name, string $email, string $ph
     ];
     if ($phone !== '') {
         $lines[] = 'Mobile: ' . $phone;
+    }
+    if ($location !== '') {
+        $lines[] = 'Location: ' . $location;
     }
     $lines[] = 'Service: ' . $service;
     $lines[] = '';
@@ -212,5 +218,33 @@ function build_enquiry_autoreply_text(string $name, string $service): string
         'With thanks,',
         email_brand_name(),
         site_url(),
+    ]);
+}
+
+function build_admin_password_reset_html(string $resetUrl): string
+{
+    $inner = email_eyebrow('Admin password')
+        . '<h1 style="margin:0 0 16px;font-family:Georgia,\'Times New Roman\',serif;font-size:28px;line-height:1.2;font-weight:600;color:#2c2419;letter-spacing:0;">'
+        . 'Reset your admin password</h1>'
+        . '<p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#2c2419;">'
+        . 'Someone requested a password reset for the ' . email_brand_html() . ' admin. This link expires in one hour.'
+        . '</p>'
+        . email_button($resetUrl, 'Choose a new password')
+        . '<p style="margin:20px 0 0;font-size:13px;line-height:1.6;color:#5c5348;">'
+        . 'If you did not request this, you can ignore this email. Your password will stay the same.'
+        . '</p>';
+
+    return render_email_layout($inner, 'Reset your admin password');
+}
+
+function build_admin_password_reset_text(string $resetUrl): string
+{
+    return implode("\n", [
+        'Reset your ' . email_brand_name() . ' admin password',
+        '',
+        'This link expires in one hour:',
+        $resetUrl,
+        '',
+        'If you did not request this, ignore this email. Your password will stay the same.',
     ]);
 }

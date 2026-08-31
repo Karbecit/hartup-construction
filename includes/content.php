@@ -15,7 +15,7 @@ function default_content(): array
         ],
         'hero' => [
             'tagline' => 'BUILDING QUALITY - CREATING VALUE',
-            'background_image' => 'images/tiny-home.png',
+            'background_image' => 'images/tiny-home.jpg',
         ],
         'contact' => [
             'eyebrow' => 'Get In Touch',

@@ -33,7 +33,7 @@ const hasSections = sections.some((section) => section.enabled !== false);
 
 <Layout title={pageTitle} description={pageDescription}>
   {showHero && (
-    <section class="page-hero">
+    <section class:list={['page-hero', { 'page-hero--compact': slug !== 'new-builds' }]}>
       <div class="container">
         {service?.tag && <span class="eyebrow">{service.tag}</span>}
         <h1 class:list={[{ 'page-title-serif': slug === 'new-builds' }]}>{pageTitle}</h1>

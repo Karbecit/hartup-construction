@@ -532,7 +532,7 @@ h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
   inset: 0;
   background:
     linear-gradient(135deg, rgba(26, 35, 50, 0.52) 0%, rgba(15, 22, 35, 0.38) 50%, rgba(15, 22, 35, 0.58) 100%),
-    url('images/tiny-home.png') center/cover no-repeat;
+    url('images/tiny-home.jpg') center/cover no-repeat;
 }
 
 .hero-pattern {

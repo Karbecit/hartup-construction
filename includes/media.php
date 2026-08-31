@@ -149,7 +149,73 @@ function upload_media_file(array $file): ?string
         return null;
     }
 
+    optimize_stored_image($target);
+
     return $filename;
+}
+
+function optimize_stored_image(string $path): void
+{
+    if (!function_exists('imagecreatefromstring') || !is_file($path)) {
+        return;
+    }
+
+    $data = @file_get_contents($path);
+    if (!is_string($data) || $data === '') {
+        return;
+    }
+
+    $source = @imagecreatefromstring($data);
+    if ($source === false) {
+        return;
+    }
+
+    $width = imagesx($source);
+    $height = imagesy($source);
+    if ($width < 1 || $height < 1) {
+        imagedestroy($source);
+        return;
+    }
+
+    $maxEdge = 1920;
+    $scale = min(1.0, $maxEdge / max($width, $height));
+    $newWidth = max(1, (int) round($width * $scale));
+    $newHeight = max(1, (int) round($height * $scale));
+
+    $canvas = imagecreatetruecolor($newWidth, $newHeight);
+    if ($canvas === false) {
+        imagedestroy($source);
+        return;
+    }
+
+    $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+    $keepAlpha = in_array($ext, ['png', 'gif', 'webp'], true);
+
+    if ($keepAlpha) {
+        imagealphablending($canvas, false);
+        imagesavealpha($canvas, true);
+        $transparent = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+        imagefilledrectangle($canvas, 0, 0, $newWidth, $newHeight, $transparent);
+        imagealphablending($canvas, true);
+    } else {
+        $white = imagecolorallocate($canvas, 255, 255, 255);
+        imagefilledrectangle($canvas, 0, 0, $newWidth, $newHeight, $white);
+    }
+
+    imagecopyresampled($canvas, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+    imagedestroy($source);
+
+    if (in_array($ext, ['jpg', 'jpeg'], true)) {
+        imagejpeg($canvas, $path, 82);
+    } elseif ($ext === 'webp' && function_exists('imagewebp')) {
+        imagewebp($canvas, $path, 82);
+    } elseif ($ext === 'png') {
+        imagepng($canvas, $path, 6);
+    } elseif ($ext === 'gif') {
+        imagegif($canvas, $path);
+    }
+
+    imagedestroy($canvas);
 }
 
 function document_storage_dir(): string

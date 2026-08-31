@@ -15,10 +15,10 @@ function default_home_sections(): array
             'enabled' => true,
             'background' => 'default',
             'tiles' => [
-                ['service_slug' => 'new-builds', 'label' => 'New Builds', 'image' => ['file' => 'tiny-home.png', 'alt' => 'Modern new home exterior']],
-                ['service_slug' => 'kitchens', 'label' => 'Kitchens', 'image' => ['file' => 'kitchen1.png', 'alt' => 'Modern kitchen interior']],
-                ['service_slug' => 'bathrooms', 'label' => 'Bathrooms', 'image' => ['file' => 'bathroom3.png', 'alt' => 'Modern bathroom interior']],
-                ['service_slug' => 'restorations', 'label' => 'Restorations', 'image' => ['file' => 'kitchen-restore.png', 'alt' => 'Restored heritage home']],
+                ['service_slug' => 'new-builds', 'label' => 'New Builds', 'image' => ['file' => 'tiny-home.jpg', 'alt' => 'Modern new home exterior']],
+                ['service_slug' => 'kitchens', 'label' => 'Kitchens', 'image' => ['file' => 'kitchen1.jpg', 'alt' => 'Modern kitchen interior']],
+                ['service_slug' => 'bathrooms', 'label' => 'Bathrooms', 'image' => ['file' => 'bathroom3.jpg', 'alt' => 'Modern bathroom interior']],
+                ['service_slug' => 'restorations', 'label' => 'Restorations', 'image' => ['file' => 'kitchen-restore.jpg', 'alt' => 'Restored heritage home']],
             ],
         ],
         [
@@ -39,7 +39,7 @@ function default_home_sections(): array
                 'Comprehensive warranty on all workmanship',
             ],
             'image_position' => 'right',
-            'image' => ['file' => 'tiny-home.png', 'alt' => 'Modern tiny home exterior'],
+            'image' => ['file' => 'tiny-home.jpg', 'alt' => 'Modern tiny home exterior'],
         ],
         [
             'id' => 'home_specialises',
@@ -52,7 +52,7 @@ function default_home_sections(): array
                 'From ground-up builds to detailed interior upgrades — tailored construction services for homes and commercial spaces throughout the Adelaide metro and surrounding areas.',
             ],
             'image_position' => 'left',
-            'image' => ['file' => 'three-bedroom/exterior.png', 'alt' => 'Three bedroom tiny home exterior'],
+            'image' => ['file' => 'three-bedroom/exterior.jpg', 'alt' => 'Three bedroom tiny home exterior'],
         ],
         [
             'id' => 'home_values',
@@ -72,7 +72,7 @@ function default_home_sections(): array
                 'Safety and compliance as non-negotiable standards on every project',
             ],
             'image_position' => 'right',
-            'image' => ['file' => 'kitchen-restore.png', 'alt' => 'Restored kitchen interior'],
+            'image' => ['file' => 'kitchen-restore.jpg', 'alt' => 'Restored kitchen interior'],
         ],
     ]);
 }
@@ -103,7 +103,7 @@ function default_about_sections(): array
                 'Quality craftsmanship, honest communication, reliability, and safety are the foundations of every Hartup project.',
             ],
             'image_position' => 'left',
-            'image' => ['file' => 'two-bedroom/exterior.png', 'alt' => 'Two bedroom tiny home exterior'],
+            'image' => ['file' => 'two-bedroom/exterior.jpg', 'alt' => 'Two bedroom tiny home exterior'],
         ],
     ]);
 }

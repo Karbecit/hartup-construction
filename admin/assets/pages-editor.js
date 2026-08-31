@@ -29,7 +29,10 @@
     mediaTargetInput: null,
     mediaPickCallback: null,
     collapsedSections: new Set(),
+    collapsedDesigns: new Set(),
+    designCollapseInitialized: new Set(),
     sectionSavedSnapshots: {},
+    designSavedSnapshots: {},
     savedSectionOrder: '',
     pageMetaDirty: false,
   };
@@ -196,7 +199,46 @@
       return section.id;
     }).join('|');
     state.pageMetaDirty = false;
+    initDesignSnapshots();
     updateAllSaveButtons();
+  }
+
+  function initDesignSnapshots() {
+    state.designSavedSnapshots = {};
+    state.page.sections.forEach(function (section) {
+      if (section.type !== 'designs') return;
+      (section.items || []).forEach(function (item) {
+        if (item && item.id) state.designSavedSnapshots[item.id] = JSON.stringify(item);
+      });
+    });
+  }
+
+  function isDesignDirty(item) {
+    if (!item || !item.id) return true;
+    return JSON.stringify(item) !== (state.designSavedSnapshots[item.id] || '');
+  }
+
+  function updateDesignSaveUi(card, item) {
+    if (!card) return;
+    const btn = card.querySelector('[data-action="save-design"]');
+    const dirty = isDesignDirty(item);
+    if (btn) {
+      btn.disabled = !dirty;
+      btn.classList.toggle('is-dirty', dirty);
+    }
+  }
+
+  function updateAllDesignSaveButtons() {
+    document.querySelectorAll('.design-admin-item').forEach(function (card) {
+      const sectionCard = card.closest('.section-card');
+      const sectionId = sectionCard ? sectionCard.dataset.sectionId : '';
+      const section = state.page.sections.find(function (entry) {
+        return entry.id === sectionId;
+      });
+      const index = parseInt(card.dataset.designIndex || '-1', 10);
+      const item = section && Array.isArray(section.items) ? section.items[index] : null;
+      if (item) updateDesignSaveUi(card, item);
+    });
   }
 
   function isSectionDirty(sectionId) {
@@ -247,12 +289,14 @@
     state.page.sections.forEach(function (section) {
       updateSectionSaveUi(section.id);
     });
+    updateAllDesignSaveButtons();
     updateGlobalSaveUi();
   }
 
   function markSectionDirty(sectionId) {
     if (!sectionId) return;
     updateSectionSaveUi(sectionId);
+    updateAllDesignSaveButtons();
     updateGlobalSaveUi();
   }
 
@@ -1505,14 +1549,190 @@
     };
   }
 
+  function isDesignCollapsed(designId) {
+    return state.collapsedDesigns.has(designId);
+  }
+
+  function toggleDesignCollapsed(designId) {
+    if (state.collapsedDesigns.has(designId)) state.collapsedDesigns.delete(designId);
+    else state.collapsedDesigns.add(designId);
+  }
+
+  function setDesignSaveStatus(card, message) {
+    const status = card.querySelector('.design-admin-item__save-status');
+    if (status) status.textContent = message || '';
+  }
+
+  function saveDesignItem(section, item, card) {
+    setDesignSaveStatus(card, 'Saving…');
+    savePage({
+      statusEl: document.getElementById('editor-save-status'),
+      onSuccess: function () {
+        setDesignSaveStatus(card, 'Saved');
+        window.setTimeout(function () {
+          setDesignSaveStatus(card, '');
+        }, 2000);
+      },
+    }).catch(function () {
+      setDesignSaveStatus(card, 'Save failed');
+    });
+  }
+
+  function designImagePresetId(aspect) {
+    const preset = presetForAspect(aspect || 4 / 3);
+    if (preset.id === 'square' || preset.id === 'wide' || preset.id === 'landscape') return preset.id;
+    return 'landscape';
+  }
+
+  function updateDesignImageThumb(itemEl, image) {
+    const aspect = image.aspect_ratio || 4 / 3;
+    const wrap = itemEl.querySelector('.gallery-admin-item__thumb-wrap');
+    const thumb = itemEl.querySelector('.gallery-admin-item__thumb');
+    const placeholder = itemEl.querySelector('.design-image-admin-item__placeholder');
+    if (wrap) wrap.style.setProperty('--thumb-aspect', String(aspect));
+    if (image.file) {
+      itemEl.dataset.src = imageUrl(image.file);
+      if (thumb) {
+        thumb.src = imageUrl(image.file);
+        thumb.hidden = false;
+      }
+      if (placeholder) placeholder.hidden = true;
+    } else {
+      delete itemEl.dataset.src;
+      if (thumb) thumb.hidden = true;
+      if (placeholder) placeholder.hidden = false;
+    }
+  }
+
+  function buildDesignImageItem(item, imageKey, captionKey, label, captionValue, notifyChange) {
+    if (!item[imageKey] || typeof item[imageKey] !== 'object') item[imageKey] = emptyImageField(4 / 3);
+    const image = item[imageKey];
+    const aspect = image.aspect_ratio || 4 / 3;
+    const aspectGroup = 'design-aspect-' + (item.id || 'new') + '-' + imageKey;
+    const presetId = designImagePresetId(aspect);
+
+    const row = el('article', 'gallery-admin-item design-image-admin-item');
+    row.innerHTML =
+      '<div class="gallery-admin-item__thumb-wrap" style="--thumb-aspect:' +
+      aspect +
+      '">' +
+      (image.file
+        ? '<img class="gallery-admin-item__thumb" src="' + escapeHtml(imageUrl(image.file)) + '" alt="">'
+        : '<div class="design-image-admin-item__placeholder">No image</div>') +
+      '</div>' +
+      '<div class="gallery-admin-item__controls">' +
+      '<span class="design-image-admin-item__label">' +
+      escapeHtml(label) +
+      '</span>' +
+      '<label class="toggle-pill toggle-pill--preset"><input type="radio" name="' +
+      escapeHtml(aspectGroup) +
+      '" value="square"' +
+      (presetId === 'square' ? ' checked' : '') +
+      '><span>Square (1:1)</span></label>' +
+      '<label class="toggle-pill toggle-pill--preset"><input type="radio" name="' +
+      escapeHtml(aspectGroup) +
+      '" value="landscape"' +
+      (presetId === 'landscape' ? ' checked' : '') +
+      '><span>Landscape (4:3)</span></label>' +
+      '<label class="toggle-pill toggle-pill--preset"><input type="radio" name="' +
+      escapeHtml(aspectGroup) +
+      '" value="wide"' +
+      (presetId === 'wide' ? ' checked' : '') +
+      '><span>Wide (16:9)</span></label>' +
+      '<button type="button" class="gallery-admin-item__focus" data-action="pick-image">Choose image</button>' +
+      '<button type="button" class="gallery-admin-item__focus" data-action="crop-image">Pan / zoom</button>' +
+      '</div>' +
+      '<div class="gallery-admin-item__texts">' +
+      '<label class="gallery-admin-item__caption">Caption<input type="text" data-caption-field value="' +
+      escapeHtml(captionValue || '') +
+      '"></label>' +
+      '<label class="gallery-admin-item__alt">Alt text<input type="text" data-image-field="alt" value="' +
+      escapeHtml(image.alt || '') +
+      '"></label>' +
+      '</div>' +
+      '<input type="hidden" data-image-field="file" value="' +
+      escapeHtml(image.file || '') +
+      '">';
+
+    if (image.file) row.dataset.src = imageUrl(image.file);
+
+    row.querySelector('[data-action="pick-image"]').addEventListener('click', function () {
+      const fileInput = row.querySelector('[data-image-field="file"]');
+      openMediaPicker(fileInput, function () {
+        image.file = fileInput.value;
+        updateDesignImageThumb(row, image);
+        if (typeof notifyChange === 'function') notifyChange();
+      });
+    });
+
+    row.querySelector('[data-action="crop-image"]').addEventListener('click', function () {
+      if (!image.file) {
+        window.alert('Choose an image first.');
+        return;
+      }
+      openCropModal(image, image.aspect_ratio || 4 / 3, ['landscape', 'square', 'wide'], function () {
+        const nextPreset = designImagePresetId(image.aspect_ratio || 4 / 3);
+        row.querySelectorAll('[name="' + aspectGroup + '"]').forEach(function (radio) {
+          radio.checked = radio.value === nextPreset;
+        });
+        updateDesignImageThumb(row, image);
+        if (typeof notifyChange === 'function') notifyChange();
+      });
+    });
+
+    row.querySelectorAll('[name="' + aspectGroup + '"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        const preset = CROP_PRESETS[radio.value];
+        if (!preset) return;
+        image.aspect_ratio = preset.aspect;
+        updateDesignImageThumb(row, image);
+        if (typeof notifyChange === 'function') notifyChange();
+      });
+    });
+
+    row.querySelector('[data-caption-field]').addEventListener('input', function (event) {
+      item[captionKey] = event.target.value;
+      if (typeof notifyChange === 'function') notifyChange();
+    });
+
+    row.querySelectorAll('[data-image-field]').forEach(function (input) {
+      input.addEventListener('input', function () {
+        image[input.dataset.imageField] = input.value;
+        if (input.dataset.imageField === 'file') updateDesignImageThumb(row, image);
+        if (typeof notifyChange === 'function') notifyChange();
+      });
+    });
+
+    row.appendChild(
+      buildSlideshowEditor(image, {
+        aspect: image.aspect_ratio || 4 / 3,
+        presetIds: ['landscape', 'square', 'wide'],
+        onChange: function () {
+          updateDesignImageThumb(row, image);
+          if (typeof notifyChange === 'function') notifyChange();
+        },
+      })
+    );
+
+    return row;
+  }
+
   function buildDesignsEditor(section) {
     if (!Array.isArray(section.items)) section.items = [];
+    if (!state.designCollapseInitialized.has(section.id)) {
+      section.items.forEach(function (item) {
+        if (item && item.id) state.collapsedDesigns.add(item.id);
+      });
+      state.designCollapseInitialized.add(section.id);
+    }
+
     const wrap = el('div', 'designs-editor');
     const list = el('div', 'designs-editor__list');
     wrap.appendChild(list);
 
     function notifyChange() {
       markSectionDirty(section.id);
+      updateAllDesignSaveButtons();
       const summary = document.querySelector(
         '.section-card[data-section-id="' + section.id + '"] .section-card__summary'
       );
@@ -1522,7 +1742,9 @@
     const addBtn = el('button', 'admin-btn admin-btn--ghost', 'Add design');
     addBtn.type = 'button';
     addBtn.addEventListener('click', function () {
-      section.items.push(emptyDesignItem());
+      const item = emptyDesignItem();
+      section.items.push(item);
+      state.collapsedDesigns.delete(item.id);
       renderDesignItems(section, list, notifyChange);
       notifyChange();
     });
@@ -1539,20 +1761,30 @@
   }
 
   function buildDesignItem(section, item, index, list, notifyChange) {
-    const card = el('article', 'design-admin-item');
+    if (!item.id) item.id = 'des_' + Math.random().toString(16).slice(2, 10);
+    const collapsed = isDesignCollapsed(item.id);
+    const card = el('article', 'design-admin-item' + (collapsed ? ' is-collapsed' : ''));
     card.dataset.designIndex = String(index);
     const title = item.name || 'Untitled design';
     card.innerHTML =
       '<div class="design-admin-item__header">' +
       '<button type="button" class="gallery-admin-item__drag" aria-label="Drag to reorder" title="Drag to reorder">⋮⋮</button>' +
+      '<button type="button" class="design-admin-item__toggle" aria-expanded="' +
+      (collapsed ? 'false' : 'true') +
+      '" aria-label="Toggle design">' +
+      (collapsed ? '▸' : '▾') +
+      '</button>' +
       '<strong class="design-admin-item__title">' +
       escapeHtml(title) +
       '</strong>' +
+      '<span class="design-admin-item__save-status" aria-live="polite"></span>' +
+      '<button type="button" class="admin-btn design-admin-item__save" data-action="save-design" disabled>Save</button>' +
       '<button type="button" class="gallery-admin-item__remove" data-action="remove-design">Remove</button>' +
       '</div>' +
       '<div class="design-admin-item__body admin-form"></div>';
 
     const body = card.querySelector('.design-admin-item__body');
+    body.hidden = collapsed;
     body.appendChild(fieldInput('Name', 'name', item.name || ''));
     body.appendChild(fieldTextarea('Description (one paragraph per line)', 'description', (item.description || []).join('\n')));
     body.appendChild(fieldTextarea('Bullet points (one per line)', 'bullets', (item.bullets || []).join('\n')));
@@ -1576,28 +1808,16 @@
     body.appendChild(fieldInput('Floor plan PDF (URL or path)', 'floorplan_pdf', item.floorplan_pdf || ''));
     body.appendChild(fieldInput('Video URL (optional)', 'video_url', item.video_url || ''));
 
-    const imageFields = [
+    const images = el('div', 'design-admin-item__images');
+    images.appendChild(el('p', 'design-admin-item__image-label', 'Images'));
+    [
       ['hero_image', 'hero_caption', 'Large image', item.hero_caption || 'Floor Plan'],
       ['image_2', 'image_2_caption', 'Small image 1', item.image_2_caption || 'Exterior view'],
       ['image_3', 'image_3_caption', 'Small image 2', item.image_3_caption || 'Exterior view'],
-    ];
-    imageFields.forEach(function (entry) {
-      const imageKey = entry[0];
-      const captionKey = entry[1];
-      const label = entry[2];
-      const captionValue = entry[3];
-      const group = el('div', 'design-admin-item__image');
-      group.appendChild(el('p', 'design-admin-item__image-label', label));
-      if (!item[imageKey] || typeof item[imageKey] !== 'object') item[imageKey] = emptyImageField(4 / 3);
-      group.appendChild(
-        buildImageFields(imageKey, item[imageKey], item[imageKey].aspect_ratio || 4 / 3, {
-          presetIds: ['landscape', 'square', 'wide'],
-          onChange: notifyChange,
-        })
-      );
-      group.appendChild(fieldInput('Caption', captionKey, captionValue));
-      body.appendChild(group);
+    ].forEach(function (entry) {
+      images.appendChild(buildDesignImageItem(item, entry[0], entry[1], entry[2], entry[3], notifyChange));
     });
+    body.appendChild(images);
 
     body.querySelectorAll('[data-field]').forEach(function (input) {
       const eventName = input.tagName === 'SELECT' ? 'change' : 'input';
@@ -1613,8 +1833,20 @@
       });
     });
 
+    card.querySelector('.design-admin-item__toggle').addEventListener('click', function () {
+      toggleDesignCollapsed(item.id);
+      renderDesignItems(section, list, notifyChange);
+    });
+
+    card.querySelector('[data-action="save-design"]').addEventListener('click', function (event) {
+      event.stopPropagation();
+      saveDesignItem(section, item, card);
+    });
+
     card.querySelector('[data-action="remove-design"]').addEventListener('click', function () {
       section.items.splice(index, 1);
+      state.collapsedDesigns.delete(item.id);
+      delete state.designSavedSnapshots[item.id];
       renderDesignItems(section, list, notifyChange);
       notifyChange();
     });
@@ -1649,6 +1881,7 @@
       notifyChange();
     });
 
+    updateDesignSaveUi(card, item);
     return card;
   }
 

@@ -23,7 +23,7 @@ const { title, href, image, imageAlt, cmsImage } = Astro.props;
 
 const hasCmsImage = Boolean(cmsImage?.file);
 const tileAspect = cmsImage?.aspect_ratio ?? 4 / 3;
-const resolvedImage = hasCmsImage ? null : (image ?? '/images/tiny-home.png');
+const resolvedImage = hasCmsImage ? null : (image ?? '/images/tiny-home.jpg');
 const resolvedAlt = cmsImage?.alt ?? imageAlt ?? title;
 ---
 

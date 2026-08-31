@@ -479,7 +479,7 @@ function default_section_for_type(string $type): array
             'heading' => 'New section heading',
             'paragraphs' => ['Add your content here.'],
             'image_position' => 'right',
-            'image' => default_image_field('tiny-home.png', 'Project photo'),
+            'image' => default_image_field('tiny-home.jpg', 'Project photo'),
         ]),
         'text' => normalize_section([
             'type' => 'text',
@@ -488,7 +488,7 @@ function default_section_for_type(string $type): array
         ]),
         'image' => normalize_section([
             'type' => 'image',
-            'image' => default_image_field('tiny-home.png', 'Full width image'),
+            'image' => default_image_field('tiny-home.jpg', 'Full width image'),
             'overlay' => normalize_image_overlay([]),
         ]),
         'designs' => normalize_section([

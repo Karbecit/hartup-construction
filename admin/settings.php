@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates = [
             'site_url' => sanitize_text($_POST['site_url'] ?? '', 200),
             'admin_username' => sanitize_text($_POST['admin_username'] ?? 'admin', 60),
+            'admin_recovery_email' => sanitize_text($_POST['admin_recovery_email'] ?? '', 190),
             'mail_to' => sanitize_text($_POST['mail_to'] ?? '', 190),
             'mail_from' => sanitize_text($_POST['mail_from'] ?? '', 190),
             'mail_from_name' => sanitize_text($_POST['mail_from_name'] ?? '', 120),
@@ -45,6 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $turnstileSecret = (string) ($_POST['turnstile_secret_key'] ?? '');
         if ($turnstileSecret === '' && !empty($config['turnstile_secret_key'])) {
             $updates['turnstile_secret_key'] = $config['turnstile_secret_key'];
+        }
+
+        if ($error === '' && !validate_email((string) $updates['admin_recovery_email'])) {
+            $error = 'Enter a valid password recovery email address.';
         }
 
         if ($error === '' && update_config($updates)) {
@@ -79,6 +84,10 @@ require __DIR__ . '/includes/header.php';
     <label>New password <span class="admin-help">(leave blank to keep current)</span>
       <input type="password" name="admin_password" autocomplete="new-password">
     </label>
+    <label>Password recovery email
+      <input type="email" name="admin_recovery_email" value="<?= h((string) ($config['admin_recovery_email'] ?? admin_recovery_email())) ?>" required>
+      <p class="admin-help">Reset links from “I forgot my password” are sent here. Use an address verified in SES if the account is still in the sandbox.</p>
+    </label>
 
     <h2>Site</h2>
     <label>Site URL
@@ -86,7 +95,7 @@ require __DIR__ . '/includes/header.php';
     </label>
 
     <h2>Email delivery (AWS SES SMTP)</h2>
-    <p class="admin-help">Create SMTP credentials in AWS SES. The from address must be verified in SES.</p>
+    <p class="admin-help">Create SMTP credentials in AWS SES. The from address must be a verified identity. If the account is still in the SES sandbox, you can only send to verified recipient addresses — request production access so office and visitor emails both arrive.</p>
     <label>Send enquiries to
       <input type="email" name="mail_to" value="<?= h($config['mail_to'] ?? '') ?>" required>
     </label>

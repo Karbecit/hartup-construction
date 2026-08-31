@@ -23,7 +23,7 @@ declare(strict_types=1);
   <?php if ($message !== ''): ?><div class="admin-alert admin-alert--success"><?= h($message) ?></div><?php endif; ?>
   <?php if ($error !== ''): ?><div class="admin-alert admin-alert--error"><?= h($error) ?></div><?php endif; ?>
 
-  <div class="page-editor__meta admin-form">
+  <div class="page-editor__meta<?= $editorConfig['mode'] === 'service' ? '' : ' admin-form' ?>">
     <?php if ($editorConfig['mode'] === 'page' && ($editorConfig['slug'] ?? '') === 'home'): ?>
       <h2>Homepage hero</h2>
       <label>Tagline<input type="text" id="hero-tagline" value="<?= h($editorConfig['hero']['tagline'] ?? '') ?>"></label>
@@ -55,42 +55,58 @@ declare(strict_types=1);
         <p class="admin-help" id="page-download-pdf-status">Upload a PDF for visitors to download on the Terms page. Leave empty to hide the download button. The page still appears in the footer when enabled.</p>
       <?php endif; ?>
     <?php elseif ($editorConfig['mode'] === 'service'): ?>
-      <h2>Service details</h2>
-      <label>Title<input type="text" id="service-title" value="<?= h($editorConfig['page']['title'] ?? '') ?>"></label>
-      <label>Nav label<input type="text" id="service-nav-label" value="<?= h($editorConfig['page']['nav_label'] ?? '') ?>"></label>
-      <label>URL path<input type="text" id="service-href" value="<?= h($editorConfig['page']['href'] ?? '') ?>"></label>
-      <label>Tagline<input type="text" id="service-tag" value="<?= h($editorConfig['page']['tag'] ?? '') ?>"></label>
-      <label>Description<textarea id="service-description" rows="2"><?= h($editorConfig['page']['description'] ?? '') ?></textarea></label>
-      <label class="admin-checkbox"><input type="checkbox" id="service-in-menu" <?= !empty($editorConfig['page']['in_menu']) ? 'checked' : '' ?>> Show in main menu</label>
-      <label class="admin-checkbox"><input type="checkbox" id="service-visible" <?= !empty($editorConfig['page']['visible']) ? 'checked' : '' ?>> Page visible on site</label>
-      <label>Menu parent
-        <select id="service-parent-slug">
-          <option value="">Top level (no parent)</option>
-          <?php foreach (($editorConfig['allServices'] ?? []) as $serviceOption): ?>
-            <?php if (($serviceOption['slug'] ?? '') === ($editorConfig['slug'] ?? '')) continue; ?>
-            <option value="<?= h($serviceOption['slug']) ?>" <?= ($editorConfig['page']['parent_slug'] ?? '') === ($serviceOption['slug'] ?? '') ? 'selected' : '' ?>>
-              <?= h($serviceOption['nav_label'] ?: $serviceOption['title']) ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
-      </label>
+      <div class="page-editor__panel page-editor__panel--details">
+        <h2>Service details</h2>
+        <div class="admin-form page-editor__details-grid">
+          <label>Title<input type="text" id="service-title" value="<?= h($editorConfig['page']['title'] ?? '') ?>"></label>
+          <label>Nav label<input type="text" id="service-nav-label" value="<?= h($editorConfig['page']['nav_label'] ?? '') ?>"></label>
+          <label>URL path<input type="text" id="service-href" value="<?= h($editorConfig['page']['href'] ?? '') ?>"></label>
+          <label>Tagline<input type="text" id="service-tag" value="<?= h($editorConfig['page']['tag'] ?? '') ?>"></label>
+          <label class="page-editor__span-2">Description<textarea id="service-description" rows="2"><?= h($editorConfig['page']['description'] ?? '') ?></textarea></label>
+          <div class="page-editor__span-2 page-editor__checks">
+            <label class="admin-checkbox"><input type="checkbox" id="service-in-menu" <?= !empty($editorConfig['page']['in_menu']) ? 'checked' : '' ?>> Show in main menu</label>
+            <label class="admin-checkbox"><input type="checkbox" id="service-visible" <?= !empty($editorConfig['page']['visible']) ? 'checked' : '' ?>> Page visible on site</label>
+          </div>
+          <label class="page-editor__span-2">Menu parent
+            <select id="service-parent-slug">
+              <option value="">Top level (no parent)</option>
+              <?php foreach (($editorConfig['allServices'] ?? []) as $serviceOption): ?>
+                <?php if (($serviceOption['slug'] ?? '') === ($editorConfig['slug'] ?? '')) continue; ?>
+                <option value="<?= h($serviceOption['slug']) ?>" <?= ($editorConfig['page']['parent_slug'] ?? '') === ($serviceOption['slug'] ?? '') ? 'selected' : '' ?>>
+                  <?= h($serviceOption['nav_label'] ?: $serviceOption['title']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </label>
+        </div>
+      </div>
     <?php endif; ?>
   </div>
 
   <div class="page-editor__sections">
-    <div class="page-editor__sections-header">
-      <h2>Sections</h2>
-      <div class="page-editor__add">
-        <select id="add-section-type">
-          <?php foreach (($editorConfig['sectionTypes'] ?? SECTION_TYPES) as $type => $label): ?>
-            <option value="<?= h($type) ?>"><?= h($label) ?></option>
-          <?php endforeach; ?>
-        </select>
-        <button type="button" class="admin-btn admin-btn--ghost" id="add-section-btn">Add section</button>
+    <div class="page-editor__panel page-editor__panel--add">
+      <div class="page-editor__add-header">
+        <div>
+          <h2>Add a section</h2>
+          <p class="admin-help">Choose a type and add it to the page. Existing sections stay in the list below.</p>
+        </div>
+        <div class="page-editor__add">
+          <select id="add-section-type">
+            <?php foreach (($editorConfig['sectionTypes'] ?? SECTION_TYPES) as $type => $label): ?>
+              <option value="<?= h($type) ?>"><?= h($label) ?></option>
+            <?php endforeach; ?>
+          </select>
+          <button type="button" class="admin-btn" id="add-section-btn">Add section</button>
+        </div>
       </div>
     </div>
-    <p class="admin-help">Drag sections by the ⋮⋮ handle to reorder. Click ▸/▾ to collapse sections. On full-width images, add overlay text and drag it into place. Design showcase sections use the standard layout with optional floor plan and video buttons.</p>
-    <div id="sections-root" class="sections-root"></div>
+    <div class="page-editor__panel page-editor__panel--sections">
+      <div class="page-editor__sections-header">
+        <h2>Sections</h2>
+      </div>
+      <p class="admin-help">Drag sections by the ⋮⋮ handle to reorder. Click ▸/▾ to collapse sections. On full-width images, add overlay text and drag it into place. Design showcase sections use the standard layout with optional floor plan and video buttons.</p>
+      <div id="sections-root" class="sections-root"></div>
+    </div>
   </div>
 </div>
 

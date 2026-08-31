@@ -14,7 +14,7 @@ if (!is_configured()) {
     json_response(['success' => false, 'message' => 'Contact form is not configured yet. Please try again later.'], 503);
 }
 
-if (rate_limit_exceeded('contact_form', 5, 3600)) {
+if (rate_limit_exceeded('contact_form', 5, 3600, false)) {
     json_response(['success' => false, 'message' => 'Too many enquiries sent. Please try again in an hour or call us directly.'], 429);
 }
 
@@ -28,7 +28,7 @@ if (!verify_csrf($csrf)) {
     json_response(['success' => false, 'message' => 'Security check failed. Please refresh the page and try again.'], 403);
 }
 
-$honeypot = isset($input['website']) ? trim((string) $input['website']) : '';
+$honeypot = trim((string) ($input['company_website_confirm'] ?? ''));
 if ($honeypot !== '') {
     json_response(['success' => true, 'message' => 'Thank you — your enquiry has been sent.']);
 }
@@ -37,6 +37,7 @@ $name = sanitize_text((string) ($input['name'] ?? ''), 120);
 $email = sanitize_text((string) ($input['email'] ?? ''), 190);
 $phone = sanitize_phone((string) ($input['phone'] ?? ''));
 $service = sanitize_text((string) ($input['service'] ?? ''), 120);
+$location = sanitize_text((string) ($input['location'] ?? ''), 120);
 $message = sanitize_text((string) ($input['message'] ?? ''), 4000);
 $turnstile = (string) ($input['cf-turnstile-response'] ?? '');
 
@@ -53,7 +54,8 @@ if (!verify_turnstile($turnstile)) {
 }
 
 try {
-    send_enquiry_email($name, $email, $service, $message, $phone);
+    send_enquiry_email($name, $email, $service, $message, $phone, $location);
+    rate_limit_exceeded('contact_form', 5, 3600, true);
 } catch (Throwable $exception) {
     error_log('Contact form mail error: ' . $exception->getMessage());
     json_response(['success' => false, 'message' => 'We could not send your enquiry right now. Please email or call us directly.'], 500);

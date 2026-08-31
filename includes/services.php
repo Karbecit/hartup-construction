@@ -34,7 +34,7 @@ function default_services(): array
                             'service_slug' => 'one-bedroom',
                             'label' => 'One Bedroom',
                             'image' => [
-                                'file' => 'one-bedroom/exterior-alt.png',
+                                'file' => 'one-bedroom/exterior-alt.jpg',
                                 'alt' => 'One bedroom tiny home exterior with timber cladding and deck',
                             ],
                         ],
@@ -42,7 +42,7 @@ function default_services(): array
                             'service_slug' => 'two-bedroom',
                             'label' => 'Two Bedroom',
                             'image' => [
-                                'file' => 'two-bedroom/exterior-alt.png',
+                                'file' => 'two-bedroom/exterior-alt.jpg',
                                 'alt' => 'Two bedroom tiny home exterior with timber cladding and deck',
                             ],
                         ],
@@ -50,7 +50,7 @@ function default_services(): array
                             'service_slug' => 'three-bedroom',
                             'label' => 'Three Bedroom',
                             'image' => [
-                                'file' => 'three-bedroom/exterior-alt.png',
+                                'file' => 'three-bedroom/exterior-alt.jpg',
                                 'alt' => 'Three bedroom tiny home exterior with timber cladding and deck',
                             ],
                         ],
@@ -81,7 +81,7 @@ function default_services(): array
                     ],
                     'image_position' => 'left',
                     'image' => [
-                        'file' => 'one-bedroom/exterior.png',
+                        'file' => 'one-bedroom/exterior.jpg',
                         'alt' => 'One bedroom tiny home exterior with timber cladding and deck',
                     ],
                 ],
@@ -94,7 +94,7 @@ function default_services(): array
                     ],
                     'image_position' => 'right',
                     'image' => [
-                        'file' => 'one-bedroom/exterior-alt.png',
+                        'file' => 'one-bedroom/exterior-alt.jpg',
                         'alt' => 'One bedroom tiny home alternate exterior view with timber deck',
                     ],
                 ],
@@ -107,7 +107,7 @@ function default_services(): array
                     ],
                     'image_position' => 'left',
                     'image' => [
-                        'file' => 'one-bedroom/floorplan.png',
+                        'file' => 'one-bedroom/floorplan.jpg',
                         'alt' => 'One bedroom tiny home floorplan layout',
                     ],
                 ],
@@ -137,7 +137,7 @@ function default_services(): array
                     ],
                     'image_position' => 'left',
                     'image' => [
-                        'file' => 'two-bedroom/exterior.png',
+                        'file' => 'two-bedroom/exterior.jpg',
                         'alt' => 'Two bedroom tiny home exterior with timber cladding and deck',
                     ],
                 ],
@@ -150,7 +150,7 @@ function default_services(): array
                     ],
                     'image_position' => 'right',
                     'image' => [
-                        'file' => 'two-bedroom/exterior-alt.png',
+                        'file' => 'two-bedroom/exterior-alt.jpg',
                         'alt' => 'Two bedroom tiny home alternate exterior view with timber deck',
                     ],
                 ],
@@ -163,7 +163,7 @@ function default_services(): array
                     ],
                     'image_position' => 'left',
                     'image' => [
-                        'file' => 'two-bedroom/floorplan.png',
+                        'file' => 'two-bedroom/floorplan.jpg',
                         'alt' => 'Two bedroom tiny home floorplan layout',
                     ],
                 ],
@@ -193,7 +193,7 @@ function default_services(): array
                     ],
                     'image_position' => 'left',
                     'image' => [
-                        'file' => 'three-bedroom/exterior.png',
+                        'file' => 'three-bedroom/exterior.jpg',
                         'alt' => 'Three bedroom tiny home exterior with timber cladding and deck',
                     ],
                 ],
@@ -206,7 +206,7 @@ function default_services(): array
                     ],
                     'image_position' => 'right',
                     'image' => [
-                        'file' => 'three-bedroom/exterior-alt.png',
+                        'file' => 'three-bedroom/exterior-alt.jpg',
                         'alt' => 'Three bedroom tiny home alternate exterior view with timber deck',
                     ],
                 ],
@@ -219,7 +219,7 @@ function default_services(): array
                     ],
                     'image_position' => 'left',
                     'image' => [
-                        'file' => 'three-bedroom/floorplan.png',
+                        'file' => 'three-bedroom/floorplan.jpg',
                         'alt' => 'Three bedroom tiny home floorplan layout',
                     ],
                 ],
@@ -269,7 +269,7 @@ function default_services(): array
                     'heading' => 'Interior Upgrades',
                     'paragraphs' => ['From full kitchen renovations to bathroom refreshes — we deliver upgrades on time and on budget.'],
                     'image_position' => 'right',
-                    'image' => ['file' => 'kitchen1.png', 'alt' => 'Modern kitchen upgrade'],
+                    'image' => ['file' => 'kitchen1.jpg', 'alt' => 'Modern kitchen upgrade'],
                 ],
             ]),
         ],
@@ -290,7 +290,7 @@ function default_services(): array
                     'heading' => 'Property Restorations',
                     'paragraphs' => ['We restore heritage and character homes with care — balancing authenticity with modern standards.'],
                     'image_position' => 'left',
-                    'image' => ['file' => 'kitchen-restore.png', 'alt' => 'Restored property interior'],
+                    'image' => ['file' => 'kitchen-restore.jpg', 'alt' => 'Restored property interior'],
                 ],
             ]),
         ],
@@ -306,7 +306,7 @@ function default_bedroom_tile(string $slug): array
             'service_slug' => 'one-bedroom',
             'label' => 'One Bedroom',
             'image' => [
-                'file' => 'one-bedroom/exterior-alt.png',
+                'file' => 'one-bedroom/exterior-alt.jpg',
                 'alt' => 'One bedroom tiny home exterior with timber cladding and deck',
             ],
         ],
@@ -314,7 +314,7 @@ function default_bedroom_tile(string $slug): array
             'service_slug' => 'two-bedroom',
             'label' => 'Two Bedroom',
             'image' => [
-                'file' => 'two-bedroom/exterior-alt.png',
+                'file' => 'two-bedroom/exterior-alt.jpg',
                 'alt' => 'Two bedroom tiny home exterior with timber cladding and deck',
             ],
         ],
@@ -322,7 +322,7 @@ function default_bedroom_tile(string $slug): array
             'service_slug' => 'three-bedroom',
             'label' => 'Three Bedroom',
             'image' => [
-                'file' => 'three-bedroom/exterior-alt.png',
+                'file' => 'three-bedroom/exterior-alt.jpg',
                 'alt' => 'Three bedroom tiny home exterior with timber cladding and deck',
             ],
         ],

@@ -16,7 +16,7 @@ const termsLive = isCmsPageVisible('terms');
   title="Contact"
   description={`Contact Hartup Construction for a free quote on residential or commercial building projects in ${serviceAreaLong}.`}
 >
-  <section class="page-hero">
+  <section class="page-hero page-hero--compact">
     <div class="container">
       <span class="eyebrow">{pageHero?.eyebrow ?? cms.contact.eyebrow}</span>
       <h1>{pageHero?.heading ?? cms.contact.heading}</h1>
@@ -142,7 +142,7 @@ const termsLive = isCmsPageVisible('terms');
           <button type="submit" class="btn btn-primary" id="contact-submit">Send Enquiry</button>
 
           <div class="form-turnstile" id="turnstile-container" hidden></div>
-          <input type="text" name="website" tabindex="-1" autocomplete="off" class="form-honeypot" aria-hidden="true" />
+          <input type="text" name="company_website_confirm" tabindex="-1" autocomplete="off" class="form-honeypot" aria-hidden="true" />
 
           <p class="form-error" id="form-error" hidden role="alert"></p>
 
@@ -298,6 +298,7 @@ const termsLive = isCmsPageVisible('terms');
 
   .form-turnstile {
     margin-top: var(--space-sm);
+    min-height: 65px;
   }
 
   .form-success {
@@ -330,27 +331,17 @@ const termsLive = isCmsPageVisible('terms');
   }
 </style>
 
-<script lang="ts">
-  declare global {
-    interface Window {
-      turnstile?: {
-        render: (selector: string, options: { sitekey: string }) => string;
-        getResponse: (widgetId?: string) => string;
-        reset: (widgetId?: string) => void;
-      };
-    }
-  }
-
-  const form = document.getElementById('contact-form') as HTMLFormElement;
+<script>
+  const form = document.getElementById('contact-form');
   const success = document.getElementById('form-success');
   const errorEl = document.getElementById('form-error');
-  const submitBtn = document.getElementById('contact-submit') as HTMLButtonElement;
-  const projectType = document.getElementById('project-type') as HTMLSelectElement;
+  const submitBtn = document.getElementById('contact-submit');
+  const projectType = document.getElementById('project-type');
   const turnstileContainer = document.getElementById('turnstile-container');
 
   let csrfToken = '';
   let turnstileSiteKey = '';
-  let turnstileWidgetId: string | undefined;
+  let turnstileWidgetId;
   let contactConfigured = false;
 
   const params = new URLSearchParams(window.location.search);
@@ -360,11 +351,26 @@ const termsLive = isCmsPageVisible('terms');
     if (option) projectType.value = service;
   }
 
-  function showError(message: string) {
+  function showError(message) {
     if (!errorEl) return;
     errorEl.textContent = message;
     errorEl.hidden = false;
     success?.setAttribute('hidden', 'true');
+  }
+
+  function loadTurnstileApi() {
+    return new Promise((resolve, reject) => {
+      if (window.turnstile) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Could not load verification script.'));
+      document.head.appendChild(script);
+    });
   }
 
   async function initContactForm() {
@@ -378,20 +384,11 @@ const termsLive = isCmsPageVisible('terms');
 
       if (turnstileSiteKey && turnstileContainer) {
         turnstileContainer.hidden = false;
-        await new Promise<void>((resolve) => {
-          if (window.turnstile) {
-            resolve();
-            return;
-          }
-          const script = document.createElement('script');
-          script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-          script.async = true;
-          script.onload = () => resolve();
-          document.head.appendChild(script);
-        });
-
+        await loadTurnstileApi();
         turnstileWidgetId = window.turnstile?.render('#turnstile-container', {
           sitekey: turnstileSiteKey,
+          theme: 'dark',
+          appearance: 'always',
         });
       }
     } catch {
@@ -425,8 +422,9 @@ const termsLive = isCmsPageVisible('terms');
       email: String(formData.get('email') ?? '').trim(),
       phone: String(formData.get('phone') ?? '').trim(),
       service: String(formData.get('projectType') ?? '').trim(),
+      location: String(formData.get('location') ?? '').trim(),
       message: String(formData.get('message') ?? '').trim(),
-      website: String(formData.get('website') ?? '').trim(),
+      company_website_confirm: String(formData.get('company_website_confirm') ?? '').trim(),
       'cf-turnstile-response': window.turnstile?.getResponse(turnstileWidgetId) ?? '',
     };
 

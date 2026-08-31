@@ -24,7 +24,7 @@ function default_our_designs_banner(string $slug): array
         'type' => 'image',
         'background' => 'default',
         'image' => default_cms_image(
-            $slug . '/exterior.png',
+            $slug . '/exterior.jpg',
             $alts[$slug] ?? 'Hartup tiny home exterior',
             16 / 9
         ),
@@ -61,17 +61,17 @@ function default_design_card(array $item): array
         'video_url' => '',
         'image_position' => 'right',
         'hero_image' => default_cms_image(
-            $folder . '/floorplan.png',
+            $folder . '/floorplan.jpg',
             $name . ' floorplan layout'
         ),
         'hero_caption' => 'Floor Plan',
         'image_2' => default_cms_image(
-            $folder . '/exterior.png',
+            $folder . '/exterior.jpg',
             $name . ' exterior with timber cladding and deck'
         ),
         'image_2_caption' => 'Exterior view',
         'image_3' => default_cms_image(
-            $folder . '/exterior-alt.png',
+            $folder . '/exterior-alt.jpg',
             $name . ' alternate exterior view'
         ),
         'image_3_caption' => 'Exterior view',

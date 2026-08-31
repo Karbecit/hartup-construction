@@ -35,6 +35,8 @@ $adminNavClass = static function (string $key) use ($activeNav): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= h($pageTitle) ?> · Hartup Construction Admin</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/admin/assets/admin.css?v=<?= (int) filemtime(__DIR__ . '/../assets/admin.css') ?>">
 </head>
 <body class="admin-body">

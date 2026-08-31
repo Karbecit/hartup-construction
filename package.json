@@ -11,9 +11,13 @@
     "preview": "astro preview",
     "preview:staging": "npm run build:staging && astro preview",
     "cms:setup": "node scripts/cms-setup.js",
-    "cms:dev": "php -d upload_max_filesize=20M -d post_max_size=22M -S localhost:8090 cms-router.php"
+    "cms:dev": "php -d upload_max_filesize=20M -d post_max_size=22M -S localhost:8090 cms-router.php",
+    "images:optimize": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "astro": "^5.7.10"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
   }
 }

@@ -7,9 +7,12 @@ function base_path(string $path = ''): string
     return dirname(__DIR__) . ($path !== '' ? DIRECTORY_SEPARATOR . ltrim($path, '/\\') : '');
 }
 
-function load_config(): array
+function load_config(bool $reload = false): array
 {
     static $config = null;
+    if ($reload) {
+        $config = null;
+    }
     if ($config !== null) {
         return $config;
     }
@@ -80,7 +83,46 @@ function client_ip(): string
     return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 }
 
-function rate_limit_exceeded(string $bucket, int $maxAttempts, int $windowSeconds): bool
+function is_local_request(): bool
+{
+    return in_array(client_ip(), ['127.0.0.1', '::1'], true);
+}
+
+function admin_public_url(string $path = ''): string
+{
+    $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
+    if ($host !== '') {
+        $forwarded = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+        $https = $forwarded === 'https'
+            || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        $base = ($https ? 'https' : 'http') . '://' . $host;
+
+        return $path === '' ? $base : $base . '/' . ltrim(str_replace('\\', '/', $path), '/');
+    }
+
+    return site_url($path);
+}
+
+function admin_recovery_email(): string
+{
+    $email = strtolower(trim((string) config('admin_recovery_email', '')));
+    if ($email !== '' && validate_email($email)) {
+        return $email;
+    }
+
+    $fallback = strtolower(trim((string) config('mail_to', '')));
+    return validate_email($fallback) ? $fallback : '';
+}
+
+function recovery_email_matches(string $email): bool
+{
+    $expected = admin_recovery_email();
+    $given = strtolower(trim($email));
+
+    return $expected !== '' && $given !== '' && hash_equals($expected, $given);
+}
+
+function rate_limit_exceeded(string $bucket, int $maxAttempts, int $windowSeconds, bool $record = true): bool
 {
     $dir = base_path('data/rate_limits');
     if (!is_dir($dir)) {
@@ -108,8 +150,11 @@ function rate_limit_exceeded(string $bucket, int $maxAttempts, int $windowSecond
         return true;
     }
 
-    $data['attempts'][] = $now;
-    file_put_contents($file, json_encode($data), LOCK_EX);
+    if ($record) {
+        $data['attempts'][] = $now;
+        file_put_contents($file, json_encode($data), LOCK_EX);
+    }
+
     return false;
 }
 

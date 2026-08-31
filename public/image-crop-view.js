@@ -100,6 +100,7 @@
       img.style.height = pos.height + 'px';
       img.style.left = pos.left + 'px';
       img.style.top = pos.top + 'px';
+      img.style.objectFit = 'fill';
     }
 
     if (img.complete && img.naturalWidth) {
