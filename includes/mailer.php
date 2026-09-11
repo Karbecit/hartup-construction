@@ -247,7 +247,7 @@ function send_admin_password_reset_email(string $resetUrl): void
 {
     $to = admin_recovery_email();
     if (!validate_email($to)) {
-        throw new RuntimeException('Admin recovery email is not configured.');
+        throw new RuntimeException('The Send enquiries to address is not set, so a reset email cannot be sent.');
     }
 
     $mailer = create_smtp_mailer();

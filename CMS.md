@@ -1,5 +1,7 @@
 # Hartup Construction — CMS Admin
 
+End-user guide (plain language): **[CMS-USER-MANUAL.md](CMS-USER-MANUAL.md)** or **Admin → Help**.
+
 Flat-file PHP admin for Hartup. Content lives in **`content/site.json`**; the Astro site reads it at **build time** (`npm run build`).
 
 ## Admin areas

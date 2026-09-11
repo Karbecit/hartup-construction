@@ -19,31 +19,24 @@ if (admin_logged_in()) {
 $error = '';
 $success = '';
 $csrfToken = csrf_token();
+$enquiryEmail = admin_recovery_email();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf($_POST['csrf_token'] ?? '')) {
         $error = 'Security token expired. Please try again.';
+    } elseif ($enquiryEmail === '') {
+        $error = 'A Send enquiries to address has not been set. Ask your web contact to add one in Settings.';
     } elseif (rate_limit_exceeded('admin_password_reset', 5, 3600)) {
         $error = 'Too many reset requests. Please wait an hour and try again.';
     } else {
-        $email = sanitize_text($_POST['recovery_email'] ?? '', 190);
-        if (!validate_email($email)) {
-            $error = 'Enter the recovery email address from Settings.';
-        } else {
-            if (recovery_email_matches($email)) {
-                try {
-                    $token = create_admin_password_reset_token();
-                    $resetUrl = admin_public_url('admin/reset-password.php?token=' . urlencode($token));
-                    send_admin_password_reset_email($resetUrl);
-                } catch (Throwable $exception) {
-                    error_log('Admin password reset email failed: ' . $exception->getMessage());
-                    $error = 'Could not send the reset email. Check SMTP settings, or reset locally if you are on this computer.';
-                }
-            }
-
-            if ($error === '') {
-                $success = 'If that email is the admin recovery address, a reset link has been sent. It expires in one hour.';
-            }
+        try {
+            $token = create_admin_password_reset_token();
+            $resetUrl = admin_public_url('admin/reset-password.php?token=' . urlencode($token));
+            send_admin_password_reset_email($resetUrl);
+            $success = 'A reset link has been sent to ' . $enquiryEmail . '. It expires in one hour. Check that inbox (and junk mail).';
+        } catch (Throwable $exception) {
+            error_log('Admin password reset email failed: ' . $exception->getMessage());
+            $error = 'Could not send the reset email. Check SMTP settings, or reset locally if you are on this computer.';
         }
     }
 }
@@ -53,18 +46,19 @@ require __DIR__ . '/includes/header.php';
 ?>
 
 <div class="admin-card admin-card--narrow">
-  <h1>I forgot my password</h1>
-  <p class="admin-lead">Enter the recovery email from Admin → Settings. We will send a link to choose a new password.</p>
+  <h1>Forgot password</h1>
+  <?php if ($enquiryEmail !== ''): ?>
+  <p class="admin-lead">A reset link will be sent to the same address used for website enquiries: <strong><?= h($enquiryEmail) ?></strong></p>
+  <?php else: ?>
+  <p class="admin-lead">A Send enquiries to address has not been set, so a reset email cannot be sent. Ask your web contact for help.</p>
+  <?php endif; ?>
 
   <?php if ($error !== ''): ?><div class="admin-alert admin-alert--error"><?= h($error) ?></div><?php endif; ?>
   <?php if ($success !== ''): ?><div class="admin-alert admin-alert--success"><?= h($success) ?></div><?php endif; ?>
 
-  <?php if ($success === ''): ?>
+  <?php if ($success === '' && $enquiryEmail !== ''): ?>
   <form method="post" class="admin-form">
     <input type="hidden" name="csrf_token" value="<?= h($csrfToken) ?>">
-    <label>Recovery email
-      <input type="email" name="recovery_email" required autocomplete="email">
-    </label>
     <button type="submit" class="admin-btn">Send reset link</button>
   </form>
   <?php endif; ?>

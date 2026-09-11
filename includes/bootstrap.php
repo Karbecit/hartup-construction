@@ -105,21 +105,8 @@ function admin_public_url(string $path = ''): string
 
 function admin_recovery_email(): string
 {
-    $email = strtolower(trim((string) config('admin_recovery_email', '')));
-    if ($email !== '' && validate_email($email)) {
-        return $email;
-    }
-
-    $fallback = strtolower(trim((string) config('mail_to', '')));
-    return validate_email($fallback) ? $fallback : '';
-}
-
-function recovery_email_matches(string $email): bool
-{
-    $expected = admin_recovery_email();
-    $given = strtolower(trim($email));
-
-    return $expected !== '' && $given !== '' && hash_equals($expected, $given);
+    $email = strtolower(trim((string) config('mail_to', '')));
+    return validate_email($email) ? $email : '';
 }
 
 function rate_limit_exceeded(string $bucket, int $maxAttempts, int $windowSeconds, bool $record = true): bool

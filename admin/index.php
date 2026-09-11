@@ -33,6 +33,10 @@ require __DIR__ . '/includes/header.php';
       <strong>Settings</strong>
       <span>AWS SES email, Turnstile spam protection &amp; admin login</span>
     </a>
+    <a class="admin-tile" href="/admin/help.php">
+      <strong>User manual</strong>
+      <span>How to edit pages, photos, services, and settings</span>
+    </a>
     <a class="admin-tile" href="/" target="_blank" rel="noopener">
       <strong>View website</strong>
       <span>Open the live site in a new tab</span>

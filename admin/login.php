@@ -52,7 +52,7 @@ require __DIR__ . '/includes/header.php';
     </label>
     <button type="submit" class="admin-btn">Sign in</button>
   </form>
-  <p class="admin-help"><a href="/admin/forgot-password.php">I forgot my password</a></p>
+  <p class="admin-help"><a href="/admin/forgot-password.php">Forgot password?</a></p>
 </div>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>

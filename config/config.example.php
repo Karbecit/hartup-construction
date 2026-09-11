@@ -9,7 +9,6 @@ return [
     // Admin login (use setup.php on first visit to generate the password hash)
     'admin_username' => 'admin',
     'admin_password_hash' => '',
-    'admin_recovery_email' => 'office@hartupconstruction.com.au',
 
     // Where enquiry emails are delivered
     'mail_to' => 'office@hartupconstruction.com.au',

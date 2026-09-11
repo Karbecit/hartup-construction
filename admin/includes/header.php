@@ -53,6 +53,7 @@ $adminNavClass = static function (string $key) use ($activeNav): string {
         <a href="/admin/settings.php" class="<?= h($adminNavClass('settings')) ?>">Settings</a>
       </div>
       <div class="admin-nav-exits">
+        <a href="/admin/help.php" class="admin-nav-exit">Help</a>
         <a href="<?= h((string) config('site_url', 'http://localhost:4321')) ?>" class="admin-nav-exit" target="_blank" rel="noopener">View site</a>
         <a href="/admin/logout.php" class="admin-nav-exit">Log out</a>
       </div>

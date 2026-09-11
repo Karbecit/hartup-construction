@@ -170,6 +170,60 @@ body.admin-body {
   border-top: 1px solid var(--admin-border);
 }
 
+.settings-section {
+  margin: 0 0 1.75rem;
+  padding-bottom: 0.25rem;
+}
+
+.settings-section h2 {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+}
+
+.settings-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.settings-section__head h2 {
+  border-top: 0;
+  padding-top: 0;
+  margin: 0;
+}
+
+.settings-section--locked .settings-section__head h2 {
+  border-top: 0;
+}
+
+.settings-lock {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.settings-lock:disabled {
+  opacity: 0.55;
+}
+
+.settings-section__head .admin-btn {
+  margin-top: 0;
+  justify-self: auto;
+}
+
+.admin-warning {
+  margin: 0.35rem 0 0.75rem;
+  color: #9b2c2c;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
 .admin-form label {
   display: grid;
   gap: 0.35rem;
@@ -2144,5 +2198,97 @@ body.layout-rotating * {
   }
   .design-image-admin-item {
     grid-template-columns: 72px minmax(0, 1fr);
+  }
+}
+
+.help-doc__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.help-doc__header h1 {
+  margin-bottom: 0.35rem;
+}
+
+.help-toc {
+  background: #faf8f5;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 0 0 1.75rem;
+}
+
+.help-toc ol {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.help-toc a {
+  color: var(--admin-accent-dark);
+}
+
+.help-doc h2 {
+  margin-top: 2rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--admin-border);
+  scroll-margin-top: 1rem;
+}
+
+.help-doc h2:first-of-type {
+  border-top: 0;
+}
+
+.help-doc p,
+.help-doc li {
+  line-height: 1.55;
+}
+
+.help-doc ul,
+.help-doc ol {
+  padding-left: 1.25rem;
+}
+
+.help-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0 1rem;
+  font-size: 0.95rem;
+}
+
+.help-table th,
+.help-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--admin-border);
+}
+
+.help-table th {
+  background: #faf8f5;
+}
+
+@media print {
+  .admin-topbar,
+  .help-doc__header .admin-btn {
+    display: none !important;
+  }
+
+  .admin-main {
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .admin-card {
+    box-shadow: none;
+    border: 0;
+    padding: 0;
+  }
+
+  .help-doc h2 {
+    break-after: avoid;
   }
 }
